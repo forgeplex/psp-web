@@ -1,0 +1,34 @@
+{
+  "name": "@psp/checkout",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@psp/shared": "workspace:*",
+    "@psp/ui": "workspace:*",
+    "@psp/api": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "antd": "^5.24.0",
+    "@ant-design/icons": "^5.6.0",
+    "@tanstack/react-router": "^1.114.0",
+    "@tanstack/react-query": "^5.65.0",
+    "zustand": "^5.0.0",
+    "dayjs": "^1.11.13"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@tanstack/router-plugin": "^1.114.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.1.0"
+  }
+}
