@@ -103,7 +103,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: merchant.psp.pleamon.com
+    - host: merchant-psp.pleamon.com
       http:
         paths:
           - path: /
@@ -115,5 +115,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - merchant.psp.pleamon.com
-      secretName: psp-merchant-tls
+        - merchant-psp.pleamon.com
+      secretName: merchant-psp-tls

@@ -103,7 +103,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: admin.psp.pleamon.com
+    - host: admin-psp.pleamon.com
       http:
         paths:
           - path: /
@@ -115,5 +115,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - admin.psp.pleamon.com
-      secretName: psp-admin-tls
+        - admin-psp.pleamon.com
+      secretName: admin-psp-tls
