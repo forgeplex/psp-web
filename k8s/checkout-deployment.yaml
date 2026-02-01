@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: psp-checkout
+  namespace: psp-frontend
+  labels:
+    app: psp-checkout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psp-checkout
+  template:
+    metadata:
+      labels:
+        app: psp-checkout
+    spec:
+      initContainers:
+        - name: build
+          image: node:22-alpine
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              apk add --no-cache git
+              corepack enable
+              git clone --depth 1 --branch main https://x-access-token:${GH_TOKEN}@github.com/forgeplex/psp-web.git /tmp/repo
+              cd /tmp/repo
+              pnpm install --frozen-lockfile
+              pnpm build --filter=@psp/checkout
+              cp -r apps/checkout/dist/* /usr/share/nginx/html/
+          env:
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token
+                  key: token
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+      volumes:
+        - name: html
+          emptyDir: {}
+        - name: nginx-conf
+          configMap:
+            name: psp-frontend-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: psp-checkout
+  namespace: psp-frontend
+spec:
+  selector:
+    app: psp-checkout
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: psp-checkout
+  namespace: psp-frontend
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: checkout.psp.pleamon.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: psp-checkout
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - checkout.psp.pleamon.com
+      secretName: psp-checkout-tls
