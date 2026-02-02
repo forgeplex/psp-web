@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Card, Form, Input, Button, Checkbox, Typography, message } from 'antd';
-import { UserOutlined, LockOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Checkbox, Typography, theme } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { brandColors } from '@psp/shared';
+import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
 import { BrandPanel, ErrorAlert, type AuthErrorCode } from '../components/auth';
 
@@ -16,104 +17,32 @@ interface LoginFormValues {
   remember?: boolean;
 }
 
-const styles = {
-  page: {
-    display: 'flex',
-    minHeight: '100vh',
-  },
-  formPanel: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-    background: '#F8FAFC',
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 400,
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    marginBottom: 8,
-  },
-  logoIcon: {
-    width: 40,
-    height: 40,
-    background: brandColors.primary,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 22,
-    fontWeight: 700,
-    color: '#0F172A',
-    letterSpacing: -0.5,
-  },
-  title: {
-    textAlign: 'center' as const,
-    marginBottom: 8,
-  },
-  subtitle: {
-    textAlign: 'center' as const,
-    marginBottom: 28,
-    fontStyle: 'normal' as const,
-    fontSize: 13,
-    color: '#64748b',
-  },
-  card: {
-    borderRadius: 12,
-    border: '1px solid #E2E8F0',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-  },
-  forgotPassword: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  forgotLink: {
-    fontSize: 12,
-    color: brandColors.primary,
-    cursor: 'pointer',
-  },
-  footer: {
-    marginTop: 32,
-    textAlign: 'center' as const,
-  },
-  copyright: {
-    fontSize: 12,
-    color: '#64748B',
-  },
-};
+interface LoginResponse {
+  session_id?: string;
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  mfa_status?: 'verified' | 'requires_setup' | 'requires_verification';
+  available_mfa_types?: string[];
+}
 
-const LayersIcon: React.FC = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#FFFFFF"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-    <path d="M2 17l10 5 10-5" />
-    <path d="M2 12l10 5 10-5" />
-  </svg>
-);
+const { useToken } = theme;
+
+// 样式常量 - 使用 8px 基准网格系统
+const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
+} as const;
 
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
+  const { token } = useToken();
   const [loading, setLoading] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState<{ visible: boolean; code?: AuthErrorCode; message?: string }>({
     visible: false,
   });
@@ -124,90 +53,102 @@ function LoginPage() {
       setError({ visible: false });
 
       try {
-        // TODO: Replace with actual API call
-        await new Promise((resolve, reject) =>
-          setTimeout(() => {
-            // Simulate login - use 'admin@psp.dev/123456' for success
-            if (values.username === 'admin@psp.dev' && values.password === '123456') {
-              resolve(true);
-            } else {
-              reject(new Error('AUTH_001'));
-            }
-          }, 800)
-        );
-
-        login(
-          {
-            id: '1',
-            username: values.username,
-            name: 'Admin User',
-            email: 'admin@psp.com',
-            role: 'admin',
-          },
-          'mock_access_token',
-          'mock_refresh_token'
-        );
-
-        message.success('登录成功');
-
-        // TODO: Check if MFA setup is required
-        // For now, navigate to dashboard
-        navigate({ to: '/' });
-      } catch (err) {
-        const errorCode = err instanceof Error ? err.message : 'AUTH_001';
-        setError({
-          visible: true,
-          code: errorCode as AuthErrorCode,
+        const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
+          username: values.username,
+          password: values.password,
         });
 
-        // Disable button for AUTH_002 (account locked)
-        if (errorCode === 'AUTH_002') {
-          setLoading(true); // Keep button disabled
+        if (data.session_id) {
+          sessionStorage.setItem('psp_session_id', data.session_id);
+        }
+
+        if (data.mfa_status === 'requires_setup') {
+          navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
+          return;
+        }
+
+        if (data.mfa_status === 'requires_verification') {
+          if (data.available_mfa_types) {
+            sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
+          }
+          navigate({ to: '/mfa/verify', search: { session_id: data.session_id || '' } });
+          return;
+        }
+
+        if (data.access_token) {
+          login(
+            {
+              id: '1',
+              username: values.username,
+              name: values.username,
+              email: values.username,
+              role: 'admin',
+            },
+            data.access_token,
+            data.refresh_token || ''
+          );
+          navigate({ to: '/merchants' });
+        }
+      } catch (err: unknown) {
+        const axiosError = err as { response?: { status: number; data?: { message?: string } } };
+        if (axiosError.response?.status === 401) {
+          setError({ visible: true, code: 'INVALID_CREDENTIALS' });
+        } else {
+          setError({
+            visible: true,
+            code: 'UNKNOWN_ERROR',
+            message: axiosError.response?.data?.message || '登录失败，请稍后重试',
+          });
         }
       } finally {
-        if (error.code !== 'AUTH_002') {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     },
-    [login, navigate, error.code]
+    [login, navigate]
   );
 
-  const handleForgotPassword = () => {
-    message.info('请联系管理员重置密码');
-  };
+  const handleForgotPassword = useCallback(() => {
+    navigate({ to: '/forgot-password' });
+  }, [navigate]);
 
   return (
-    <div style={styles.page}>
+    <div style={pageStyles.container}>
       <BrandPanel />
-
-      <main style={styles.formPanel} className="form-panel">
-        <style>{`
-          @media (min-width: 1024px) {
-            .form-panel { width: 50%; flex: none !important; }
-          }
-          @media (min-width: 1440px) {
-            .form-panel { width: 45%; }
-          }
-        `}</style>
-        <div style={styles.formContainer}>
-          {/* Logo */}
-          <div style={styles.logo}>
-            <div style={styles.logoIcon}>
-              <LayersIcon />
+      
+      {/* 右侧表单区域 */}
+      <div style={pageStyles.formSection}>
+        <div style={pageStyles.formWrapper}>
+          {/* 头部品牌区 */}
+          <div style={pageStyles.header}>
+            <div style={pageStyles.logo}>
+              <div style={pageStyles.logoIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <span style={pageStyles.logoText}>PSP Admin</span>
             </div>
-            <span style={styles.logoText}>PSP Admin</span>
+            
+            <Typography.Title 
+              level={3} 
+              style={{ 
+                margin: `${SPACING.md}px 0 ${SPACING.xs}px`,
+                fontWeight: 600,
+                fontSize: 24,
+              }}
+            >
+              欢迎回来
+            </Typography.Title>
+            
+            <Typography.Text style={pageStyles.subtitle}>
+              请输入您的账号信息以继续
+            </Typography.Text>
           </div>
 
-          <Typography.Title level={4} style={styles.title}>
-            登录
-          </Typography.Title>
-
-          <Typography.Text style={styles.subtitle}>
-            输入您的账号信息以访问管理面板
-          </Typography.Text>
-
-          <Card style={styles.card} styles={{ body: { padding: 32 } }}>
+          {/* 登录卡片 */}
+          <div style={pageStyles.card}>
             <ErrorAlert
               visible={error.visible}
               code={error.code}
@@ -219,75 +160,163 @@ function LoginPage() {
               layout="vertical"
               size="large"
               initialValues={{ username: 'admin@psp.dev', password: '123456', remember: false }}
+              requiredMark={false}
             >
               <Form.Item
                 name="username"
-                label="用户名 / 邮箱"
                 rules={[{ required: true, message: '请输入用户名' }]}
+                style={{ marginBottom: SPACING.lg }}
               >
                 <Input
-                  prefix={<UserOutlined style={{ color: '#94a3b8' }} />}
-                  placeholder="请输入用户名或邮箱"
+                  prefix={<UserOutlined style={{ color: token.colorTextDisabled }} />}
+                  placeholder="用户名 / 邮箱"
                   autoComplete="username"
+                  style={inputStyles.base}
                 />
               </Form.Item>
 
               <Form.Item
                 name="password"
-                label="密码"
                 rules={[{ required: true, message: '请输入密码' }]}
+                style={{ marginBottom: SPACING.md }}
               >
-                <Input
-                  type={passwordVisible ? 'text' : 'password'}
-                  prefix={<LockOutlined style={{ color: '#94a3b8' }} />}
-                  suffix={
-                    <span
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                      style={{ cursor: 'pointer', color: '#94a3b8', display: 'flex' }}
-                      aria-label={passwordVisible ? '隐藏密码' : '显示密码'}
-                    >
-                      {passwordVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                    </span>
-                  }
-                  placeholder="请输入密码"
+                <Input.Password
+                  prefix={<LockOutlined style={{ color: token.colorTextDisabled }} />}
+                  placeholder="密码"
                   autoComplete="current-password"
+                  style={inputStyles.base}
                 />
               </Form.Item>
 
-              <div style={styles.forgotPassword}>
+              <div style={pageStyles.formFooter}>
                 <Form.Item name="remember" valuePropName="checked" style={{ marginBottom: 0 }}>
-                  <Checkbox>记住此设备</Checkbox>
+                  <Checkbox style={{ fontSize: 13 }}>记住此设备</Checkbox>
                 </Form.Item>
-                <span style={styles.forgotLink} onClick={handleForgotPassword}>
+                <Button 
+                  type="link" 
+                  onClick={handleForgotPassword}
+                  style={{ padding: 0, fontSize: 13, height: 'auto' }}
+                >
                   忘记密码？
-                </span>
+                </Button>
               </div>
 
-              <Form.Item style={{ marginBottom: 0 }}>
+              <Form.Item style={{ marginBottom: 0, marginTop: SPACING.lg }}>
                 <Button
                   type="primary"
                   htmlType="submit"
                   block
                   loading={loading}
-                  style={{
-                    height: 42,
-                    background: brandColors.primary,
-                    borderColor: brandColors.primary,
-                  }}
+                  style={buttonStyles.primary}
                 >
                   登录
                 </Button>
               </Form.Item>
             </Form>
-          </Card>
+          </div>
 
-          <footer style={styles.footer}>
-            <Typography.Text style={styles.copyright}>
-              &copy; 2026 PSP Admin
-            </Typography.Text>
-          </footer>
+          {/* 底部版权 */}
+          <Typography.Text style={pageStyles.copyright}>
+            © 2026 PSP Admin · 安全连接
+          </Typography.Text>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
+
+// 页面级样式
+const pageStyles: Record<string, React.CSSProperties> = {
+  container: {
+    display: 'flex',
+    minHeight: '100vh',
+    backgroundColor: '#FFFFFF',
+  },
+  formSection: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: `${SPACING.xl}px`,
+    position: 'relative',
+  },
+  formWrapper: {
+    width: '100%',
+    maxWidth: 360,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: SPACING.lg,
+  },
+  header: {
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  logo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
+  },
+  logoIcon: {
+    width: 36,
+    height: 36,
+    background: brandColors.gradient || `linear-gradient(135deg, ${brandColors.primary} 0%, #8B5CF6 100%)`,
+    borderRadius: 8,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoText: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: '#0F172A',
+    letterSpacing: -0.3,
+  },
+  subtitle: {
+    color: '#64748B',
+    fontSize: 14,
+    margin: 0,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    border: '1px solid #E2E8F0',
+    padding: `${SPACING.xl}px`,
+  },
+  formFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.xs,
+  },
+  copyright: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#94A3B8',
+    marginTop: SPACING.md,
+  },
+};
+
+// 输入框样式
+const inputStyles = {
+  base: {
+    borderRadius: 8,
+    height: 44,
+  } as React.CSSProperties,
+};
+
+// 按钮样式
+const buttonStyles = {
+  primary: {
+    height: 44,
+    borderRadius: 8,
+    fontWeight: 500,
+    fontSize: 15,
+    background: brandColors.primary,
+    borderColor: brandColors.primary,
+  } as React.CSSProperties,
+};
+
+export default LoginPage;
