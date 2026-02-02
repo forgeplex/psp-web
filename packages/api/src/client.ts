@@ -38,8 +38,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
 
-    if (status === 401) {
+    // 排除登录相关接口的 401 处理（登录失败不应跳转，应显示错误提示）
+    const isAuthEndpoint = /\/api\/v1\/auth\/(login|mfa|refresh)/.test(requestUrl);
+
+    if (status === 401 && !isAuthEndpoint) {
       // Clear token and redirect to login
       if (typeof window !== 'undefined') {
         localStorage.removeItem('psp_access_token');
