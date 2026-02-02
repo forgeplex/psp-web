@@ -41,27 +41,6 @@ const styles = {
     position: 'relative' as const,
     overflow: 'hidden' as const,
   },
-  // Subtle background decoration for right panel
-  bgDecor1: {
-    position: 'absolute' as const,
-    width: 500,
-    height: 500,
-    borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(99, 102, 241, 0.04), transparent 70%)',
-    top: '-15%',
-    right: '-10%',
-    pointerEvents: 'none' as const,
-  },
-  bgDecor2: {
-    position: 'absolute' as const,
-    width: 400,
-    height: 400,
-    borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(168, 85, 247, 0.03), transparent 70%)',
-    bottom: '-10%',
-    left: '-5%',
-    pointerEvents: 'none' as const,
-  },
   formContainer: {
     width: '100%',
     maxWidth: 420,
@@ -384,10 +363,6 @@ function LoginPage() {
             color: ${brandColors.primary} !important;
           }
         `}</style>
-
-        {/* Background decorations */}
-        <div style={styles.bgDecor1} />
-        <div style={styles.bgDecor2} />
 
         <div style={styles.formContainer}>
           {/* Logo */}
