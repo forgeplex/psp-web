@@ -25,6 +25,7 @@ import { Route as AuthenticatedMerchantsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedChannelsRouteImport } from './routes/_authenticated/channels'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
 import { Route as AuthenticatedMerchantsDashboardRouteImport } from './routes/_authenticated/merchants/dashboard'
 import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
@@ -111,6 +112,12 @@ const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSettingsTrustedDevicesRoute =
   AuthenticatedSettingsTrustedDevicesRouteImport.update({
     id: '/trusted-devices',
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -160,7 +168,6 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
-  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/settlements': typeof AuthenticatedSettlementsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/mfa/setup': typeof MfaSetupRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/_authenticated/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
     | '/settings/trusted-devices'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -224,7 +234,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/rates'
     | '/risk'
-    | '/settings'
     | '/settlements'
     | '/transactions'
     | '/mfa/setup'
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
     | '/settings/trusted-devices'
+    | '/settings'
   id:
     | '__root__'
     | '/_authenticated'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/_authenticated/merchants/$merchantId'
     | '/_authenticated/merchants/dashboard'
     | '/_authenticated/settings/trusted-devices'
+    | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -377,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAgentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
     '/_authenticated/settings/trusted-devices': {
       id: '/_authenticated/settings/trusted-devices'
       path: '/trusted-devices'
@@ -420,11 +438,13 @@ const AuthenticatedMerchantsRouteWithChildren =
 
 interface AuthenticatedSettingsRouteChildren {
   AuthenticatedSettingsTrustedDevicesRoute: typeof AuthenticatedSettingsTrustedDevicesRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
   AuthenticatedSettingsTrustedDevicesRoute:
     AuthenticatedSettingsTrustedDevicesRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }
 
 const AuthenticatedSettingsRouteWithChildren =
