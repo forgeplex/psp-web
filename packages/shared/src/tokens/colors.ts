@@ -85,3 +85,17 @@ export const statusConfigMap = {
 } as const;
 
 export type TransactionStatus = keyof typeof statusConfigMap;
+
+// ============================================================
+// Brand Colors (for Auth pages and marketing)
+// Use these instead of baseColors.primary for Auth module pages
+// ============================================================
+export const brandColors = {
+  primary: '#6366F1',           // Indigo
+  primaryHover: '#4F46E5',      // Darker indigo on hover
+  primaryLight: '#EEF2FF',      // Light indigo background
+  secondary: '#8B5CF6',         // Purple (gradient end)
+  tertiary: '#A855F7',          // Violet (gradient option)
+  gradient: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)',
+  gradientSimple: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+} as const;

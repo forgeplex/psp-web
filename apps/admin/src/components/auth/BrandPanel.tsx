@@ -1,11 +1,12 @@
 import React from 'react';
 import { CheckCircleFilled } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 
 const styles = {
   panel: {
     display: 'none',
     width: '50%',
-    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+    background: brandColors.gradient,
     padding: 48,
     position: 'relative' as const,
     overflow: 'hidden' as const,

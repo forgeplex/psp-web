@@ -5,3 +5,4 @@ export { OtpInput } from './OtpInput';
 export { StepIndicator } from './StepIndicator';
 export { BackupCodes } from './BackupCodes';
 export { MfaMethodSelector, type MfaMethod } from './MfaMethodSelector';
+export { authStyles, brandColors } from './constants';
