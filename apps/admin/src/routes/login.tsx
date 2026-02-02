@@ -26,7 +26,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    padding: 0,
     background: '#F8FAFC',
   },
   formContainer: {
@@ -151,7 +151,7 @@ function LoginPage() {
 
         // TODO: Check if MFA setup is required
         // For now, navigate to dashboard
-        navigate({ to: '/' });
+        navigate({ to: '/merchants' });
       } catch (err) {
         const errorCode = err instanceof Error ? err.message : 'AUTH_001';
         setError({
@@ -177,7 +177,9 @@ function LoginPage() {
   };
 
   return (
-    <div style={styles.page}>
+    <>
+      <style>{`html, body, #root { margin: 0; padding: 0; height: 100%; }`}</style>
+      <div style={styles.page}>
       <BrandPanel />
 
       <main style={styles.formPanel} className="form-panel">
@@ -288,5 +290,6 @@ function LoginPage() {
         </div>
       </main>
     </div>
+    </>
   );
 }
