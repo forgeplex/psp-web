@@ -9,7 +9,7 @@ export interface BreadcrumbItem {
 }
 
 export interface PageHeaderProps {
-  title: string;
+  title: React.ReactNode;
   subtitle?: string;
   breadcrumb?: BreadcrumbItem[];
   extra?: React.ReactNode;
@@ -28,9 +28,13 @@ export function PageHeader({ title, subtitle, breadcrumb, extra }: PageHeaderPro
       )}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Space direction="vertical" size={0}>
-          <Title level={4} style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
-            {title}
-          </Title>
+          {typeof title === 'string' ? (
+            <Title level={4} style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
+              {title}
+            </Title>
+          ) : (
+            <div style={{ fontSize: 20, fontWeight: 600 }}>{title}</div>
+          )}
           {subtitle && (
             <span style={{ color: '#71717A', fontSize: 14 }}>{subtitle}</span>
           )}
