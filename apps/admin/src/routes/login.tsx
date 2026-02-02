@@ -56,7 +56,7 @@ function LoginPage() {
         background: '#F5F5F5',
       }}
     >
-      <Card style={{ width: 400, borderRadius: 12 }} bodyStyle={{ padding: 32 }}>
+      <Card style={{ width: 400, borderRadius: 12 }} styles={{ body: { padding: 32 } }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Typography.Title level={3} style={{ margin: 0 }}>
             PSP Admin

@@ -25,7 +25,7 @@ export function DetailDrawer({
     <Drawer
       width={640}
       placement="right"
-      destroyOnClose
+      destroyOnHidden
       extra={extra}
       {...drawerProps}
     >

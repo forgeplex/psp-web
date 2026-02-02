@@ -17,7 +17,7 @@ export interface KpiCardProps {
 
 export function KpiCard({ title, value, subtitle, change, icon, loading }: KpiCardProps) {
   return (
-    <Card bodyStyle={{ padding: 24 }} style={{ borderRadius: 8 }}>
+    <Card styles={{ body: { padding: 24 } }} style={{ borderRadius: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography.Text type="secondary" style={{ fontSize: 14, fontWeight: 500 }}>
           {title}
