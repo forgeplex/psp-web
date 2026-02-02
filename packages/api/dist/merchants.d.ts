@@ -126,4 +126,90 @@ export declare function useExportMerchants(): import("@tanstack/react-query").Us
 }, AxiosError<ApiError, any>, ListMerchantsParams & {
     format?: "csv" | "xlsx";
 }, unknown>;
+export interface MerchantDetail extends MerchantListItem {
+    tenant_id: string;
+    email: string;
+    phone?: string;
+    mcc?: string;
+    industry?: string;
+    website?: string;
+    address?: string;
+    business_model?: string;
+    activated_at?: string;
+    updated_at: string;
+}
+export interface MerchantBalance {
+    currency: string;
+    available: number;
+    pending: number;
+    frozen: number;
+    settled: number;
+}
+export interface MerchantStats {
+    total_transactions: number;
+    total_amount: number;
+    active_accounts: number;
+    active_users: number;
+}
+export declare function useMerchantBalance(merchantId: string): import("@tanstack/react-query").UseQueryResult<MerchantBalance, AxiosError<ApiError, any>>;
+export declare function useMerchantStats(merchantId: string): import("@tanstack/react-query").UseQueryResult<MerchantStats, AxiosError<ApiError, any>>;
+export interface MerchantAccount {
+    id: string;
+    code: string;
+    currency: string;
+    bank_name: string;
+    account_number: string;
+    pix_key_type?: string;
+    status: 'active' | 'frozen' | 'closed';
+    is_default: boolean;
+    created_at: string;
+}
+export declare function useMerchantAccounts(merchantId: string): import("@tanstack/react-query").UseQueryResult<MerchantAccount[], AxiosError<ApiError, any>>;
+export declare function useFreezeAccount(): import("@tanstack/react-query").UseMutationResult<void, AxiosError<ApiError, any>, {
+    merchantId: string;
+    accountId: string;
+    reason: string;
+}, unknown>;
+export declare function useUnfreezeAccount(): import("@tanstack/react-query").UseMutationResult<void, AxiosError<ApiError, any>, {
+    merchantId: string;
+    accountId: string;
+}, unknown>;
+export interface MerchantUser {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    status: 'active' | 'inactive' | 'locked';
+    mfa_enabled: boolean;
+    last_login_at?: string;
+    created_at: string;
+}
+export declare function useMerchantUsers(merchantId: string): import("@tanstack/react-query").UseQueryResult<MerchantUser[], AxiosError<ApiError, any>>;
+export interface MerchantApiKey {
+    id: string;
+    name: string;
+    prefix: string;
+    status: 'active' | 'disabled';
+    last_used_at?: string;
+    created_at: string;
+    expires_at?: string;
+}
+export declare function useMerchantApiKeys(merchantId: string): import("@tanstack/react-query").UseQueryResult<MerchantApiKey[], AxiosError<ApiError, any>>;
+export interface IpWhitelistEntry {
+    id: string;
+    ip_address: string;
+    description?: string;
+    created_at: string;
+    created_by: string;
+}
+export declare function useMerchantIpWhitelist(merchantId: string): import("@tanstack/react-query").UseQueryResult<IpWhitelistEntry[], AxiosError<ApiError, any>>;
+export declare function useAddIpWhitelist(): import("@tanstack/react-query").UseMutationResult<IpWhitelistEntry, AxiosError<ApiError, any>, {
+    merchantId: string;
+    ip_address: string;
+    description?: string;
+}, unknown>;
+export declare function useRemoveIpWhitelist(): import("@tanstack/react-query").UseMutationResult<void, AxiosError<ApiError, any>, {
+    merchantId: string;
+    ipId: string;
+}, unknown>;
 //# sourceMappingURL=merchants.d.ts.map

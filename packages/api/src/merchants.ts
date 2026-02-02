@@ -256,17 +256,6 @@ export interface MerchantStats {
   active_users: number;
 }
 
-export function useMerchant(id: string) {
-  return useQuery<MerchantDetail, AxiosError<ApiError>>({
-    queryKey: merchantKeys.detail(id),
-    queryFn: async () => {
-      const { data } = await apiClient.get(`/api/v1/merchants/${id}`);
-      return data;
-    },
-    enabled: !!id,
-  });
-}
-
 export function useMerchantBalance(merchantId: string) {
   return useQuery<MerchantBalance, AxiosError<ApiError>>({
     queryKey: [...merchantKeys.detail(merchantId), 'balance'],
