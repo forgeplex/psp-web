@@ -70,6 +70,7 @@ const styles = {
     filter: 'blur(45px)',
     animation: 'float3 12s ease-in-out infinite',
   },
+  // Main content container - Top/Middle/Bottom structure
   content: {
     position: 'relative' as const,
     zIndex: 2,
@@ -77,10 +78,13 @@ const styles = {
     padding: '64px 56px',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 28,
     color: '#FFFFFF',
   },
-  topRow: {
+  // TOP: Logo section
+  topSection: {
+    flexShrink: 0,
+  },
+  logoRow: {
     display: 'flex',
     alignItems: 'center',
     gap: 10,
@@ -103,11 +107,19 @@ const styles = {
     letterSpacing: 0.2,
     color: '#E2E8F0',
   },
+  // MIDDLE: Headline section
+  middleSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    justifyContent: 'center',
+    padding: '40px 0',
+  },
   headline: {
-    fontSize: 40,
-    lineHeight: 1.15,
+    fontSize: 44,
+    lineHeight: 1.1,
     fontWeight: 700,
-    letterSpacing: -1,
+    letterSpacing: -1.5,
   } as React.CSSProperties,
   highlight: {
     background: 'linear-gradient(135deg, #C7D2FE 0%, #8B5CF6 100%)',
@@ -115,13 +127,17 @@ const styles = {
     WebkitTextFillColor: 'transparent',
   } as React.CSSProperties,
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'rgba(226, 232, 240, 0.7)',
-    maxWidth: 420,
+    maxWidth: 440,
     lineHeight: 1.7,
+    marginTop: 20,
+  },
+  // BOTTOM: Feature cards section
+  bottomSection: {
+    flexShrink: 0,
   },
   cards: {
-    marginTop: 'auto',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: 16,
@@ -131,10 +147,10 @@ const styles = {
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: 12,
-    padding: 16,
+    padding: 18,
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 6,
+    gap: 8,
   },
   cardIcon: {
     width: 28,
@@ -148,12 +164,12 @@ const styles = {
     fontSize: 14,
   },
   cardTitle: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 600,
     color: '#F8FAFC',
   },
   cardDesc: {
-    fontSize: 11,
+    fontSize: 12,
     color: 'rgba(226, 232, 240, 0.55)',
     lineHeight: 1.5,
   },
@@ -214,14 +230,18 @@ export const BrandPanel: React.FC = () => {
       <div style={styles.orb3} />
 
       <div style={styles.content}>
-        <div style={styles.topRow}>
-          <div style={styles.logoIcon}>
-            <LayersIcon />
+        {/* TOP: Logo & Brand */}
+        <div style={styles.topSection}>
+          <div style={styles.logoRow}>
+            <div style={styles.logoIcon}>
+              <LayersIcon />
+            </div>
+            <span style={styles.logoText}>PSP Terminal</span>
           </div>
-          <span style={styles.logoText}>PSP Terminal</span>
         </div>
 
-        <div>
+        {/* MIDDLE: Headline & Description */}
+        <div style={styles.middleSection}>
           <div style={styles.headline}>
             Next Gen
             <br />
@@ -235,16 +255,19 @@ export const BrandPanel: React.FC = () => {
           </p>
         </div>
 
-        <div style={styles.cards}>
-          <div style={styles.card}>
-            <div style={styles.cardIcon}><ShieldIcon /></div>
-            <div style={styles.cardTitle}>Enterprise Security</div>
-            <div style={styles.cardDesc}>Bank-grade encryption and SOC2 Type II compliance.</div>
-          </div>
-          <div style={styles.card}>
-            <div style={styles.cardIcon}><GlobeIcon /></div>
-            <div style={styles.cardTitle}>Global Connectivity</div>
-            <div style={styles.cardDesc}>Direct connections to 50+ acquiring banks worldwide.</div>
+        {/* BOTTOM: Feature Cards */}
+        <div style={styles.bottomSection}>
+          <div style={styles.cards}>
+            <div style={styles.card}>
+              <div style={styles.cardIcon}><ShieldIcon /></div>
+              <div style={styles.cardTitle}>Enterprise Security</div>
+              <div style={styles.cardDesc}>Bank-grade encryption and SOC2 Type II compliance.</div>
+            </div>
+            <div style={styles.card}>
+              <div style={styles.cardIcon}><GlobeIcon /></div>
+              <div style={styles.cardTitle}>Global Connectivity</div>
+              <div style={styles.cardDesc}>Direct connections to 50+ acquiring banks worldwide.</div>
+            </div>
           </div>
         </div>
       </div>
