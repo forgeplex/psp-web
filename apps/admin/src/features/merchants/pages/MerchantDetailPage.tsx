@@ -40,8 +40,6 @@ import {
   UnlockOutlined,
   CheckCircleOutlined,
   ExclamationCircleOutlined,
-  MailOutlined,
-  CopyOutlined,
   DeleteOutlined,
   StopOutlined,
 } from '@ant-design/icons';
@@ -59,16 +57,17 @@ import {
   useRemoveIpWhitelist,
   useFreezeAccount,
   useUnfreezeAccount,
-  type MerchantDetail,
   type MerchantAccount,
   type MerchantUser,
   type MerchantApiKey,
   type IpWhitelistEntry,
-  type MerchantStatus,
-  type KYBStatus,
-  type RiskLevel,
 } from '@psp/api';
-import { StatusChangeModal } from '../components';
+import {
+  MerchantStatusBadge,
+  KybStatusBadge,
+  RiskLevelBadge,
+  StatusChangeModal,
+} from '../components';
 import { apiClient } from '@psp/api';
 import { useQuery } from '@tanstack/react-query';
 
@@ -124,44 +123,6 @@ function useMerchantPricing(merchantId: string) {
   });
 }
 
-// ─── Helper Components ─────────────────────────────────────
-
-const MerchantStatusBadge: React.FC<{ status: MerchantStatus }> = ({ status }) => {
-  const config: Record<MerchantStatus, { color: string; label: string }> = {
-    pending: { color: 'warning', label: '待审核' },
-    active: { color: 'success', label: '正常' },
-    suspended: { color: 'orange', label: '已暂停' },
-    closed: { color: 'default', label: '已关闭' },
-    rejected: { color: 'error', label: '已拒绝' },
-  };
-  const c = config[status] || { color: 'default', label: status };
-  return <Tag color={c.color}>{c.label}</Tag>;
-};
-
-const KybStatusBadge: React.FC<{ status: KYBStatus }> = ({ status }) => {
-  const config: Record<KYBStatus, { color: string; label: string }> = {
-    not_submitted: { color: 'default', label: '未提交' },
-    submitted: { color: 'processing', label: '已提交' },
-    under_review: { color: 'processing', label: '审核中' },
-    approved: { color: 'success', label: '已通过' },
-    rejected: { color: 'error', label: '已拒绝' },
-    need_more_info: { color: 'warning', label: '需补充' },
-  };
-  const c = config[status] || { color: 'default', label: status };
-  return <Tag color={c.color}>{c.label}</Tag>;
-};
-
-const RiskLevelBadge: React.FC<{ level: RiskLevel }> = ({ level }) => {
-  const config: Record<RiskLevel, { color: string; label: string }> = {
-    low: { color: 'success', label: '低风险' },
-    medium: { color: 'warning', label: '中风险' },
-    high: { color: 'error', label: '高风险' },
-    blacklist: { color: '#000', label: '黑名单' },
-  };
-  const c = config[level] || { color: 'default', label: level };
-  return <Tag color={c.color}>{c.label}</Tag>;
-};
-
 // ─── Styles ────────────────────────────────────────────────
 
 const cardStyle = { borderRadius: 8 };
@@ -177,6 +138,7 @@ export const MerchantDetailPage: React.FC<MerchantDetailPageProps> = ({ merchant
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [addIpModalOpen, setAddIpModalOpen] = useState(false);
   const [addIpForm] = Form.useForm();
+  const [freezingAccountId, setFreezingAccountId] = useState<string | null>(null);
 
   // API Queries
   const { data: merchant, isLoading, error } = useMerchant(merchantId);
@@ -196,22 +158,28 @@ export const MerchantDetailPage: React.FC<MerchantDetailPageProps> = ({ merchant
 
   // Handlers
   const handleFreezeAccount = async (accountId: string) => {
+    setFreezingAccountId(accountId);
     try {
       await freezeAccountMutation.mutateAsync({ merchantId, accountId, reason: '管理员冻结' });
       message.success('账户已冻结');
       refetchAccounts();
     } catch {
       message.error('冻结失败');
+    } finally {
+      setFreezingAccountId(null);
     }
   };
 
   const handleUnfreezeAccount = async (accountId: string) => {
+    setFreezingAccountId(accountId);
     try {
       await unfreezeAccountMutation.mutateAsync({ merchantId, accountId });
       message.success('账户已解冻');
       refetchAccounts();
     } catch {
       message.error('解冻失败');
+    } finally {
+      setFreezingAccountId(null);
     }
   };
 
@@ -300,12 +268,13 @@ export const MerchantDetailPage: React.FC<MerchantDetailPageProps> = ({ merchant
       key: 'action',
       render: (_, record) => {
         const isFrozen = record.status === 'frozen';
+        const isLoading = freezingAccountId === record.id;
         return (
           <Popconfirm
             title={isFrozen ? '确认解冻？' : '确认冻结？'}
             onConfirm={() => isFrozen ? handleUnfreezeAccount(record.id) : handleFreezeAccount(record.id)}
           >
-            <Button type="link" size="small" icon={isFrozen ? <UnlockOutlined /> : <LockOutlined />}>
+            <Button type="link" size="small" icon={isFrozen ? <UnlockOutlined /> : <LockOutlined />} loading={isLoading}>
               {isFrozen ? '解冻' : '冻结'}
             </Button>
           </Popconfirm>
@@ -426,9 +395,7 @@ export const MerchantDetailPage: React.FC<MerchantDetailPageProps> = ({ merchant
       title: '操作',
       key: 'action',
       render: () => (
-        <Space>
-          <Tooltip title="禁用"><Button type="text" size="small" icon={<StopOutlined />} /></Tooltip>
-        </Space>
+        <Tooltip title="禁用"><Button type="text" size="small" icon={<StopOutlined />} /></Tooltip>
       ),
     },
   ];
