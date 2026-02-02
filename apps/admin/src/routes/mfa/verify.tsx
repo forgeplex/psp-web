@@ -1,19 +1,23 @@
 import React, { useState, useCallback } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Card, Button, Typography, Input, Checkbox, message, Alert } from 'antd';
+import { Card, Button, Typography, Input, Checkbox, Alert } from 'antd';
 import {
   SafetyCertificateOutlined,
-  KeyOutlined,
-  ScanOutlined,
   ExclamationCircleFilled,
 } from '@ant-design/icons';
-import { OtpInput } from '../../components/auth';
+import { brandColors } from '@psp/shared';
+import {
+  OtpInput,
+  MfaMethodSelector,
+  SuccessOverlay,
+  PasskeyPulse,
+  type MfaMethod,
+} from '../../components/auth';
 
 export const Route = createFileRoute('/mfa/verify')({
   component: MfaVerifyPage,
 });
 
-type VerifyMode = 'totp' | 'backup' | 'passkey';
 type MfaErrorCode = 'MFA_001' | 'MFA_002' | 'MFA_003' | 'MFA_004';
 
 const errorMessages: Record<MfaErrorCode, string> = {
@@ -34,7 +38,7 @@ const styles = {
   },
   container: {
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 480,
   },
   logo: {
     textAlign: 'center' as const,
@@ -48,7 +52,7 @@ const styles = {
   logoIcon: {
     width: 28,
     height: 28,
-    background: '#6366f1',
+    background: brandColors.primary,
     borderRadius: 7,
     display: 'flex',
     alignItems: 'center',
@@ -76,12 +80,12 @@ const styles = {
     width: 56,
     height: 56,
     borderRadius: 14,
-    background: '#eef2ff',
+    background: brandColors.primaryLight,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     margin: '0 auto 20px',
-    color: '#6366f1',
+    color: brandColors.primary,
     fontSize: 28,
   },
   title: {
@@ -94,38 +98,22 @@ const styles = {
     textAlign: 'center' as const,
     fontSize: 13,
     color: '#64748b',
-    marginBottom: 28,
+    marginBottom: 24,
     lineHeight: 1.6,
   },
   trustDevice: {
+    marginTop: 20,
     marginBottom: 20,
   },
-  switchLinks: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
+  backButton: {
     marginTop: 20,
-    fontSize: 12,
-  },
-  switchLink: {
-    color: '#6366f1',
-    cursor: 'pointer',
-    fontWeight: 500,
-  },
-  switchSep: {
-    color: '#e2e8f0',
+    textAlign: 'center' as const,
   },
   backLink: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    marginTop: 20,
-    fontSize: 12,
-    color: '#6366f1',
+    color: brandColors.primary,
     cursor: 'pointer',
     fontWeight: 500,
+    fontSize: 12,
   },
   backupInput: {
     textAlign: 'center' as const,
@@ -152,16 +140,24 @@ const styles = {
 
 function MfaVerifyPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<VerifyMode>('totp');
+  const [step, setStep] = useState<'select' | 'verify'>('select');
+  const [method, setMethod] = useState<MfaMethod>('totp');
   const [otpValue, setOtpValue] = useState('');
   const [backupCode, setBackupCode] = useState('');
   const [trustDevice, setTrustDevice] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passkeyWaiting, setPasskeyWaiting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<{ visible: boolean; code?: MfaErrorCode }>({
     visible: false,
   });
 
   const isDisabled = error.code === 'MFA_003' || error.code === 'MFA_004';
+
+  const handleMethodSelect = () => {
+    setStep('verify');
+    setError({ visible: false });
+  };
 
   const handleTotpVerify = useCallback(async () => {
     if (otpValue.length !== 6) return;
@@ -182,8 +178,7 @@ function MfaVerifyPage() {
         }, 1000)
       );
 
-      message.success('验证成功');
-      navigate({ to: '/' });
+      setShowSuccess(true);
     } catch (err) {
       const errorCode = err instanceof Error ? err.message : 'MFA_001';
       setError({
@@ -191,10 +186,9 @@ function MfaVerifyPage() {
         code: errorCode as MfaErrorCode,
       });
       setOtpValue('');
-    } finally {
       setLoading(false);
     }
-  }, [otpValue, navigate]);
+  }, [otpValue]);
 
   const handleBackupVerify = async () => {
     if (backupCode.length < 8) return;
@@ -215,41 +209,43 @@ function MfaVerifyPage() {
         }, 1000)
       );
 
-      message.success('验证成功');
-      navigate({ to: '/' });
+      setShowSuccess(true);
     } catch (err) {
       const errorCode = err instanceof Error ? err.message : 'MFA_001';
       setError({
         visible: true,
         code: errorCode as MfaErrorCode,
       });
-    } finally {
       setLoading(false);
     }
   };
 
   const handlePasskeyVerify = async () => {
     setLoading(true);
+    setPasskeyWaiting(true);
     setError({ visible: false });
 
     try {
       // TODO: Replace with actual WebAuthn API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      message.success('验证成功');
-      navigate({ to: '/' });
+      setShowSuccess(true);
     } catch {
       setError({
         visible: true,
         code: 'MFA_001',
       });
-    } finally {
       setLoading(false);
+      setPasskeyWaiting(false);
     }
   };
 
-  const switchMode = (newMode: VerifyMode) => {
-    setMode(newMode);
+  const handleSuccessComplete = () => {
+    navigate({ to: '/' });
+  };
+
+  const handleBack = () => {
+    setStep('select');
     setError({ visible: false });
     setOtpValue('');
     setBackupCode('');
@@ -257,6 +253,12 @@ function MfaVerifyPage() {
 
   return (
     <div style={styles.page}>
+      <SuccessOverlay
+        visible={showSuccess}
+        message="验证成功"
+        onComplete={handleSuccessComplete}
+      />
+
       <div style={styles.container}>
         {/* Logo */}
         <div style={styles.logo}>
@@ -272,8 +274,8 @@ function MfaVerifyPage() {
 
         {/* Card */}
         <Card style={styles.card} styles={{ body: { padding: 32 } }}>
-          {/* TOTP Mode */}
-          {mode === 'totp' && (
+          {/* Step 1: Method Selection */}
+          {step === 'select' && (
             <>
               <div style={styles.iconCircle}>
                 <SafetyCertificateOutlined />
@@ -281,6 +283,42 @@ function MfaVerifyPage() {
 
               <Typography.Title level={5} style={styles.title}>
                 双因素验证
+              </Typography.Title>
+              <Typography.Text style={styles.subtitle}>
+                请选择验证方式完成身份验证
+              </Typography.Text>
+
+              <MfaMethodSelector
+                value={method}
+                onChange={setMethod}
+                showRecovery
+              />
+
+              <Button
+                type="primary"
+                block
+                onClick={handleMethodSelect}
+                style={{
+                  marginTop: 24,
+                  height: 42,
+                  background: brandColors.primary,
+                  borderColor: brandColors.primary,
+                }}
+              >
+                继续验证
+              </Button>
+            </>
+          )}
+
+          {/* Step 2: TOTP Verify */}
+          {step === 'verify' && method === 'totp' && (
+            <>
+              <div style={styles.iconCircle}>
+                <SafetyCertificateOutlined />
+              </div>
+
+              <Typography.Title level={5} style={styles.title}>
+                身份验证器验证
               </Typography.Title>
               <Typography.Text style={styles.subtitle}>
                 请输入身份验证器应用中的 6 位验证码
@@ -304,7 +342,7 @@ function MfaVerifyPage() {
                 disabled={isDisabled}
               />
 
-              <div style={{ ...styles.trustDevice, marginTop: 20 }}>
+              <div style={styles.trustDevice}>
                 <Checkbox
                   checked={trustDevice}
                   onChange={(e) => setTrustDevice(e.target.checked)}
@@ -324,30 +362,26 @@ function MfaVerifyPage() {
                 disabled={otpValue.length !== 6 || isDisabled}
                 style={{
                   height: 40,
-                  background: otpValue.length === 6 && !isDisabled ? '#6366f1' : undefined,
-                  borderColor: otpValue.length === 6 && !isDisabled ? '#6366f1' : undefined,
+                  background: otpValue.length === 6 && !isDisabled ? brandColors.primary : undefined,
+                  borderColor: otpValue.length === 6 && !isDisabled ? brandColors.primary : undefined,
                 }}
               >
                 验证
               </Button>
 
-              <div style={styles.switchLinks}>
-                <span style={styles.switchLink} onClick={() => switchMode('backup')}>
-                  使用备用码
-                </span>
-                <span style={styles.switchSep}>|</span>
-                <span style={styles.switchLink} onClick={() => switchMode('passkey')}>
-                  使用安全密钥
+              <div style={styles.backButton}>
+                <span style={styles.backLink} onClick={handleBack}>
+                  ← 返回选择验证方式
                 </span>
               </div>
             </>
           )}
 
-          {/* Backup Code Mode */}
-          {mode === 'backup' && (
+          {/* Step 2: Backup Code Verify */}
+          {step === 'verify' && method === 'recovery' && (
             <>
               <div style={styles.iconCircle}>
-                <KeyOutlined />
+                <SafetyCertificateOutlined />
               </div>
 
               <Typography.Title level={5} style={styles.title}>
@@ -384,25 +418,25 @@ function MfaVerifyPage() {
                 disabled={backupCode.length < 8 || isDisabled}
                 style={{
                   height: 40,
-                  background: backupCode.length >= 8 && !isDisabled ? '#6366f1' : undefined,
-                  borderColor: backupCode.length >= 8 && !isDisabled ? '#6366f1' : undefined,
+                  background: backupCode.length >= 8 && !isDisabled ? brandColors.primary : undefined,
+                  borderColor: backupCode.length >= 8 && !isDisabled ? brandColors.primary : undefined,
                 }}
               >
                 验证
               </Button>
 
-              <div style={styles.backLink} onClick={() => switchMode('totp')}>
-                ← 返回验证码验证
+              <div style={styles.backButton}>
+                <span style={styles.backLink} onClick={handleBack}>
+                  ← 返回选择验证方式
+                </span>
               </div>
             </>
           )}
 
-          {/* Passkey Mode */}
-          {mode === 'passkey' && (
+          {/* Step 2: Passkey Verify */}
+          {step === 'verify' && method === 'passkey' && (
             <>
-              <div style={styles.iconCircle}>
-                <ScanOutlined />
-              </div>
+              <PasskeyPulse active={passkeyWaiting} />
 
               <Typography.Title level={5} style={styles.title}>
                 安全密钥验证
@@ -433,16 +467,17 @@ function MfaVerifyPage() {
                 disabled={isDisabled}
                 style={{
                   height: 40,
-                  background: !isDisabled ? '#6366f1' : undefined,
-                  borderColor: !isDisabled ? '#6366f1' : undefined,
+                  background: !isDisabled ? brandColors.primary : undefined,
+                  borderColor: !isDisabled ? brandColors.primary : undefined,
                 }}
-                icon={<ScanOutlined />}
               >
                 使用安全密钥验证
               </Button>
 
-              <div style={styles.backLink} onClick={() => switchMode('totp')}>
-                ← 返回验证码验证
+              <div style={styles.backButton}>
+                <span style={styles.backLink} onClick={handleBack}>
+                  ← 返回选择验证方式
+                </span>
               </div>
             </>
           )}

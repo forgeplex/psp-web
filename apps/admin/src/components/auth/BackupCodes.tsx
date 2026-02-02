@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Alert, Checkbox, message } from 'antd';
 import { CopyOutlined, DownloadOutlined, WarningFilled } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 
 interface BackupCodesProps {
   codes: string[];
@@ -111,8 +112,8 @@ export const BackupCodes: React.FC<BackupCodesProps> = ({
         onClick={onConfirm}
         style={{
           height: 42,
-          background: confirmed ? '#6366f1' : undefined,
-          borderColor: confirmed ? '#6366f1' : undefined,
+          background: confirmed ? brandColors.primary : undefined,
+          borderColor: confirmed ? brandColors.primary : undefined,
         }}
       >
         完成设置

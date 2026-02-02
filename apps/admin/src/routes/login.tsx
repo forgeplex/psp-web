@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Card, Form, Input, Button, Checkbox, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 import { useAuthStore } from '../stores/auth';
 import { BrandPanel, ErrorAlert, type AuthErrorCode } from '../components/auth';
 
@@ -42,7 +43,7 @@ const styles = {
   logoIcon: {
     width: 40,
     height: 40,
-    background: '#6366f1',
+    background: brandColors.primary,
     borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
@@ -56,12 +57,29 @@ const styles = {
   },
   title: {
     textAlign: 'center' as const,
+    marginBottom: 8,
+  },
+  subtitle: {
+    textAlign: 'center' as const,
     marginBottom: 32,
+    fontSize: 13,
+    color: '#64748b',
   },
   card: {
     borderRadius: 12,
     border: '1px solid #E2E8F0',
     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+  },
+  forgotPassword: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  forgotLink: {
+    fontSize: 12,
+    color: brandColors.primary,
+    cursor: 'pointer',
   },
   footer: {
     marginTop: 32,
@@ -154,6 +172,10 @@ function LoginPage() {
     [login, navigate, error.code]
   );
 
+  const handleForgotPassword = () => {
+    message.info('请联系管理员重置密码');
+  };
+
   return (
     <div style={styles.page}>
       <BrandPanel />
@@ -179,6 +201,10 @@ function LoginPage() {
           <Typography.Title level={4} style={styles.title}>
             登录
           </Typography.Title>
+
+          <Typography.Text style={styles.subtitle}>
+            输入您的账号信息以访问管理面板
+          </Typography.Text>
 
           <Card style={styles.card} styles={{ body: { padding: 32 } }}>
             <ErrorAlert
@@ -227,9 +253,14 @@ function LoginPage() {
                 />
               </Form.Item>
 
-              <Form.Item name="remember" valuePropName="checked">
-                <Checkbox>记住此设备</Checkbox>
-              </Form.Item>
+              <div style={styles.forgotPassword}>
+                <Form.Item name="remember" valuePropName="checked" style={{ marginBottom: 0 }}>
+                  <Checkbox>记住此设备</Checkbox>
+                </Form.Item>
+                <span style={styles.forgotLink} onClick={handleForgotPassword}>
+                  忘记密码？
+                </span>
+              </div>
 
               <Form.Item style={{ marginBottom: 0 }}>
                 <Button
@@ -239,8 +270,8 @@ function LoginPage() {
                   loading={loading}
                   style={{
                     height: 42,
-                    background: '#6366f1',
-                    borderColor: '#6366f1',
+                    background: brandColors.primary,
+                    borderColor: brandColors.primary,
                   }}
                 >
                   登录

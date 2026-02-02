@@ -2,11 +2,15 @@ import React, { useState, useCallback } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Card, Button, Typography, Input, message } from 'antd';
 import { SafetyCertificateOutlined, LockOutlined } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 import {
   StepIndicator,
   MfaMethodSelector,
   OtpInput,
   BackupCodes,
+  MfaRequiredBanner,
+  SuccessOverlay,
+  PasskeyPulse,
   type MfaMethod,
 } from '../../components/auth';
 
@@ -55,7 +59,7 @@ const styles = {
   },
   logoIcon: {
     fontSize: 48,
-    color: '#6366f1',
+    color: brandColors.primary,
     marginBottom: 12,
   },
   card: {
@@ -92,7 +96,7 @@ const styles = {
   },
   secretToggle: {
     fontSize: 12,
-    color: '#6366f1',
+    color: brandColors.primary,
     cursor: 'pointer',
     marginBottom: 12,
     display: 'inline-flex',
@@ -126,18 +130,6 @@ const styles = {
   passkeySection: {
     textAlign: 'center' as const,
   },
-  passkeyIcon: {
-    width: 80,
-    height: 80,
-    background: '#eef2ff',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 24px',
-    fontSize: 36,
-    color: '#6366f1',
-  },
   passkeyHint: {
     fontSize: 12,
     color: '#64748b',
@@ -153,6 +145,8 @@ function MfaSetupPage() {
   const [loading, setLoading] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
   const [deviceName, setDeviceName] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [passkeyWaiting, setPasskeyWaiting] = useState(false);
 
   const handleMethodNext = () => {
     setStep(2);
@@ -177,9 +171,10 @@ function MfaSetupPage() {
 
   const handlePasskeyRegister = async () => {
     setLoading(true);
+    setPasskeyWaiting(true);
     try {
       // TODO: Replace with actual WebAuthn API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Mock: simulate successful registration
       setStep(3);
@@ -187,6 +182,7 @@ function MfaSetupPage() {
       message.error('安全密钥注册失败');
     } finally {
       setLoading(false);
+      setPasskeyWaiting(false);
     }
   };
 
@@ -196,13 +192,15 @@ function MfaSetupPage() {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      message.success('MFA 设置完成！');
-      navigate({ to: '/' });
+      setShowSuccess(true);
     } catch {
       message.error('设置失败，请重试');
-    } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuccessComplete = () => {
+    navigate({ to: '/' });
   };
 
   const handleBack = () => {
@@ -214,6 +212,12 @@ function MfaSetupPage() {
 
   return (
     <div style={styles.page}>
+      <SuccessOverlay
+        visible={showSuccess}
+        message="MFA 设置完成"
+        onComplete={handleSuccessComplete}
+      />
+
       <div style={styles.container}>
         {/* Logo */}
         <div style={styles.logo}>
@@ -222,6 +226,9 @@ function MfaSetupPage() {
             设置多因素认证
           </Typography.Title>
         </div>
+
+        {/* Forced MFA Banner */}
+        <MfaRequiredBanner />
 
         {/* Step Indicator */}
         <StepIndicator steps={STEPS} currentStep={step} />
@@ -247,8 +254,8 @@ function MfaSetupPage() {
                 style={{
                   marginTop: 24,
                   height: 42,
-                  background: '#6366f1',
-                  borderColor: '#6366f1',
+                  background: brandColors.primary,
+                  borderColor: brandColors.primary,
                 }}
               >
                 下一步
@@ -311,8 +318,8 @@ function MfaSetupPage() {
                   disabled={otpValue.length !== 6}
                   style={{
                     flex: 1,
-                    background: otpValue.length === 6 ? '#6366f1' : undefined,
-                    borderColor: otpValue.length === 6 ? '#6366f1' : undefined,
+                    background: otpValue.length === 6 ? brandColors.primary : undefined,
+                    borderColor: otpValue.length === 6 ? brandColors.primary : undefined,
                   }}
                 >
                   验证并绑定
@@ -332,9 +339,7 @@ function MfaSetupPage() {
               </Typography.Text>
 
               <div style={styles.passkeySection}>
-                <div style={styles.passkeyIcon}>
-                  <LockOutlined />
-                </div>
+                <PasskeyPulse active={passkeyWaiting} />
 
                 <Input
                   placeholder="例如：我的 MacBook Pro"
@@ -350,8 +355,8 @@ function MfaSetupPage() {
                   loading={loading}
                   style={{
                     height: 42,
-                    background: '#6366f1',
-                    borderColor: '#6366f1',
+                    background: brandColors.primary,
+                    borderColor: brandColors.primary,
                   }}
                 >
                   注册安全密钥

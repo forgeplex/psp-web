@@ -70,6 +70,34 @@ const styles = {
     justifyContent: 'center',
     fontSize: 12,
   },
+  // Decorative circles
+  circle1: {
+    position: 'absolute' as const,
+    top: -100,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: '50%',
+    background: 'rgba(255, 255, 255, 0.1)',
+  },
+  circle2: {
+    position: 'absolute' as const,
+    bottom: -150,
+    left: -150,
+    width: 400,
+    height: 400,
+    borderRadius: '50%',
+    background: 'rgba(255, 255, 255, 0.08)',
+  },
+  circle3: {
+    position: 'absolute' as const,
+    top: '40%',
+    right: '10%',
+    width: 150,
+    height: 150,
+    borderRadius: '50%',
+    background: 'rgba(255, 255, 255, 0.05)',
+  },
 };
 
 const LayersIcon: React.FC = () => (
@@ -116,6 +144,12 @@ export const BrandPanel: React.FC = () => {
           50% { transform: translate(5%, 5%); }
         }
       `}</style>
+      
+      {/* Decorative circles */}
+      <div style={styles.circle1} />
+      <div style={styles.circle2} />
+      <div style={styles.circle3} />
+      
       <div style={styles.content}>
         <div style={styles.logo}>
           <div style={styles.logoIcon}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckOutlined } from '@ant-design/icons';
+import { brandColors, statusColors } from '@psp/shared';
 
 interface Step {
   label: string;
@@ -32,7 +33,7 @@ const styles = {
     justifyContent: 'center',
     fontSize: 12,
     fontWeight: 600,
-    background: completed ? '#22c55e' : active ? '#6366f1' : '#e2e8f0',
+    background: completed ? statusColors.success : active ? brandColors.primary : '#e2e8f0',
     color: completed || active ? 'white' : '#64748b',
     transition: 'all 200ms ease',
   }),
@@ -45,7 +46,7 @@ const styles = {
   connector: (completed: boolean) => ({
     width: 40,
     height: 2,
-    background: completed ? '#22c55e' : '#e2e8f0',
+    background: completed ? statusColors.success : '#e2e8f0',
     transition: 'background-color 200ms ease',
   }),
 };

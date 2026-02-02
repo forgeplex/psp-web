@@ -1,12 +1,14 @@
 import React from 'react';
-import { MobileOutlined, KeyOutlined } from '@ant-design/icons';
+import { MobileOutlined, KeyOutlined, SafetyOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
+import { brandColors } from '@psp/shared';
 
-export type MfaMethod = 'totp' | 'passkey';
+export type MfaMethod = 'totp' | 'passkey' | 'recovery';
 
 interface MfaMethodSelectorProps {
   value: MfaMethod;
   onChange: (method: MfaMethod) => void;
+  showRecovery?: boolean;
 }
 
 const styles = {
@@ -20,22 +22,22 @@ const styles = {
     alignItems: 'flex-start',
     gap: 16,
     padding: 16,
-    border: `2px solid ${selected ? '#6366f1' : '#e2e8f0'}`,
+    border: `2px solid ${selected ? brandColors.primary : '#e2e8f0'}`,
     borderRadius: 8,
     cursor: 'pointer',
     transition: 'all 200ms ease',
-    background: selected ? '#eef2ff' : '#ffffff',
+    background: selected ? brandColors.primaryLight : '#ffffff',
   }),
   optionIcon: {
     width: 40,
     height: 40,
     borderRadius: 8,
-    background: '#eef2ff',
+    background: brandColors.primaryLight,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    color: '#6366f1',
+    color: brandColors.primary,
     fontSize: 18,
   },
   optionContent: {
@@ -55,7 +57,11 @@ const styles = {
   },
 };
 
-export const MfaMethodSelector: React.FC<MfaMethodSelectorProps> = ({ value, onChange }) => {
+export const MfaMethodSelector: React.FC<MfaMethodSelectorProps> = ({ 
+  value, 
+  onChange, 
+  showRecovery = false 
+}) => {
   const methods = [
     {
       key: 'totp' as MfaMethod,
@@ -71,6 +77,13 @@ export const MfaMethodSelector: React.FC<MfaMethodSelectorProps> = ({ value, onC
       description: '使用指纹、面容或安全密钥',
       recommended: false,
     },
+    ...(showRecovery ? [{
+      key: 'recovery' as MfaMethod,
+      icon: <SafetyOutlined />,
+      title: '使用备用码',
+      description: '使用您保存的 8 位备用验证码',
+      recommended: false,
+    }] : []),
   ];
 
   return (

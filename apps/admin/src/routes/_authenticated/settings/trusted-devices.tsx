@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { Card, Button, Typography, Modal, Input, Empty, Tag, message } from 'antd';
+import { Card, Button, Typography, Modal, Input, Empty, Tag, message, Row, Col, Statistic } from 'antd';
 import {
   DesktopOutlined,
   MobileOutlined,
@@ -10,7 +10,11 @@ import {
   EditOutlined,
   CheckOutlined,
   CloseOutlined,
+  SafetyCertificateOutlined,
+  FieldTimeOutlined,
+  LaptopOutlined,
 } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 
 export const Route = createFileRoute('/_authenticated/settings/trusted-devices')({
   component: TrustedDevicesPage,
@@ -99,6 +103,23 @@ const styles = {
     fontSize: 13,
     color: '#64748b',
   },
+  statsCard: {
+    borderRadius: 8,
+    border: '1px solid #e2e8f0',
+    marginBottom: 24,
+  },
+  statIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    background: brandColors.primaryLight,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: brandColors.primary,
+    fontSize: 18,
+    marginBottom: 8,
+  },
   deviceList: {
     display: 'flex',
     flexDirection: 'column' as const,
@@ -116,13 +137,13 @@ const styles = {
   deviceIcon: {
     width: 40,
     height: 40,
-    background: '#eef2ff',
+    background: brandColors.primaryLight,
     borderRadius: 8,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    color: '#6366f1',
+    color: brandColors.primary,
     fontSize: 18,
   },
   deviceInfo: {
@@ -179,6 +200,13 @@ function TrustedDevicesPage() {
     visible: false,
   });
   const [revokeAllModal, setRevokeAllModal] = useState(false);
+
+  // Stats
+  const totalDevices = devices.length;
+  const activeDevices = devices.filter((d) => {
+    // Consider active if last used within 30 days
+    return d.lastUsed.includes('刚刚') || d.lastUsed.includes('小时') || d.lastUsed.includes('天');
+  }).length;
 
   const handleStartEdit = (device: TrustedDevice) => {
     setEditingId(device.id);
@@ -242,6 +270,47 @@ function TrustedDevicesPage() {
           </Button>
         )}
       </div>
+
+      {/* Stats Cards */}
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Col xs={24} sm={8}>
+          <Card style={styles.statsCard} styles={{ body: { padding: 20 } }}>
+            <div style={styles.statIcon}>
+              <SafetyCertificateOutlined />
+            </div>
+            <Statistic
+              title="信任设备总数"
+              value={totalDevices}
+              valueStyle={{ color: brandColors.primary, fontWeight: 600 }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card style={styles.statsCard} styles={{ body: { padding: 20 } }}>
+            <div style={styles.statIcon}>
+              <LaptopOutlined />
+            </div>
+            <Statistic
+              title="30 天活跃设备"
+              value={activeDevices}
+              valueStyle={{ color: brandColors.primary, fontWeight: 600 }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card style={styles.statsCard} styles={{ body: { padding: 20 } }}>
+            <div style={styles.statIcon}>
+              <FieldTimeOutlined />
+            </div>
+            <Statistic
+              title="信任有效期"
+              value={7}
+              suffix="天"
+              valueStyle={{ color: brandColors.primary, fontWeight: 600 }}
+            />
+          </Card>
+        </Col>
+      </Row>
 
       {devices.length === 0 ? (
         <Card>

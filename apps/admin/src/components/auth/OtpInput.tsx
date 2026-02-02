@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, KeyboardEvent, ClipboardEvent, ChangeEvent } from 'react';
+import { brandColors } from '@psp/shared';
 
 interface OtpInputProps {
   length?: number;
@@ -10,6 +11,7 @@ interface OtpInputProps {
   autoFocus?: boolean;
 }
 
+// P3 fix: 48x56px, font-size 24px per design spec
 const styles = {
   container: {
     display: 'flex',
@@ -17,18 +19,18 @@ const styles = {
     justifyContent: 'center',
   },
   input: (hasValue: boolean, error: boolean) => ({
-    width: 44,
-    height: 52,
-    border: `1.5px solid ${error ? '#ef4444' : hasValue ? '#6366f1' : '#e2e8f0'}`,
+    width: 48,
+    height: 56,
+    border: `1.5px solid ${error ? '#ef4444' : hasValue ? brandColors.primary : '#e2e8f0'}`,
     borderRadius: 8,
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 600,
     textAlign: 'center' as const,
     fontFamily: "'JetBrains Mono', monospace",
     outline: 'none',
     transition: 'all 200ms ease',
-    background: error ? '#fef2f2' : hasValue ? '#eef2ff' : '#ffffff',
-    caretColor: '#6366f1',
+    background: error ? '#fef2f2' : hasValue ? brandColors.primaryLight : '#ffffff',
+    caretColor: brandColors.primary,
   }),
 };
 
@@ -144,8 +146,8 @@ export const OtpInput: React.FC<OtpInputProps> = ({
         }
         .shake { animation: shake 0.4s ease-in-out; }
         .otp-input:focus {
-          border-color: #6366f1 !important;
-          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+          border-color: ${brandColors.primary} !important;
+          box-shadow: 0 0 0 3px ${brandColors.primaryLight};
         }
       `}</style>
       <div ref={containerRef} style={styles.container}>
