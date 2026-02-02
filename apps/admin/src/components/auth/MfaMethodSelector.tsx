@@ -1,116 +1,202 @@
 import React from 'react';
+import { Typography } from 'antd';
 import { MobileOutlined, KeyOutlined, SafetyOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
 import { brandColors } from '@psp/shared';
 
 export type MfaMethod = 'totp' | 'passkey' | 'recovery';
 
 interface MfaMethodSelectorProps {
-  value: MfaMethod;
-  onChange: (method: MfaMethod) => void;
-  showRecovery?: boolean;
+  // Mode 1: Login flow
+  onSelect?: (method: MfaMethod) => void;
+  availableMethods?: MfaMethod[];
+  onBack?: () => void;
+
+  // Mode 2: Setup flow (controlled)
+  value?: MfaMethod;
+  onChange?: (method: MfaMethod) => void;
 }
 
+const ALL_METHODS: MfaMethod[] = ['totp', 'passkey'];
+
 const styles = {
-  options: {
+  container: {
+    textAlign: 'center' as const,
+    padding: '24px 0',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 600,
+    color: '#0F172A',
+    marginBottom: 8,
+  },
+  desc: {
+    fontSize: 14,
+    color: '#64748B',
+    marginBottom: 32,
+  },
+  methods: {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 12,
   },
-  option: (selected: boolean) => ({
+  methodButton: {
+    height: 64,
+    borderRadius: 12,
+    border: '1px solid #E2E8F0',
+    background: '#FFFFFF',
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: 16,
-    padding: 16,
-    border: `2px solid ${selected ? brandColors.primary : '#e2e8f0'}`,
-    borderRadius: 8,
+    alignItems: 'center',
+    padding: '0 20px',
     cursor: 'pointer',
-    transition: 'all 200ms ease',
-    background: selected ? brandColors.primaryLight : '#ffffff',
-  }),
-  optionIcon: {
+    transition: 'all 0.2s ease',
+    textAlign: 'left' as const,
+  } as React.CSSProperties,
+  methodButtonSelected: {
+    borderColor: brandColors.primary,
+    boxShadow: `0 0 0 3px ${brandColors.primary}15`,
+    background: `${brandColors.primary}08`,
+  },
+  methodIcon: {
     width: 40,
     height: 40,
-    borderRadius: 8,
-    background: brandColors.primaryLight,
+    borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
-    color: brandColors.primary,
+    marginRight: 16,
     fontSize: 18,
   },
-  optionContent: {
+  methodInfo: {
     flex: 1,
   },
-  optionTitle: {
-    fontSize: 14,
+  methodTitle: {
+    fontSize: 15,
     fontWeight: 600,
-    marginBottom: 4,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
+    color: '#0F172A',
+    marginBottom: 2,
   },
-  optionDesc: {
+  methodSubtitle: {
     fontSize: 12,
-    color: '#64748b',
+    color: '#64748B',
+  },
+  backLink: {
+    marginTop: 24,
+    fontSize: 13,
+    color: brandColors.primary,
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    padding: 0,
   },
 };
 
-export const MfaMethodSelector: React.FC<MfaMethodSelectorProps> = ({ 
-  value, 
-  onChange, 
-  showRecovery = false 
+export const MfaMethodSelector: React.FC<MfaMethodSelectorProps> = ({
+  onSelect,
+  availableMethods,
+  onBack,
+  value,
+  onChange,
 }) => {
-  const methods = [
-    {
-      key: 'totp' as MfaMethod,
+  // Determine mode and methods to display
+  const isSetupMode = value !== undefined && onChange !== undefined;
+  const methodsToShow = isSetupMode ? ALL_METHODS : (availableMethods || ALL_METHODS);
+
+  const handleMethodClick = (method: MfaMethod) => {
+    if (isSetupMode) {
+      onChange?.(method);
+    } else {
+      onSelect?.(method);
+    }
+  };
+
+  const isSelected = (method: MfaMethod) => isSetupMode && value === method;
+
+  const methodConfigs: Record<
+    MfaMethod,
+    { icon: React.ReactNode; title: string; subtitle: string; color: string }
+  > = {
+    totp: {
       icon: <MobileOutlined />,
-      title: '身份验证器应用',
-      description: '使用 Google Authenticator 等应用生成验证码',
-      recommended: true,
+      title: '验证器应用',
+      subtitle: '使用 Google Authenticator 等应用',
+      color: '#6366F1',
     },
-    {
-      key: 'passkey' as MfaMethod,
+    passkey: {
       icon: <KeyOutlined />,
-      title: '安全密钥/生物识别',
-      description: '使用指纹、面容或安全密钥',
-      recommended: false,
+      title: 'Passkey',
+      subtitle: '使用生物识别或设备密钥',
+      color: '#8B5CF6',
     },
-    ...(showRecovery ? [{
-      key: 'recovery' as MfaMethod,
+    recovery: {
       icon: <SafetyOutlined />,
-      title: '使用备用码',
-      description: '使用您保存的 8 位备用验证码',
-      recommended: false,
-    }] : []),
-  ];
+      title: '备用码',
+      subtitle: '使用一次性备用恢复码',
+      color: '#F59E0B',
+    },
+  };
 
   return (
-    <div style={styles.options}>
-      {methods.map((method) => (
-        <div
-          key={method.key}
-          style={styles.option(value === method.key)}
-          onClick={() => onChange(method.key)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onChange(method.key);
-            }
-          }}
-        >
-          <div style={styles.optionIcon}>{method.icon}</div>
-          <div style={styles.optionContent}>
-            <div style={styles.optionTitle}>
-              {method.title}
-              {method.recommended && <Tag color="blue">推荐</Tag>}
-            </div>
-            <p style={styles.optionDesc}>{method.description}</p>
-          </div>
-        </div>
-      ))}
+    <div style={styles.container}>
+      {!isSetupMode && (
+        <>
+          <div style={styles.title}>双因素认证</div>
+          <div style={styles.desc}>请选择验证方式继续登录</div>
+        </>
+      )}
+
+      <div style={styles.methods}>
+        {methodsToShow
+          .filter((m): m is MfaMethod => m in methodConfigs)
+          .map((method) => {
+            const config = methodConfigs[method];
+            const selected = isSelected(method);
+
+            return (
+              <button
+                key={method}
+                style={{
+                  ...styles.methodButton,
+                  ...(selected ? styles.methodButtonSelected : {}),
+                }}
+                onClick={() => handleMethodClick(method)}
+                onMouseEnter={(e) => {
+                  if (!selected) {
+                    e.currentTarget.style.borderColor = config.color;
+                    e.currentTarget.style.boxShadow = `0 0 0 3px ${config.color}15`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!selected) {
+                    e.currentTarget.style.borderColor = '#E2E8F0';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }
+                }}
+              >
+                <div
+                  style={{
+                    ...styles.methodIcon,
+                    background: selected ? `${config.color}25` : `${config.color}15`,
+                    color: config.color,
+                  }}
+                >
+                  {config.icon}
+                </div>
+                <div style={styles.methodInfo}>
+                  <div style={styles.methodTitle}>{config.title}</div>
+                  <div style={styles.methodSubtitle}>{config.subtitle}</div>
+                </div>
+              </button>
+            );
+          })}
+      </div>
+
+      {!isSetupMode && onBack && (
+        <button style={styles.backLink} onClick={onBack}>
+          ← 返回登录
+        </button>
+      )}
     </div>
   );
 };
+
+export default MfaMethodSelector;
