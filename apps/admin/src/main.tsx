@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { VersionBadge } from '@psp/ui';
 import { routeTree } from './routeTree.gen';
 
 // Create a query client
@@ -25,6 +26,10 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Version info from build-time env
+const gitCommit = import.meta.env.VITE_GIT_COMMIT || 'dev';
+const buildTime = import.meta.env.VITE_BUILD_TIME;
+
 // Render
 const rootEl = document.getElementById('root');
 if (rootEl) {
@@ -32,6 +37,7 @@ if (rootEl) {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <VersionBadge version={gitCommit} buildTime={buildTime} />
       </QueryClientProvider>
     </React.StrictMode>,
   );
