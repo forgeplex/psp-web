@@ -70,56 +70,55 @@ const styles = {
     filter: 'blur(45px)',
     animation: 'float3 12s ease-in-out infinite',
   },
-  // Main content container - Top/Middle/Bottom structure
-  content: {
+  // Top section - Logo & Brand
+  topSection: {
     position: 'relative' as const,
     zIndex: 2,
-    height: '100%',
-    padding: '64px 56px',
+    height: '33.33%',
+    padding: '48px 56px 24px',
     display: 'flex',
     flexDirection: 'column' as const,
-    color: '#FFFFFF',
-  },
-  // TOP: Logo section
-  topSection: {
-    flexShrink: 0,
+    justifyContent: 'flex-start',
   },
   logoRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   logoIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     background: brandColors.gradient,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     boxShadow: '0 6px 16px rgba(99,102,241,0.4)',
   },
   logoText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 600,
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
     color: '#E2E8F0',
   },
-  // MIDDLE: Headline section
+  // Middle section - Headline
   middleSection: {
-    flex: 1,
+    position: 'relative' as const,
+    zIndex: 2,
+    height: '33.33%',
+    padding: '0 56px',
     display: 'flex',
     flexDirection: 'column' as const,
     justifyContent: 'center',
-    padding: '40px 0',
   },
   headline: {
     fontSize: 44,
     lineHeight: 1.1,
     fontWeight: 700,
     letterSpacing: -1.5,
+    color: '#FFFFFF',
   } as React.CSSProperties,
   highlight: {
     background: 'linear-gradient(135deg, #C7D2FE 0%, #8B5CF6 100%)',
@@ -128,14 +127,20 @@ const styles = {
   } as React.CSSProperties,
   subtitle: {
     fontSize: 15,
-    color: 'rgba(226, 232, 240, 0.7)',
-    maxWidth: 440,
+    color: 'rgba(226, 232, 240, 0.65)',
+    maxWidth: 400,
     lineHeight: 1.7,
-    marginTop: 20,
+    marginTop: 16,
   },
-  // BOTTOM: Feature cards section
+  // Bottom section - Feature cards
   bottomSection: {
-    flexShrink: 0,
+    position: 'relative' as const,
+    zIndex: 2,
+    height: '33.33%',
+    padding: '24px 56px 48px',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    justifyContent: 'flex-end',
   },
   cards: {
     display: 'grid',
@@ -146,22 +151,22 @@ const styles = {
     background: 'rgba(255, 255, 255, 0.04)',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: 12,
-    padding: 18,
+    borderRadius: 14,
+    padding: 20,
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 8,
   },
   cardIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
+    width: 32,
+    height: 32,
+    borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     background: 'rgba(99, 102, 241, 0.18)',
     color: '#C7D2FE',
-    fontSize: 14,
+    fontSize: 16,
   },
   cardTitle: {
     fontSize: 13,
@@ -176,7 +181,7 @@ const styles = {
 };
 
 const LayersIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 2L2 7l10 5 10-5-10-5z" />
     <path d="M2 17l10 5 10-5" />
     <path d="M2 12l10 5 10-5" />
@@ -184,14 +189,14 @@ const LayersIcon = () => (
 );
 
 const ShieldIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <path d="M9 12l2 2 4-4" />
   </svg>
 );
 
 const GlobeIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <path d="M2 12h20" />
     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -229,45 +234,43 @@ export const BrandPanel: React.FC = () => {
       <div style={styles.orb2} />
       <div style={styles.orb3} />
 
-      <div style={styles.content}>
-        {/* TOP: Logo & Brand */}
-        <div style={styles.topSection}>
-          <div style={styles.logoRow}>
-            <div style={styles.logoIcon}>
-              <LayersIcon />
-            </div>
-            <span style={styles.logoText}>PSP Terminal</span>
+      {/* Top Section - Brand */}
+      <div style={styles.topSection}>
+        <div style={styles.logoRow}>
+          <div style={styles.logoIcon}>
+            <LayersIcon />
           </div>
+          <span style={styles.logoText}>PSP Admin</span>
         </div>
+      </div>
 
-        {/* MIDDLE: Headline & Description */}
-        <div style={styles.middleSection}>
-          <div style={styles.headline}>
-            Next Gen
-            <br />
-            <span style={styles.highlight}>Financial</span>
-            <br />
-            Infrastructure
+      {/* Middle Section - Headline */}
+      <div style={styles.middleSection}>
+        <div style={styles.headline}>
+          Secure
+          <br />
+          <span style={styles.highlight}>Payment</span>
+          <br />
+          Management
+        </div>
+        <p style={styles.subtitle}>
+          Enterprise-grade payment platform with real-time transaction monitoring, 
+          risk management, and multi-currency settlement.
+        </p>
+      </div>
+
+      {/* Bottom Section - Features */}
+      <div style={styles.bottomSection}>
+        <div style={styles.cards}>
+          <div style={styles.card}>
+            <div style={styles.cardIcon}><ShieldIcon /></div>
+            <div style={styles.cardTitle}>Bank-Grade Security</div>
+            <div style={styles.cardDesc}>SOC2 Type II certified with end-to-end encryption.</div>
           </div>
-          <p style={styles.subtitle}>
-            Orchestrate global payments, manage risk, and settle funds in real-time. Built for
-            high-frequency transaction environments.
-          </p>
-        </div>
-
-        {/* BOTTOM: Feature Cards */}
-        <div style={styles.bottomSection}>
-          <div style={styles.cards}>
-            <div style={styles.card}>
-              <div style={styles.cardIcon}><ShieldIcon /></div>
-              <div style={styles.cardTitle}>Enterprise Security</div>
-              <div style={styles.cardDesc}>Bank-grade encryption and SOC2 Type II compliance.</div>
-            </div>
-            <div style={styles.card}>
-              <div style={styles.cardIcon}><GlobeIcon /></div>
-              <div style={styles.cardTitle}>Global Connectivity</div>
-              <div style={styles.cardDesc}>Direct connections to 50+ acquiring banks worldwide.</div>
-            </div>
+          <div style={styles.card}>
+            <div style={styles.cardIcon}><GlobeIcon /></div>
+            <div style={styles.cardTitle}>Global Coverage</div>
+            <div style={styles.cardDesc}>Direct integration with 50+ payment providers.</div>
           </div>
         </div>
       </div>

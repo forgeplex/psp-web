@@ -30,7 +30,7 @@ interface LoginResponse {
   access_token?: string;
   refresh_token?: string;
   expires_in?: number;
-  mfa_status?: 'required' | 'optional' | 'not_configured';
+  mfa_status?: 'required' | 'optional' | 'not_configured' | 'requires_setup' | 'requires_verification';
   available_mfa_types?: ('totp' | 'passkey' | 'recovery')[];
   mfa_token?: string;
   mfa_token_expires_in?: number;
@@ -254,34 +254,39 @@ function LoginPage(): React.ReactElement {
     clearError();
 
     try {
-      // TODO: 联调时切换到真实 API
-      // const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
-      //   username: values.username,
-      //   password: values.password,
-      // });
+      // 使用真实 API
+      const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
+        username: values.username,
+        password: values.password,
+      });
 
-      // Mock 响应用于开发
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const data: LoginResponse = {
-        mfa_status: 'required',
-        available_mfa_types: ['totp', 'passkey', 'recovery'],
-        mfa_token: 'mock_mfa_token_' + Date.now(),
-        mfa_token_expires_in: 300,
-      };
-
-      if (data.mfa_status === 'required') {
-        // 需要 MFA 验证
-        setMfaToken(data.mfa_token || '');
-        setAvailableMethods(data.available_mfa_types || []);
-        setSelectedMethod(data.available_mfa_types?.[0] || '');
-        setStep('mfa-select');
-      } else {
-        // 直接登录成功
-        if (data.access_token) {
-          setTokens(data.access_token, data.refresh_token || '');
-          message.success('登录成功');
-          navigate({ to: '/' });
-        }
+      // 处理不同的 MFA 状态
+      switch (data.mfa_status) {
+        case 'requires_setup':
+          // 首次登录，需要设置 MFA
+          message.info('首次登录，请设置 MFA');
+          navigate({ to: '/mfa/setup' });
+          break;
+          
+        case 'requires_verification':
+        case 'required':
+          // 需要 MFA 验证
+          setMfaToken(data.mfa_token || '');
+          setAvailableMethods(data.available_mfa_types || []);
+          setSelectedMethod(data.available_mfa_types?.[0] || '');
+          setStep('mfa-select');
+          break;
+          
+        case 'not_configured':
+        case 'optional':
+        default:
+          // 直接登录成功
+          if (data.access_token) {
+            setTokens(data.access_token, data.refresh_token || '');
+            message.success('登录成功');
+            navigate({ to: '/' });
+          }
+          break;
       }
     } catch (err: unknown) {
       const axiosError = err as { response?: { data?: { code?: string; message?: string } } };
