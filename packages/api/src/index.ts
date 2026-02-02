@@ -22,3 +22,6 @@ export * from './merchants';
 
 // Export API
 export * from './export';
+
+// MFA API
+export * from './mfa';

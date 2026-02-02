@@ -12,4 +12,5 @@ export * from './hooks';
 export * from './types';
 export * from './merchants';
 export * from './export';
+export * from './mfa';
 //# sourceMappingURL=index.d.ts.map

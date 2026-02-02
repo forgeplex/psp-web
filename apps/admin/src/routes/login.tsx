@@ -269,7 +269,7 @@ function LoginPage() {
         // Handle MFA status
         if (data.mfa_status === 'requires_setup') {
           message.info('请先设置 MFA');
-          navigate({ to: '/mfa/setup' });
+          navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
           return;
         }
 
@@ -278,7 +278,7 @@ function LoginPage() {
             sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
           }
           message.info('请完成 MFA 验证');
-          navigate({ to: '/mfa/verify' });
+          navigate({ to: '/mfa/verify', search: { session_id: data.session_id || '' } });
           return;
         }
 

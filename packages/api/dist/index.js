@@ -15,4 +15,6 @@ export * from './types';
 export * from './merchants';
 // Export API
 export * from './export';
+// MFA API
+export * from './mfa';
 //# sourceMappingURL=index.js.map
