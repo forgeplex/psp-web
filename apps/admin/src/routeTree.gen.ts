@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as MfaVerifyRouteImport } from './routes/mfa/verify'
+import { Route as MfaSetupRouteImport } from './routes/mfa/setup'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
 import { Route as AuthenticatedSettlementsRouteImport } from './routes/_authenticated/settlements'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -23,6 +25,7 @@ import { Route as AuthenticatedMerchantsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedChannelsRouteImport } from './routes/_authenticated/channels'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -37,6 +40,16 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const MfaVerifyRoute = MfaVerifyRouteImport.update({
+  id: '/mfa/verify',
+  path: '/mfa/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MfaSetupRoute = MfaSetupRouteImport.update({
+  id: '/mfa/setup',
+  path: '/mfa/setup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedTransactionsRoute =
   AuthenticatedTransactionsRouteImport.update({
@@ -96,6 +109,12 @@ const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSettingsTrustedDevicesRoute =
+  AuthenticatedSettingsTrustedDevicesRouteImport.update({
+    id: '/trusted-devices',
+    path: '/trusted-devices',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -108,9 +127,12 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/settlements': typeof AuthenticatedSettlementsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/mfa/setup': typeof MfaSetupRoute
+  '/mfa/verify': typeof MfaVerifyRoute
+  '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -122,10 +144,13 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/settlements': typeof AuthenticatedSettlementsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/mfa/setup': typeof MfaSetupRoute
+  '/mfa/verify': typeof MfaVerifyRoute
   '/': typeof AuthenticatedIndexRoute
+  '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,10 +164,13 @@ export interface FileRoutesById {
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/rates': typeof AuthenticatedRatesRoute
   '/_authenticated/risk': typeof AuthenticatedRiskRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/settlements': typeof AuthenticatedSettlementsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
+  '/mfa/setup': typeof MfaSetupRoute
+  '/mfa/verify': typeof MfaVerifyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,6 +188,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settlements'
     | '/transactions'
+    | '/mfa/setup'
+    | '/mfa/verify'
+    | '/settings/trusted-devices'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -174,7 +205,10 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settlements'
     | '/transactions'
+    | '/mfa/setup'
+    | '/mfa/verify'
     | '/'
+    | '/settings/trusted-devices'
   id:
     | '__root__'
     | '/_authenticated'
@@ -190,12 +224,17 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/settlements'
     | '/_authenticated/transactions'
+    | '/mfa/setup'
+    | '/mfa/verify'
     | '/_authenticated/'
+    | '/_authenticated/settings/trusted-devices'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MfaSetupRoute: typeof MfaSetupRoute
+  MfaVerifyRoute: typeof MfaVerifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -220,6 +259,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/mfa/verify': {
+      id: '/mfa/verify'
+      path: '/mfa/verify'
+      fullPath: '/mfa/verify'
+      preLoaderRoute: typeof MfaVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mfa/setup': {
+      id: '/mfa/setup'
+      path: '/mfa/setup'
+      fullPath: '/mfa/setup'
+      preLoaderRoute: typeof MfaSetupRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/transactions': {
       id: '/_authenticated/transactions'
@@ -298,8 +351,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAgentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/settings/trusted-devices': {
+      id: '/_authenticated/settings/trusted-devices'
+      path: '/trusted-devices'
+      fullPath: '/settings/trusted-devices'
+      preLoaderRoute: typeof AuthenticatedSettingsTrustedDevicesRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
   }
 }
+
+interface AuthenticatedSettingsRouteChildren {
+  AuthenticatedSettingsTrustedDevicesRoute: typeof AuthenticatedSettingsTrustedDevicesRoute
+}
+
+const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
+  AuthenticatedSettingsTrustedDevicesRoute:
+    AuthenticatedSettingsTrustedDevicesRoute,
+}
+
+const AuthenticatedSettingsRouteWithChildren =
+  AuthenticatedSettingsRoute._addFileChildren(
+    AuthenticatedSettingsRouteChildren,
+  )
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
@@ -310,7 +384,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
   AuthenticatedRiskRoute: typeof AuthenticatedRiskRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedSettlementsRoute: typeof AuthenticatedSettlementsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -325,7 +399,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedRatesRoute: AuthenticatedRatesRoute,
   AuthenticatedRiskRoute: AuthenticatedRiskRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedSettlementsRoute: AuthenticatedSettlementsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
@@ -338,6 +412,8 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
+  MfaSetupRoute: MfaSetupRoute,
+  MfaVerifyRoute: MfaVerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
