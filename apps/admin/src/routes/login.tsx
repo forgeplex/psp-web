@@ -22,13 +22,15 @@ export const Route = createFileRoute('/login')({
 // ─── Types ─────────────────────────────────────────────────
 
 type LoginStep = 'credentials' | 'mfa-select' | 'mfa-totp' | 'mfa-passkey' | 'mfa-recovery' | 'success';
+type MfaStatus = 'required' | 'verified' | 'requires_setup';
 
 interface LoginResponse {
+  session_id?: string;
+  mfa_status?: MfaStatus;
+  available_methods?: Array<'totp' | 'passkey'>;
+  default_method?: 'totp' | 'passkey';
   access_token?: string;
   refresh_token?: string;
-  requires_mfa?: boolean;
-  mfa_token?: string;
-  mfa_type?: 'totp' | 'passkey' | 'both';
   user?: {
     id: string;
     email: string;
@@ -72,8 +74,9 @@ function Login() {
   const [error, setError] = useState('');
 
   // MFA State
-  const [mfaToken, setMfaToken] = useState<string>('');
-  const [availableMfaMethods, setAvailableMfaMethods] = useState<MfaMethod[]>(['totp', 'passkey']);
+  const [sessionId, setSessionId] = useState<string>('');
+  const [availableMfaMethods, setAvailableMfaMethods] = useState<MfaMethod[]>(['totp']);
+  const [defaultMfaMethod, setDefaultMfaMethod] = useState<MfaMethod>('totp');
 
   // TOTP State
   const [totpCode, setTotpCode] = useState('');
@@ -102,7 +105,7 @@ function Login() {
       });
 
       // No MFA required - direct login
-      if (data.access_token && !data.requires_mfa) {
+      if (data.access_token && data.mfa_status === 'verified') {
         completeLogin(
           data.access_token,
           data.refresh_token || '',
@@ -111,30 +114,39 @@ function Login() {
         return;
       }
 
-      // MFA required - transition to MFA flow
-      if (data.requires_mfa && data.mfa_token) {
-        setMfaToken(data.mfa_token);
+      // MFA setup required - redirect to setup page
+      if (data.mfa_status === 'requires_setup') {
+        navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
+        return;
+      }
 
-        // Determine available MFA methods
-        const methods: MfaMethod[] = [];
-        if (data.mfa_type === 'totp' || data.mfa_type === 'both') {
-          methods.push('totp');
-        }
-        if (data.mfa_type === 'passkey' || data.mfa_type === 'both') {
-          methods.push('passkey');
-        }
+      // MFA required - transition to MFA flow
+      if (data.mfa_status === 'required' && data.session_id) {
+        setSessionId(data.session_id);
+
+        // Parse available MFA methods from backend
+        const backendMethods = data.available_methods || ['totp'];
+        const methods: MfaMethod[] = [...backendMethods];
+        
         // Always allow recovery as fallback
         methods.push('recovery');
         setAvailableMfaMethods(methods);
 
-        // If only one method available, go directly to it
-        if (methods.length === 2 && methods.includes('recovery')) {
-          // Only one real method + recovery
-          const primaryMethod = methods[0] === 'recovery' ? methods[1] : methods[0];
-          transitionToMfaStep(primaryMethod as MfaMethod);
+        // Use default method from backend if available
+        const defaultMethod = data.default_method || 'totp';
+        setDefaultMfaMethod(defaultMethod as MfaMethod);
+
+        // If only one real MFA method available (plus recovery), go directly to it
+        const realMethods = backendMethods;
+        if (realMethods.length === 1) {
+          transitionToMfaStep(realMethods[0] as MfaMethod);
         } else {
-          // Multiple options - show selector
-          setCurrentStep('mfa-select');
+          // Multiple options - show selector, or use default
+          if (methods.includes(defaultMethod as MfaMethod)) {
+            transitionToMfaStep(defaultMethod as MfaMethod);
+          } else {
+            setCurrentStep('mfa-select');
+          }
         }
         return;
       }
@@ -157,7 +169,7 @@ function Login() {
   };
 
   const handleBackToCredentials = () => {
-    setMfaToken('');
+    setSessionId('');
     setTotpCode('');
     setPasskeyError(null);
     setError('');
@@ -182,7 +194,7 @@ function Login() {
 
       try {
         const { data } = await apiClient.post<MfaVerifyResponse>('/api/v1/auth/mfa/verify', {
-          mfa_token: mfaToken,
+          session_id: sessionId,
           totp_code: code,
           trust_device: false,
           device_fingerprint: generateDeviceFingerprint(),
@@ -196,7 +208,7 @@ function Login() {
         setLoading(false);
       }
     },
-    [mfaToken]
+    [sessionId]
   );
 
   // Auto-verify when 6 digits entered
@@ -221,7 +233,7 @@ function Login() {
       // 1. Get authentication options from backend
       const { data: options } = await apiClient.post<PasskeyAuthOptions>(
         '/api/v1/auth/mfa/passkey/authentication-options',
-        { mfa_token: mfaToken }
+        { session_id: sessionId }
       );
 
       // 2. Call WebAuthn API
@@ -252,7 +264,7 @@ function Login() {
       const { data } = await apiClient.post<MfaVerifyResponse>(
         '/api/v1/auth/mfa/passkey/verify',
         {
-          mfa_token: mfaToken,
+          session_id: sessionId,
           assertion_response: {
             id: assertion.id,
             rawId: bufferToBase64URL(assertion.rawId),
@@ -284,7 +296,7 @@ function Login() {
 
     try {
       const { data } = await apiClient.post<MfaVerifyResponse>('/api/v1/auth/mfa/verify', {
-        mfa_token: mfaToken,
+        session_id: sessionId,
         recovery_code: code,
         device_fingerprint: generateDeviceFingerprint(),
       });
@@ -399,24 +411,6 @@ function Login() {
                 请输入您的账号信息以访问管理面板
               </Typography.Text>
             </div>
-
-            {/* Passkey Quick Login */}
-            <Button
-              size="large"
-              block
-              icon={<KeyOutlined style={{ color: brandColors.primary }} />}
-              onClick={() => message.info('Passkey 快速登录开发中')}
-              style={{
-                height: 44,
-                borderRadius: 8,
-                borderColor: '#E2E8F0',
-                marginBottom: 16,
-              }}
-            >
-              使用 Passkey 登录
-            </Button>
-
-            <Divider style={{ margin: '16px 0', color: '#94A3B8', fontSize: 12 }}>或使用账号密码</Divider>
 
             {/* Error */}
             {error && (
