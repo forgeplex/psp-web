@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, GripVertical, Info } from 'lucide-react';
+import { X, GripVertical, Info, Copy, Check } from 'lucide-react';
 
 interface VersionBadgeProps {
   version?: string;
@@ -27,6 +27,7 @@ export function VersionBadge({
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showRestoreHint, setShowRestoreHint] = useState(false);
+  const [copied, setCopied] = useState(false);
   const dragRef = useRef<{ startX: number; startY: number; startPosX: number; startPosY: number } | null>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
 
@@ -127,6 +128,29 @@ export function VersionBadge({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [hiddenKey]);
 
+  const handleCopy = useCallback(async () => {
+    if (!version) return;
+    try {
+      await navigator.clipboard.writeText(version);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = version;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1200);
+      } catch {}
+      document.body.removeChild(textarea);
+    }
+  }, [version]);
+
   if (isHidden) return null;
 
   // Show restore hint when closing
@@ -169,7 +193,20 @@ export function VersionBadge({
       `}
     >
       <GripVertical className="w-3 h-3 opacity-50" />
-      <span className="font-semibold">{version}</span>
+      <button
+        onClick={handleCopy}
+        className="font-semibold select-text cursor-pointer hover:text-white/90 transition-colors"
+        title="点击复制"
+      >
+        {version}
+      </button>
+      <button
+        onClick={handleCopy}
+        className="p-0.5 rounded hover:bg-white/20 transition-colors"
+        title={copied ? '已复制' : '复制'}
+      >
+        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+      </button>
       {buildTime && isHovered && (
         <span className="text-white/60 text-[10px]">
           {new Date(buildTime).toLocaleString()}
@@ -177,7 +214,7 @@ export function VersionBadge({
       )}
       <button
         onClick={handleClose}
-        className="ml-1 p-0.5 rounded hover:bg-white/20 transition-colors"
+        className="ml-0.5 p-0.5 rounded hover:bg-white/20 transition-colors"
         title="关闭 (Ctrl+Shift+V 重新显示)"
       >
         <X className="w-3 h-3" />
