@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Form, Input, Button, Checkbox, Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Checkbox, Typography, Divider } from 'antd';
+import { UserOutlined, LockOutlined, SafetyOutlined, KeyOutlined } from '@ant-design/icons';
 import { brandColors } from '@psp/shared';
 import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
@@ -69,7 +69,7 @@ function Login() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#FFFFFF' }}>
-      {/* 左侧品牌区 - 保持原有 BrandPanel */}
+      {/* 左侧品牌区 */}
       <BrandPanel />
 
       {/* 右侧表单区 */}
@@ -82,22 +82,77 @@ function Login() {
       }}>
         <div style={{ width: '100%', maxWidth: 360 }}>
           {/* 表单头部 */}
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 16px',
+              background: '#F1F5F9',
+              borderRadius: 20,
+              marginBottom: 20,
+            }}>
+              <span style={{ fontSize: 14 }}>👋</span>
+              <span style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>欢迎回来</span>
+            </div>
+            
             <Typography.Title level={3} style={{ 
               margin: '0 0 8px 0', 
               fontWeight: 600,
               fontSize: 24,
               color: '#0F172A',
             }}>
-              欢迎回来
+              登录您的账户
             </Typography.Title>
             <Typography.Text style={{ 
               fontSize: 14, 
               color: '#64748B',
             }}>
-              请输入您的账号信息以继续
+              请输入您的账号信息以访问管理面板
             </Typography.Text>
           </div>
+
+          {/* 快捷登录 */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+            <Button
+              size="large"
+              style={{
+                flex: 1,
+                height: 44,
+                borderRadius: 8,
+                borderColor: '#E2E8F0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+              }}
+              onClick={() => message.info('SSO 登录开发中')}
+            >
+              <SafetyOutlined style={{ color: brandColors.primary }} />
+              <span style={{ fontSize: 13 }}>SSO 登录</span>
+            </Button>
+            <Button
+              size="large"
+              style={{
+                flex: 1,
+                height: 44,
+                borderRadius: 8,
+                borderColor: '#E2E8F0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+              }}
+              onClick={() => message.info('Passkey 登录开发中')}
+            >
+              <KeyOutlined style={{ color: brandColors.primary }} />
+              <span style={{ fontSize: 13 }}>Passkey</span>
+            </Button>
+          </div>
+
+          <Divider style={{ margin: '16px 0', color: '#94A3B8', fontSize: 12 }}>
+            或使用账号密码
+          </Divider>
 
           {/* 错误提示 */}
           {error && (
@@ -106,7 +161,7 @@ function Login() {
               background: '#FEF2F2',
               border: '1px solid #FECACA',
               borderRadius: 8,
-              marginBottom: 20,
+              marginBottom: 16,
               color: '#DC2626',
               fontSize: 14,
             }}>
@@ -202,15 +257,22 @@ function Login() {
             </Form.Item>
           </Form>
 
-          {/* 版权信息 */}
-          <p style={{
+          {/* 底部 */}
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <Typography.Text style={{ fontSize: 13, color: '#64748B' }}>
+              遇到问题？<Button type="link" style={{ padding: 0, fontSize: 13 }}>联系管理员</Button>
+            </Typography.Text>
+          </div>
+          
+          <Typography.Text style={{
+            display: 'block',
             textAlign: 'center',
             fontSize: 12,
             color: '#94A3B8',
-            marginTop: 40,
+            marginTop: 16,
           }}>
             © 2026 PSP Admin · 安全连接
-          </p>
+          </Typography.Text>
         </div>
       </div>
     </div>
