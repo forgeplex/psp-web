@@ -326,17 +326,19 @@ function LoginPage() {
 
       <main style={styles.formPanel} className="login-form-panel">
         <style>{`
-          @media (min-width: 1024px) {
+@media (min-width: 1024px) {
             .login-form-panel { width: 50%; flex: none !important; }
           }
           @media (min-width: 1440px) {
             .login-form-panel { width: 45%; }
           }
+          /* Input styling */
           .login-form-panel .ant-input-affix-wrapper {
             border-radius: 10px !important;
-            height: 46px !important;
+            height: 44px !important;
             border-color: #E2E8F0 !important;
             transition: all 0.2s ease !important;
+            background: #ffffff !important;
           }
           .login-form-panel .ant-input-affix-wrapper:hover {
             border-color: ${brandColors.primary} !important;
@@ -346,13 +348,13 @@ function LoginPage() {
             box-shadow: 0 0 0 3px ${brandColors.primaryLight} !important;
           }
           .login-form-panel .ant-form-item-label > label {
-            font-weight: 500 !important;
+            font-weight: 600 !important;
             color: #334155 !important;
-            font-size: 13px !important;
+            font-size: 12px !important;
           }
           .login-form-panel .ant-btn-primary:hover {
             transform: translateY(-1px) !important;
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45) !important;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45) !important;
           }
           .login-form-panel .ant-btn-primary:active {
             transform: translateY(0) !important;
@@ -361,6 +363,18 @@ function LoginPage() {
             border-color: ${brandColors.primary} !important;
             background: ${brandColors.primaryLight} !important;
             color: ${brandColors.primary} !important;
+          }
+
+          /* Mobile: one screen */
+          @media (max-width: 480px) {
+            .login-form-panel { padding: 16px !important; }
+            .login-card { padding: 20px !important; border-radius: 16px !important; }
+            .login-title { font-size: 20px !important; }
+            .login-subtitle { margin-bottom: 16px !important; }
+            .login-divider { margin: 16px 0 !important; }
+            .login-footer { display: none !important; }
+            .login-welcome { display: none !important; }
+            .login-social { display: none !important; }
           }
         `}</style>
 
@@ -374,24 +388,24 @@ function LoginPage() {
           </div>
 
           {/* Welcome badge */}
-          <div style={styles.welcomeTag}>
+          <div style={styles.welcomeTag} className="login-welcome">
             <span style={styles.welcomeBadge}>
               👋 欢迎回来
             </span>
           </div>
 
-          <div style={{ ...styles.title, margin: 0 }}>
+          <div style={{ ...styles.title, margin: 0 }} className="login-title">
             <Typography.Title level={3} style={{ marginBottom: 4, fontWeight: 700, letterSpacing: -0.5 }}>
               登录您的账户
             </Typography.Title>
           </div>
 
-          <p style={styles.subtitle}>
+          <p style={styles.subtitle} className="login-subtitle">
             输入凭据以访问支付管理平台
           </p>
 
           {/* Login Card */}
-          <div style={styles.card}>
+          <div style={styles.card} className="login-card">
             <ErrorAlert
               visible={error.visible}
               code={error.code}
@@ -399,7 +413,7 @@ function LoginPage() {
             />
 
             {/* Social login */}
-            <div style={styles.socialRow}>
+            <div style={styles.socialRow} className="login-social">
               <div className="social-btn" style={styles.socialBtn}>
                 <SsoIcon />
                 <span>SSO 登录</span>
@@ -411,7 +425,7 @@ function LoginPage() {
             </div>
 
             {/* Divider */}
-            <div style={styles.dividerRow}>
+            <div style={styles.dividerRow} className="login-divider">
               <div style={styles.dividerLine} />
               <span style={styles.dividerText}>或使用账号密码</span>
               <div style={styles.dividerLine} />
@@ -483,7 +497,7 @@ function LoginPage() {
           </div>
 
           {/* Footer */}
-          <div style={styles.footer}>
+          <div style={styles.footer} className="login-footer">
             <span style={styles.footerText}>
               遇到问题？
               <span style={styles.footerLink}>联系管理员</span>
