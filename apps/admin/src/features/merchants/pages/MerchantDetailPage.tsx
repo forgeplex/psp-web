@@ -116,7 +116,7 @@ function useMerchantPricing(merchantId: string) {
   return useQuery<MerchantPricingResponse>({
     queryKey: ['merchants', merchantId, 'pricing'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/api/v1/pricing/merchants/${merchantId}`);
+      const { data } = await apiClient.get(`/v1/pricing/merchants/${merchantId}`);
       return data;
     },
     enabled: !!merchantId,
