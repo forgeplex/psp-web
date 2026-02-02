@@ -177,8 +177,6 @@ function LoginPage() {
   };
 
   return (
-    <>
-      <style>{`html, body, #root { margin: 0; padding: 0; height: 100%; }`}</style>
       <div style={styles.page}>
       <BrandPanel />
 
@@ -290,6 +288,5 @@ function LoginPage() {
         </div>
       </main>
     </div>
-    </>
   );
 }
