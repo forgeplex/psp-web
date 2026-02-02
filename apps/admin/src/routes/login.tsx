@@ -255,7 +255,7 @@ function LoginPage(): React.ReactElement {
 
     try {
       // 使用真实 API
-      const { data } = await apiClient.post<LoginResponse>('/v1/auth/login', {
+      const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
         username: values.username,
         password: values.password,
       });
