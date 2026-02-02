@@ -244,7 +244,7 @@ function MfaSetupPage() {
               <div style={styles.qrCode}>
                 {totpData ? (
                   <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(totpData.qrCodeUri)}`}
+                    src={`https://api.qrserver.com/api/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(totpData.qrCodeUri)}`}
                     alt="TOTP QR Code"
                     style={{ width: 180, height: 180 }}
                   />

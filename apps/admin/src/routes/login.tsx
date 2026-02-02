@@ -255,7 +255,7 @@ function LoginPage(): React.ReactElement {
 
     try {
       // 使用真实 API
-      const { data } = await apiClient.post<LoginResponse>('/v1/auth/login', {
+      const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
         username: values.username,
         password: values.password,
       });
@@ -319,7 +319,7 @@ function LoginPage(): React.ReactElement {
 
     try {
       // TODO: 联调时切换到真实 API
-      // const { data } = await apiClient.post('/v1/auth/mfa/verify', {
+      // const { data } = await apiClient.post('/api/v1/auth/mfa/verify', {
       //   mfa_token: mfaToken,
       //   method: 'totp',
       //   totp_code: values.code,

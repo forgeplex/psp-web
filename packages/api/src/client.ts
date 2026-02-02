@@ -8,7 +8,7 @@ function getBaseURL(): string {
       return win.__PSP_API_BASE_URL__;
     }
   }
-  return '/v1';
+  return '/api';
 }
 
 export const apiClient = axios.create({
