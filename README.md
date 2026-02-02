@@ -159,3 +159,33 @@ chore(shared): 更新 Design Tokens
 ## License
 
 Private
+
+## 版本信息页面
+
+所有 apps 都提供 `/version` 页面，显示当前部署的 Git commit hash 和构建时间，方便部署后校验版本。
+
+### 访问方式
+
+- Admin: `https://admin.example.com/version`
+- Merchant: `https://merchant.example.com/version`
+- Agent: `https://agent.example.com/version`
+- Checkout: `https://checkout.example.com/version`
+
+### 构建时环境变量
+
+CI/CD 构建时需要传入以下环境变量：
+
+| 变量 | 说明 | 示例 |
+|------|------|------|
+| `VITE_GIT_COMMIT` | Git commit hash | `a1b2c3d4e5f6...` |
+| `VITE_BUILD_TIME` | 构建时间 | `2026-02-02 12:00:00` |
+
+构建命令示例：
+
+```bash
+VITE_GIT_COMMIT=$(git rev-parse HEAD) \
+VITE_BUILD_TIME=$(date '+%Y-%m-%d %H:%M:%S') \
+pnpm build
+```
+
+本地开发时不设置这些变量，页面会显示 "development"。
