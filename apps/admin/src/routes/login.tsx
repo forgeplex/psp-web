@@ -30,7 +30,7 @@ const styles = {
   page: {
     display: 'flex',
     minHeight: '100vh',
-    background: '#FAFBFD',
+    background: '#F1F5F9',
   },
   formPanel: {
     flex: 1,
@@ -124,13 +124,13 @@ const styles = {
     color: '#94A3B8',
     lineHeight: 1.5,
   },
-  // Card with glassmorphism
+  // Solid white card with strong shadow
   card: {
-    borderRadius: 16,
-    border: '1px solid rgba(226, 232, 240, 0.8)',
-    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)',
+    borderRadius: 20,
+    border: 'none',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
     background: '#FFFFFF',
-    padding: 36,
+    padding: '44px 40px',
   },
   // Divider
   dividerRow: {
@@ -161,7 +161,7 @@ const styles = {
     height: 44,
     borderRadius: 10,
     border: '1px solid #E2E8F0',
-    background: '#FAFBFD',
+    background: '#F1F5F9',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -187,13 +187,13 @@ const styles = {
     transition: 'color 0.2s',
   },
   loginBtn: {
-    height: 46,
-    borderRadius: 10,
+    height: 48,
+    borderRadius: 12,
     background: brandColors.gradient,
     border: 'none',
     fontSize: 15,
     fontWeight: 600,
-    boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+    boxShadow: '0 6px 20px rgba(99, 102, 241, 0.4)',
     transition: 'all 0.3s ease',
   },
   // Footer
