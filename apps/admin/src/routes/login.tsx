@@ -61,7 +61,8 @@ const styles = {
   },
   subtitle: {
     textAlign: 'center' as const,
-    marginBottom: 32,
+    marginBottom: 28,
+    fontStyle: 'normal' as const,
     fontSize: 13,
     color: '#64748b',
   },
@@ -72,7 +73,8 @@ const styles = {
   },
   forgotPassword: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    gap: 40,
     alignItems: 'center',
     marginBottom: 16,
   },
