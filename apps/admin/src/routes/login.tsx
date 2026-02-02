@@ -30,7 +30,7 @@ const styles = {
   page: {
     display: 'flex',
     minHeight: '100vh',
-    background: '#F1F5F9',
+    background: '#FEFDFB',
   },
   formPanel: {
     flex: 1,
@@ -161,7 +161,7 @@ const styles = {
     height: 44,
     borderRadius: 10,
     border: '1px solid #E2E8F0',
-    background: '#F1F5F9',
+    background: '#FEFDFB',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
