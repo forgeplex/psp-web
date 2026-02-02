@@ -26,6 +26,7 @@ import { Route as AuthenticatedChannelsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
+import { Route as AuthenticatedMerchantsDashboardRouteImport } from './routes/_authenticated/merchants/dashboard'
 import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
 
 const LoginRoute = LoginRouteImport.update({
@@ -116,6 +117,12 @@ const AuthenticatedSettingsTrustedDevicesRoute =
     path: '/trusted-devices',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
+const AuthenticatedMerchantsDashboardRoute =
+  AuthenticatedMerchantsDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedMerchantsRoute,
+  } as any)
 const AuthenticatedMerchantsMerchantIdRoute =
   AuthenticatedMerchantsMerchantIdRouteImport.update({
     id: '/$merchantId',
@@ -140,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
+  '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRoutesByTo {
@@ -159,6 +167,7 @@ export interface FileRoutesByTo {
   '/mfa/verify': typeof MfaVerifyRoute
   '/': typeof AuthenticatedIndexRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
+  '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRoutesById {
@@ -180,6 +189,7 @@ export interface FileRoutesById {
   '/mfa/verify': typeof MfaVerifyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
+  '/_authenticated/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
 }
 export interface FileRouteTypes {
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/mfa/setup'
     | '/mfa/verify'
     | '/merchants/$merchantId'
+    | '/merchants/dashboard'
     | '/settings/trusted-devices'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/'
     | '/merchants/$merchantId'
+    | '/merchants/dashboard'
     | '/settings/trusted-devices'
   id:
     | '__root__'
@@ -240,6 +252,7 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/_authenticated/'
     | '/_authenticated/merchants/$merchantId'
+    | '/_authenticated/merchants/dashboard'
     | '/_authenticated/settings/trusted-devices'
   fileRoutesById: FileRoutesById
 }
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsTrustedDevicesRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
+    '/_authenticated/merchants/dashboard': {
+      id: '/_authenticated/merchants/dashboard'
+      path: '/dashboard'
+      fullPath: '/merchants/dashboard'
+      preLoaderRoute: typeof AuthenticatedMerchantsDashboardRouteImport
+      parentRoute: typeof AuthenticatedMerchantsRoute
+    }
     '/_authenticated/merchants/$merchantId': {
       id: '/_authenticated/merchants/$merchantId'
       path: '/$merchantId'
@@ -383,12 +403,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedMerchantsRouteChildren {
   AuthenticatedMerchantsMerchantIdRoute: typeof AuthenticatedMerchantsMerchantIdRoute
+  AuthenticatedMerchantsDashboardRoute: typeof AuthenticatedMerchantsDashboardRoute
 }
 
 const AuthenticatedMerchantsRouteChildren: AuthenticatedMerchantsRouteChildren =
   {
     AuthenticatedMerchantsMerchantIdRoute:
       AuthenticatedMerchantsMerchantIdRoute,
+    AuthenticatedMerchantsDashboardRoute: AuthenticatedMerchantsDashboardRoute,
   }
 
 const AuthenticatedMerchantsRouteWithChildren =
