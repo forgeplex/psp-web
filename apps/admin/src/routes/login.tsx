@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Form, Input, Button, Checkbox, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { brandColors } from '@psp/shared';
+import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
 import { BrandPanel, ErrorAlert, type AuthErrorCode } from '../components/auth';
 
@@ -16,6 +17,15 @@ interface LoginFormValues {
   remember?: boolean;
 }
 
+
+interface LoginResponse {
+  session_id?: string;
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  mfa_status?: 'verified' | 'requires_setup' | 'requires_verification';
+  available_mfa_types?: string[];
+}
 const styles = {
   page: {
     display: 'flex',
@@ -246,47 +256,85 @@ function LoginPage() {
       setError({ visible: false });
 
       try {
-        await new Promise((resolve, reject) =>
-          setTimeout(() => {
-            if (values.username === 'admin' && values.password === 'admin') {
-              resolve(true);
-            } else {
-              reject(new Error('AUTH_001'));
-            }
-          }, 800)
-        );
+        const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
+          username: values.username,
+          password: values.password,
+        });
 
-        login(
-          {
-            id: '1',
-            username: values.username,
-            name: 'Admin User',
-            email: 'admin@psp.com',
-            role: 'admin',
-          },
-          'mock_access_token',
-          'mock_refresh_token'
-        );
+        // Store session_id for MFA flow
+        if (data.session_id) {
+          sessionStorage.setItem('psp_session_id', data.session_id);
+        }
 
-        message.success('登录成功');
-        navigate({ to: '/merchants' });
-      } catch (err) {
-        const errorCode = err instanceof Error ? err.message : 'AUTH_001';
+        // Handle MFA status
+        if (data.mfa_status === 'requires_setup') {
+          message.info('请先设置 MFA');
+          navigate({ to: '/mfa/setup' });
+          return;
+        }
+
+        if (data.mfa_status === 'requires_verification') {
+          if (data.available_mfa_types) {
+            sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
+          }
+          message.info('请完成 MFA 验证');
+          navigate({ to: '/mfa/verify' });
+          return;
+        }
+
+        // MFA verified or not required - complete login
+        if (data.access_token) {
+          login(
+            {
+              id: '1',
+              username: values.username,
+              name: values.username,
+              email: values.username,
+              role: 'admin',
+            },
+            data.access_token,
+            data.refresh_token || ''
+          );
+
+          message.success('登录成功');
+          navigate({ to: '/merchants' });
+        }
+      } catch (err: unknown) {
+        console.error('Login error:', err);
+        
+        let errorCode: AuthErrorCode = 'AUTH_001';
+        let errorMessage = '用户名或密码错误';
+        
+        if (err && typeof err === 'object' && 'response' in err) {
+          const response = (err as { response?: { data?: { code?: string; message?: string }; status?: number } }).response;
+          if (response?.data?.code) {
+            errorCode = response.data.code as AuthErrorCode;
+          }
+          if (response?.data?.message) {
+            errorMessage = response.data.message;
+          }
+          if (response?.status === 401) {
+            errorCode = 'AUTH_001';
+          } else if (response?.status === 423) {
+            errorCode = 'AUTH_002';
+          }
+        }
+        
         setError({
           visible: true,
-          code: errorCode as AuthErrorCode,
+          code: errorCode,
+          message: errorMessage,
         });
 
         if (errorCode === 'AUTH_002') {
           setLoading(true);
+          return;
         }
       } finally {
-        if (error.code !== 'AUTH_002') {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     },
-    [login, navigate, error.code]
+    [login, navigate]
   );
 
   const handleForgotPassword = () => {
