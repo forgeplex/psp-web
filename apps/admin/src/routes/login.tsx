@@ -1,322 +1,329 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Form, Input, Button, Checkbox, Typography, theme } from 'antd';
+import { Form, Input, Button, Checkbox, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { brandColors } from '@psp/shared';
 import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
-import { BrandPanel, ErrorAlert, type AuthErrorCode } from '../components/auth';
 
 export const Route = createFileRoute('/login')({
-  component: LoginPage,
+  component: Login,
 });
-
-interface LoginFormValues {
-  username: string;
-  password: string;
-  remember?: boolean;
-}
 
 interface LoginResponse {
   session_id?: string;
   access_token?: string;
   refresh_token?: string;
-  expires_in?: number;
   mfa_status?: 'verified' | 'requires_setup' | 'requires_verification';
   available_mfa_types?: string[];
 }
 
-const { useToken } = theme;
-
-// 样式常量 - 使用 8px 基准网格系统
-const SPACING = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
-} as const;
-
-function LoginPage() {
+function Login() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
-  const { token } = useToken();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{ visible: boolean; code?: AuthErrorCode; message?: string }>({
-    visible: false,
-  });
+  const [error, setError] = useState('');
 
-  const handleLogin = useCallback(
-    async (values: LoginFormValues) => {
-      setLoading(true);
-      setError({ visible: false });
+  const onFinish = async (values: { username: string; password: string; remember?: boolean }) => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
+        username: values.username,
+        password: values.password,
+      });
 
-      try {
-        const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
-          username: values.username,
-          password: values.password,
-        });
-
-        if (data.session_id) {
-          sessionStorage.setItem('psp_session_id', data.session_id);
-        }
-
-        if (data.mfa_status === 'requires_setup') {
-          navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
-          return;
-        }
-
-        if (data.mfa_status === 'requires_verification') {
-          if (data.available_mfa_types) {
-            sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
-          }
-          navigate({ to: '/mfa/verify', search: { session_id: data.session_id || '' } });
-          return;
-        }
-
-        if (data.access_token) {
-          login(
-            {
-              id: '1',
-              username: values.username,
-              name: values.username,
-              email: values.username,
-              role: 'admin',
-            },
-            data.access_token,
-            data.refresh_token || ''
-          );
-          navigate({ to: '/merchants' });
-        }
-      } catch (err: unknown) {
-        const axiosError = err as { response?: { status: number; data?: { message?: string } } };
-        if (axiosError.response?.status === 401) {
-          setError({ visible: true, code: 'INVALID_CREDENTIALS' });
-        } else {
-          setError({
-            visible: true,
-            code: 'UNKNOWN_ERROR',
-            message: axiosError.response?.data?.message || '登录失败，请稍后重试',
-          });
-        }
-      } finally {
-        setLoading(false);
+      if (data.session_id) {
+        sessionStorage.setItem('psp_session_id', data.session_id);
       }
-    },
-    [login, navigate]
-  );
 
-  const handleForgotPassword = useCallback(() => {
-    navigate({ to: '/forgot-password' });
-  }, [navigate]);
+      if (data.mfa_status === 'requires_setup') {
+        navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
+        return;
+      }
+
+      if (data.mfa_status === 'requires_verification') {
+        if (data.available_mfa_types) {
+          sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
+        }
+        navigate({ to: '/mfa/verify', search: { session_id: data.session_id || '' } });
+        return;
+      }
+
+      if (data.access_token) {
+        login(
+          { id: '1', username: values.username, name: values.username, email: values.username, role: 'admin' },
+          data.access_token,
+          data.refresh_token || ''
+        );
+        navigate({ to: '/merchants' });
+      }
+    } catch {
+      setError('用户名或密码错误');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div style={pageStyles.container}>
-      <BrandPanel />
-      
-      {/* 右侧表单区域 */}
-      <div style={pageStyles.formSection}>
-        <div style={pageStyles.formWrapper}>
-          {/* 头部品牌区 */}
-          <div style={pageStyles.header}>
-            <div style={pageStyles.logo}>
-              <div style={pageStyles.logoIcon}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <span style={pageStyles.logoText}>PSP Admin</span>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* 左侧品牌区 */}
+      <div style={{
+        flex: 1,
+        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: 64,
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* 背景装饰 */}
+        <div style={{
+          position: 'absolute',
+          top: '10%',
+          right: '10%',
+          width: 400,
+          height: 400,
+          background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)',
+          borderRadius: '50%',
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '5%',
+          width: 300,
+          height: 300,
+          background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)',
+          borderRadius: '50%',
+        }} />
+        
+        {/* 网格背景 */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }} />
+
+        {/* 品牌内容 */}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 12, 
+            marginBottom: 48 
+          }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
             </div>
-            
-            <Typography.Title 
-              level={3} 
-              style={{ 
-                margin: `${SPACING.md}px 0 ${SPACING.xs}px`,
-                fontWeight: 600,
-                fontSize: 24,
-              }}
-            >
-              欢迎回来
-            </Typography.Title>
-            
-            <Typography.Text style={pageStyles.subtitle}>
-              请输入您的账号信息以继续
-            </Typography.Text>
+            <span style={{ 
+              fontSize: 24, 
+              fontWeight: 700, 
+              color: '#F8FAFC' 
+            }}>PSP Admin</span>
           </div>
 
-          {/* 登录卡片 */}
-          <div style={pageStyles.card}>
-            <ErrorAlert
-              visible={error.visible}
-              code={error.code}
-              message={error.message}
-            />
+          <h1 style={{
+            fontSize: 48,
+            fontWeight: 700,
+            color: '#F8FAFC',
+            lineHeight: 1.1,
+            margin: '0 0 24px 0',
+            letterSpacing: -1,
+          }}>
+            下一代<br />支付基础设施
+          </h1>
+          
+          <p style={{
+            fontSize: 18,
+            color: '#94A3B8',
+            lineHeight: 1.6,
+            margin: 0,
+            maxWidth: 400,
+          }}>
+            安全、高效、可扩展的企业级支付管理平台
+          </p>
+        </div>
 
-            <Form<LoginFormValues>
-              onFinish={handleLogin}
-              layout="vertical"
-              size="large"
-              initialValues={{ username: 'admin@psp.dev', password: '123456', remember: false }}
-              requiredMark={false}
-            >
-              <Form.Item
-                name="username"
-                rules={[{ required: true, message: '请输入用户名' }]}
-                style={{ marginBottom: SPACING.lg }}
-              >
-                <Input
-                  prefix={<UserOutlined style={{ color: token.colorTextDisabled }} />}
-                  placeholder="用户名 / 邮箱"
-                  autoComplete="username"
-                  style={inputStyles.base}
-                />
-              </Form.Item>
+        {/* 底部特性 */}
+        <div style={{
+          position: 'absolute',
+          bottom: 64,
+          left: 64,
+          right: 64,
+          display: 'flex',
+          gap: 32,
+        }}>
+          {[
+            { icon: '⚡', text: '实时交易' },
+            { icon: '🛡️', text: '银行级安全' },
+            { icon: '📊', text: '数据分析' },
+          ].map((item) => (
+            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span>{item.icon}</span>
+              <span style={{ color: '#94A3B8', fontSize: 13 }}>{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: '请输入密码' }]}
-                style={{ marginBottom: SPACING.md }}
-              >
-                <Input.Password
-                  prefix={<LockOutlined style={{ color: token.colorTextDisabled }} />}
-                  placeholder="密码"
-                  autoComplete="current-password"
-                  style={inputStyles.base}
-                />
-              </Form.Item>
-
-              <div style={pageStyles.formFooter}>
-                <Form.Item name="remember" valuePropName="checked" style={{ marginBottom: 0 }}>
-                  <Checkbox style={{ fontSize: 13 }}>记住此设备</Checkbox>
-                </Form.Item>
-                <Button 
-                  type="link" 
-                  onClick={handleForgotPassword}
-                  style={{ padding: 0, fontSize: 13, height: 'auto' }}
-                >
-                  忘记密码？
-                </Button>
-              </div>
-
-              <Form.Item style={{ marginBottom: 0, marginTop: SPACING.lg }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  loading={loading}
-                  style={buttonStyles.primary}
-                >
-                  登录
-                </Button>
-              </Form.Item>
-            </Form>
+      {/* 右侧表单区 */}
+      <div style={{
+        width: 480,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: 64,
+        background: '#FFFFFF',
+      }}>
+        <div style={{ maxWidth: 360, width: '100%', margin: '0 auto' }}>
+          {/* 表单头部 */}
+          <div style={{ marginBottom: 32 }}>
+            <h2 style={{
+              fontSize: 28,
+              fontWeight: 600,
+              color: '#0F172A',
+              margin: '0 0 8px 0',
+            }}>登录</h2>
+            <p style={{
+              fontSize: 14,
+              color: '#64748B',
+              margin: 0,
+            }}>请输入您的账号信息以访问管理面板</p>
           </div>
 
-          {/* 底部版权 */}
-          <Typography.Text style={pageStyles.copyright}>
+          {/* 错误提示 */}
+          {error && (
+            <div style={{
+              padding: '12px 16px',
+              background: '#FEF2F2',
+              border: '1px solid #FECACA',
+              borderRadius: 8,
+              marginBottom: 20,
+              color: '#DC2626',
+              fontSize: 14,
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* 登录表单 */}
+          <Form
+            onFinish={onFinish}
+            layout="vertical"
+            requiredMark={false}
+            initialValues={{ remember: false }}
+          >
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: '请输入用户名' }]}
+              style={{ marginBottom: 20 }}
+            >
+              <Input
+                size="large"
+                placeholder="用户名 / 邮箱"
+                prefix={<UserOutlined style={{ color: '#94A3B8' }} />}
+                style={{
+                  height: 48,
+                  borderRadius: 8,
+                  borderColor: '#E2E8F0',
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: '请输入密码' }]}
+              style={{ marginBottom: 16 }}
+            >
+              <Input.Password
+                size="large"
+                placeholder="密码"
+                prefix={<LockOutlined style={{ color: '#94A3B8' }} />}
+                style={{
+                  height: 48,
+                  borderRadius: 8,
+                  borderColor: '#E2E8F0',
+                }}
+              />
+            </Form.Item>
+
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <Form.Item name="remember" valuePropName="checked" style={{ marginBottom: 0 }}>
+                <Checkbox style={{ fontSize: 13, color: '#475569' }}>
+                  记住此设备
+                </Checkbox>
+              </Form.Item>
+              <Button 
+                type="link" 
+                style={{ 
+                  padding: 0, 
+                  fontSize: 13, 
+                  height: 'auto',
+                  color: '#6366F1',
+                }}
+                onClick={() => navigate({ to: '/forgot-password' })}
+              >
+                忘记密码？
+              </Button>
+            </div>
+
+            <Form.Item style={{ marginBottom: 0 }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                block
+                loading={loading}
+                style={{
+                  height: 48,
+                  borderRadius: 8,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                  border: 'none',
+                  boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
+                }}
+              >
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+
+          {/* 版权信息 */}
+          <p style={{
+            textAlign: 'center',
+            fontSize: 12,
+            color: '#94A3B8',
+            marginTop: 48,
+          }}>
             © 2026 PSP Admin · 安全连接
-          </Typography.Text>
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-// 页面级样式
-const pageStyles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    minHeight: '100vh',
-    backgroundColor: '#FFFFFF',
-  },
-  formSection: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${SPACING.xl}px`,
-    position: 'relative',
-  },
-  formWrapper: {
-    width: '100%',
-    maxWidth: 360,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: SPACING.lg,
-  },
-  header: {
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    marginBottom: SPACING.lg,
-  },
-  logoIcon: {
-    width: 36,
-    height: 36,
-    background: brandColors.gradient || `linear-gradient(135deg, ${brandColors.primary} 0%, #8B5CF6 100%)`,
-    borderRadius: 8,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: '#0F172A',
-    letterSpacing: -0.3,
-  },
-  subtitle: {
-    color: '#64748B',
-    fontSize: 14,
-    margin: 0,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    border: '1px solid #E2E8F0',
-    padding: `${SPACING.xl}px`,
-  },
-  formFooter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.xs,
-  },
-  copyright: {
-    textAlign: 'center',
-    fontSize: 12,
-    color: '#94A3B8',
-    marginTop: SPACING.md,
-  },
-};
-
-// 输入框样式
-const inputStyles = {
-  base: {
-    borderRadius: 8,
-    height: 44,
-  } as React.CSSProperties,
-};
-
-// 按钮样式
-const buttonStyles = {
-  primary: {
-    height: 44,
-    borderRadius: 8,
-    fontWeight: 500,
-    fontSize: 15,
-    background: brandColors.primary,
-    borderColor: brandColors.primary,
-  } as React.CSSProperties,
-};
-
-export default LoginPage;
+export default Login;
