@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, GripVertical } from 'lucide-react';
+import { X, GripVertical, Info } from 'lucide-react';
 
 interface VersionBadgeProps {
   version?: string;
@@ -26,6 +26,7 @@ export function VersionBadge({
   const [position, setPosition] = useState<Position>({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showRestoreHint, setShowRestoreHint] = useState(false);
   const dragRef = useRef<{ startX: number; startY: number; startPosX: number; startPosY: number } | null>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
 
@@ -52,10 +53,15 @@ export function VersionBadge({
   }, [hiddenKey, positionKey]);
 
   const handleClose = useCallback(() => {
-    setIsHidden(true);
-    try {
-      localStorage.setItem(hiddenKey, 'true');
-    } catch {}
+    setShowRestoreHint(true);
+    // Show hint for 3 seconds before hiding
+    setTimeout(() => {
+      setIsHidden(true);
+      setShowRestoreHint(false);
+      try {
+        localStorage.setItem(hiddenKey, 'true');
+      } catch {}
+    }, 2500);
   }, [hiddenKey]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -104,11 +110,13 @@ export function VersionBadge({
     };
   }, [isDragging, position, positionKey]);
 
+  // Keyboard shortcut to restore
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'v') {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'v') {
         e.preventDefault();
         setIsHidden(false);
+        setShowRestoreHint(false);
         try {
           localStorage.setItem(hiddenKey, 'false');
         } catch {}
@@ -120,6 +128,24 @@ export function VersionBadge({
   }, [hiddenKey]);
 
   if (isHidden) return null;
+
+  // Show restore hint when closing
+  if (showRestoreHint) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          right: position.x,
+          bottom: position.y,
+          zIndex: 9999,
+        }}
+        className="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-500/90 text-white text-xs font-medium backdrop-blur-sm shadow-lg animate-pulse"
+      >
+        <Info className="w-4 h-4" />
+        <span>按 <kbd className="px-1 py-0.5 bg-white/20 rounded text-[10px]">Ctrl+Shift+V</kbd> 可重新显示</span>
+      </div>
+    );
+  }
 
   return (
     <div
