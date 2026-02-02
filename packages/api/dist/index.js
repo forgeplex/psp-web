@@ -13,4 +13,6 @@ export * from './hooks';
 export * from './types';
 // Merchants API
 export * from './merchants';
+// Export API
+export * from './export';
 //# sourceMappingURL=index.js.map

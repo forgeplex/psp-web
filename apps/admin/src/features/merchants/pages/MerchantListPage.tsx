@@ -11,6 +11,7 @@ import {
   Typography,
   message,
   Spin,
+  Modal,
 } from 'antd';
 import type { MenuProps, TableColumnsType } from 'antd';
 import {
@@ -24,6 +25,8 @@ import {
   PauseCircleOutlined,
   DeleteOutlined,
   ReloadOutlined,
+  FileExcelOutlined,
+  FilePdfOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from '@tanstack/react-router';
 import { PageHeader } from '@psp/ui';
@@ -31,12 +34,13 @@ import { formatDate } from '@psp/shared';
 import {
   useMerchants,
   useUpdateMerchantStatus,
-  useExportMerchants,
+  useExportMerchantsAsync,
   type MerchantListItem,
   type MerchantStatus,
   type KYBStatus,
   type RiskLevel,
   type ListMerchantsParams,
+  type ExportFormat,
 } from '@psp/api';
 import {
   MerchantStatusBadge,
@@ -78,6 +82,8 @@ const riskLevelOptions = [
 export function MerchantListPage() {
   const navigate = useNavigate();
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [selectedExportFormat, setSelectedExportFormat] = useState<ExportFormat>('xlsx');
   
   // Filter state
   const [filters, setFilters] = useState<ListMerchantsParams>({
@@ -94,7 +100,7 @@ export function MerchantListPage() {
   } = useMerchants(filters);
 
   const updateStatusMutation = useUpdateMerchantStatus();
-  const exportMutation = useExportMerchants();
+  const exportMutation = useExportMerchantsAsync();
 
   // Computed
   const merchants = merchantsData?.data ?? [];
@@ -131,15 +137,34 @@ export function MerchantListPage() {
 
   const handleExport = useCallback(async () => {
     try {
-      await exportMutation.mutateAsync({
-        ...filters,
-        format: 'xlsx',
+      // 根据筛选条件计算时间范围
+      const now = Date.now();
+      let startTime = now - 90 * 24 * 60 * 60 * 1000; // 默认 90 天
+      let endTime = now;
+      
+      if (filters.start_date) {
+        startTime = new Date(filters.start_date).getTime();
+      }
+      if (filters.end_date) {
+        endTime = new Date(filters.end_date).getTime() + 24 * 60 * 60 * 1000 - 1; // 结束当天 23:59:59
+      }
+
+      const result = await exportMutation.mutateAsync({
+        format: selectedExportFormat,
+        start_time: startTime,
+        end_time: endTime,
       });
-      message.success('导出任务已创建');
-    } catch (error) {
-      message.error('导出失败');
+      
+      setExportModalOpen(false);
+      message.success(
+        <span>
+          导出任务已创建，任务 ID: <Typography.Text code copyable>{result.task_id}</Typography.Text>
+        </span>
+      );
+    } catch (error: any) {
+      message.error(error?.response?.data?.message || '导出失败');
     }
-  }, [exportMutation, filters]);
+  }, [exportMutation, filters, selectedExportFormat]);
 
   const handleReset = useCallback(() => {
     setSearchKeyword('');
@@ -148,6 +173,37 @@ export function MerchantListPage() {
       page_size: 20,
     });
   }, []);
+
+  // Export dropdown menu
+  const exportMenuItems: MenuProps['items'] = [
+    {
+      key: 'xlsx',
+      icon: <FileExcelOutlined />,
+      label: '导出为 Excel',
+      onClick: () => {
+        setSelectedExportFormat('xlsx');
+        setExportModalOpen(true);
+      },
+    },
+    {
+      key: 'csv',
+      icon: <DownloadOutlined />,
+      label: '导出为 CSV',
+      onClick: () => {
+        setSelectedExportFormat('csv');
+        setExportModalOpen(true);
+      },
+    },
+    {
+      key: 'json',
+      icon: <DownloadOutlined />,
+      label: '导出为 JSON',
+      onClick: () => {
+        setSelectedExportFormat('json');
+        setExportModalOpen(true);
+      },
+    },
+  ];
 
   // Row actions menu
   const getRowActions = (record: MerchantListItem): MenuProps['items'] => [
@@ -278,13 +334,14 @@ export function MerchantListPage() {
             >
               刷新
             </Button>
-            <Button
-              icon={<DownloadOutlined />}
-              onClick={handleExport}
-              loading={exportMutation.isPending}
-            >
-              导出
-            </Button>
+            <Dropdown menu={{ items: exportMenuItems }} trigger={['click']}>
+              <Button
+                icon={<DownloadOutlined />}
+                loading={exportMutation.isPending}
+              >
+                导出
+              </Button>
+            </Dropdown>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -385,6 +442,29 @@ export function MerchantListPage() {
           refetch();
         }}
       />
+
+      {/* Export Confirmation Modal */}
+      <Modal
+        title="导出商户数据"
+        open={exportModalOpen}
+        onOk={handleExport}
+        onCancel={() => setExportModalOpen(false)}
+        confirmLoading={exportMutation.isPending}
+        okText="开始导出"
+        cancelText="取消"
+      >
+        <p>将导出 {selectedExportFormat.toUpperCase()} 格式的商户数据。</p>
+        <p style={{ color: 'var(--muted-foreground)', fontSize: 12 }}>
+          • 导出任务将在后台执行<br />
+          • 完成后可在「导出记录」中下载文件<br />
+          • 文件保留 72 小时
+        </p>
+        {filters.start_date && filters.end_date && (
+          <p style={{ marginTop: 8 }}>
+            <strong>时间范围：</strong>{filters.start_date} ~ {filters.end_date}
+          </p>
+        )}
+      </Modal>
     </div>
   );
 }
