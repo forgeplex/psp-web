@@ -97,7 +97,7 @@ export function MerchantListPage() {
   const exportMutation = useExportMerchants();
 
   // Computed
-  const merchants = merchantsData?.items ?? [];
+  const merchants = merchantsData?.data ?? [];
   const total = merchantsData?.total ?? 0;
 
   // Handlers
@@ -120,7 +120,7 @@ export function MerchantListPage() {
   const handleStatusChange = useCallback(async (merchantId: string, newStatus: MerchantStatus) => {
     try {
       await updateStatusMutation.mutateAsync({
-        merchantId,
+        id: merchantId,
         status: newStatus,
       });
       message.success('状态更新成功');
@@ -161,7 +161,7 @@ export function MerchantListPage() {
       key: 'edit',
       icon: <EditOutlined />,
       label: '编辑',
-      onClick: () => navigate({ to: '/merchants/$merchantId/edit', params: { merchantId: record.id } }),
+      onClick: () => navigate({ to: '/merchants/$merchantId', params: { merchantId: record.id } }),
     },
     { type: 'divider' },
     ...(record.status === 'active' ? [{
@@ -270,7 +270,7 @@ export function MerchantListPage() {
       <PageHeader
         title="商户管理"
         subtitle={`共 ${total} 个商户`}
-        actions={
+        extra={
           <Space>
             <Button
               icon={<ReloadOutlined spin={isLoading} />}
