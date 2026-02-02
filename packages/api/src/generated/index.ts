@@ -5,3 +5,11 @@
  */
 
 export * from './admin';
+
+// Admin Swagger types with different names to avoid conflicts
+export type {
+  paths as SwaggerPaths,
+  components as SwaggerComponents,
+  operations as SwaggerOperations,
+  webhooks as SwaggerWebhooks,
+} from './admin-swagger';
