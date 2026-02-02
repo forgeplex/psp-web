@@ -111,4 +111,109 @@ export function useExportMerchants() {
         },
     });
 }
+export function useMerchantBalance(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'balance'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/balance`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useMerchantStats(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'stats'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/stats`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useMerchantAccounts(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'accounts'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/accounts`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useFreezeAccount() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ merchantId, accountId, reason }) => {
+            await apiClient.post(`/api/v1/merchants/${merchantId}/accounts/${accountId}/freeze`, { reason });
+        },
+        onSuccess: (_, { merchantId }) => {
+            queryClient.invalidateQueries({ queryKey: [...merchantKeys.detail(merchantId), 'accounts'] });
+        },
+    });
+}
+export function useUnfreezeAccount() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ merchantId, accountId }) => {
+            await apiClient.post(`/api/v1/merchants/${merchantId}/accounts/${accountId}/unfreeze`);
+        },
+        onSuccess: (_, { merchantId }) => {
+            queryClient.invalidateQueries({ queryKey: [...merchantKeys.detail(merchantId), 'accounts'] });
+        },
+    });
+}
+export function useMerchantUsers(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'users'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/users`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useMerchantApiKeys(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'api-keys'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/api-keys`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useMerchantIpWhitelist(merchantId) {
+    return useQuery({
+        queryKey: [...merchantKeys.detail(merchantId), 'ip-whitelist'],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/api/v1/merchants/${merchantId}/ip-whitelist`);
+            return data;
+        },
+        enabled: !!merchantId,
+    });
+}
+export function useAddIpWhitelist() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ merchantId, ...data }) => {
+            const { data: result } = await apiClient.post(`/api/v1/merchants/${merchantId}/ip-whitelist`, data);
+            return result;
+        },
+        onSuccess: (_, { merchantId }) => {
+            queryClient.invalidateQueries({ queryKey: [...merchantKeys.detail(merchantId), 'ip-whitelist'] });
+        },
+    });
+}
+export function useRemoveIpWhitelist() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ merchantId, ipId }) => {
+            await apiClient.delete(`/api/v1/merchants/${merchantId}/ip-whitelist/${ipId}`);
+        },
+        onSuccess: (_, { merchantId }) => {
+            queryClient.invalidateQueries({ queryKey: [...merchantKeys.detail(merchantId), 'ip-whitelist'] });
+        },
+    });
+}
 //# sourceMappingURL=merchants.js.map
