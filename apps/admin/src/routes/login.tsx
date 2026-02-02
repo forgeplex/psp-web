@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Form, Input, Button, Checkbox, Typography, message } from 'antd';
+import { Card, Form, Input, Button, Checkbox, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { brandColors } from '@psp/shared';
-import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
 import { BrandPanel, ErrorAlert, type AuthErrorCode } from '../components/auth';
 
@@ -17,206 +16,95 @@ interface LoginFormValues {
   remember?: boolean;
 }
 
-
-interface LoginResponse {
-  session_id?: string;
-  access_token?: string;
-  refresh_token?: string;
-  expires_in?: number;
-  mfa_status?: 'verified' | 'requires_setup' | 'requires_verification';
-  available_mfa_types?: string[];
-}
 const styles = {
   page: {
     display: 'flex',
     minHeight: '100vh',
-    background: '#FFFFFF',
   },
   formPanel: {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '40px 24px',
-    position: 'relative' as const,
-    overflow: 'hidden' as const,
+    padding: 24,
+    background: '#F8FAFC',
   },
   formContainer: {
     width: '100%',
-    maxWidth: 420,
-    position: 'relative' as const,
-    zIndex: 1,
+    maxWidth: 400,
   },
-  // Logo
   logo: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
-    marginBottom: 12,
-  },
-  logoIcon: {
-    width: 44,
-    height: 44,
-    background: brandColors.gradient,
-    borderRadius: 12,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 4px 14px rgba(99, 102, 241, 0.3)',
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: 700,
-    color: '#0F172A',
-    letterSpacing: -0.8,
-  },
-  // Welcome text
-  welcomeTag: {
-    display: 'flex',
-    justifyContent: 'center',
+    gap: 10,
     marginBottom: 8,
   },
-  welcomeBadge: {
-    display: 'inline-flex',
+  logoIcon: {
+    width: 40,
+    height: 40,
+    background: brandColors.primary,
+    borderRadius: 10,
+    display: 'flex',
     alignItems: 'center',
-    gap: 6,
-    padding: '5px 14px',
-    background: brandColors.primaryLight,
-    borderRadius: 20,
-    fontSize: 12,
-    fontWeight: 500,
-    color: brandColors.primary,
+    justifyContent: 'center',
   },
-  title: {
-    textAlign: 'center' as const,
-    marginBottom: 6,
-    fontSize: 26,
+  logoText: {
+    fontSize: 22,
     fontWeight: 700,
     color: '#0F172A',
     letterSpacing: -0.5,
   },
+  title: {
+    textAlign: 'center' as const,
+    marginBottom: 8,
+  },
   subtitle: {
     textAlign: 'center' as const,
     marginBottom: 32,
-    fontSize: 14,
-    color: '#94A3B8',
-    lineHeight: 1.5,
-  },
-  // Solid white card with strong shadow
-  card: {
-    borderRadius: 20,
-    border: 'none',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
-    background: '#FFFFFF',
-    padding: '44px 40px',
-  },
-  // Divider
-  dividerRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    margin: '24px 0',
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    background: '#E2E8F0',
-  },
-  dividerText: {
-    fontSize: 12,
-    color: '#94A3B8',
-    fontWeight: 500,
-    whiteSpace: 'nowrap' as const,
-  },
-  // Social login buttons
-  socialRow: {
-    display: 'flex',
-    gap: 12,
-    marginBottom: 0,
-  },
-  socialBtn: {
-    flex: 1,
-    height: 44,
-    borderRadius: 10,
-    border: '1px solid #E2E8F0',
-    background: '#FFFFFF',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    cursor: 'pointer',
     fontSize: 13,
-    fontWeight: 500,
-    color: '#475569',
-    transition: 'all 0.2s ease',
+    color: '#64748b',
   },
-  // Form elements
+  card: {
+    borderRadius: 12,
+    border: '1px solid #E2E8F0',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+  },
   forgotPassword: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   forgotLink: {
-    fontSize: 13,
-    color: brandColors.primary,
-    cursor: 'pointer',
-    fontWeight: 500,
-    transition: 'color 0.2s',
-  },
-  loginBtn: {
-    height: 48,
-    borderRadius: 12,
-    background: brandColors.gradient,
-    border: 'none',
-    fontSize: 15,
-    fontWeight: 600,
-    boxShadow: '0 6px 20px rgba(99, 102, 241, 0.4)',
-    transition: 'all 0.3s ease',
-  },
-  // Footer
-  footer: {
-    marginTop: 28,
-    textAlign: 'center' as const,
-  },
-  footerText: {
-    fontSize: 13,
-    color: '#94A3B8',
-  },
-  footerLink: {
-    color: brandColors.primary,
-    fontWeight: 500,
-    cursor: 'pointer',
-    marginLeft: 4,
-  },
-  // Copyright
-  copyright: {
-    marginTop: 40,
-    textAlign: 'center' as const,
     fontSize: 12,
-    color: '#CBD5E1',
+    color: brandColors.primary,
+    cursor: 'pointer',
+  },
+  footer: {
+    marginTop: 32,
+    textAlign: 'center' as const,
+  },
+  copyright: {
+    fontSize: 12,
+    color: '#64748B',
   },
 };
 
 const LayersIcon: React.FC = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#FFFFFF"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M12 2L2 7l10 5 10-5-10-5z" />
     <path d="M2 17l10 5 10-5" />
     <path d="M2 12l10 5 10-5" />
-  </svg>
-);
-
-const SsoIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-  </svg>
-);
-
-const KeyIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
   </svg>
 );
 
@@ -235,85 +123,53 @@ function LoginPage() {
       setError({ visible: false });
 
       try {
-        const { data } = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
-          username: values.username,
-          password: values.password,
-        });
+        // TODO: Replace with actual API call
+        await new Promise((resolve, reject) =>
+          setTimeout(() => {
+            // Simulate login - use 'admin@psp.dev/123456' for success
+            if (values.username === 'admin@psp.dev' && values.password === '123456') {
+              resolve(true);
+            } else {
+              reject(new Error('AUTH_001'));
+            }
+          }, 800)
+        );
 
-        // Store session_id for MFA flow
-        if (data.session_id) {
-          sessionStorage.setItem('psp_session_id', data.session_id);
-        }
+        login(
+          {
+            id: '1',
+            username: values.username,
+            name: 'Admin User',
+            email: 'admin@psp.com',
+            role: 'admin',
+          },
+          'mock_access_token',
+          'mock_refresh_token'
+        );
 
-        // Handle MFA status
-        if (data.mfa_status === 'requires_setup') {
-          message.info('请先设置 MFA');
-          navigate({ to: '/mfa/setup', search: { session_id: data.session_id || '' } });
-          return;
-        }
+        message.success('登录成功');
 
-        if (data.mfa_status === 'requires_verification') {
-          if (data.available_mfa_types) {
-            sessionStorage.setItem('psp_mfa_types', JSON.stringify(data.available_mfa_types));
-          }
-          message.info('请完成 MFA 验证');
-          navigate({ to: '/mfa/verify', search: { session_id: data.session_id || '' } });
-          return;
-        }
-
-        // MFA verified or not required - complete login
-        if (data.access_token) {
-          login(
-            {
-              id: '1',
-              username: values.username,
-              name: values.username,
-              email: values.username,
-              role: 'admin',
-            },
-            data.access_token,
-            data.refresh_token || ''
-          );
-
-          message.success('登录成功');
-          navigate({ to: '/merchants' });
-        }
-      } catch (err: unknown) {
-        console.error('Login error:', err);
-        
-        let errorCode: AuthErrorCode = 'AUTH_001';
-        let errorMessage = '用户名或密码错误';
-        
-        if (err && typeof err === 'object' && 'response' in err) {
-          const response = (err as { response?: { data?: { code?: string; message?: string }; status?: number } }).response;
-          if (response?.data?.code) {
-            errorCode = response.data.code as AuthErrorCode;
-          }
-          if (response?.data?.message) {
-            errorMessage = response.data.message;
-          }
-          if (response?.status === 401) {
-            errorCode = 'AUTH_001';
-          } else if (response?.status === 423) {
-            errorCode = 'AUTH_002';
-          }
-        }
-        
+        // TODO: Check if MFA setup is required
+        // For now, navigate to dashboard
+        navigate({ to: '/' });
+      } catch (err) {
+        const errorCode = err instanceof Error ? err.message : 'AUTH_001';
         setError({
           visible: true,
-          code: errorCode,
-          message: errorMessage,
+          code: errorCode as AuthErrorCode,
         });
 
+        // Disable button for AUTH_002 (account locked)
         if (errorCode === 'AUTH_002') {
-          setLoading(true);
-          return;
+          setLoading(true); // Keep button disabled
         }
       } finally {
-        setLoading(false);
+        if (error.code !== 'AUTH_002') {
+          setLoading(false);
+        }
       }
     },
-    [login, navigate]
+    [login, navigate, error.code]
   );
 
   const handleForgotPassword = () => {
@@ -324,60 +180,15 @@ function LoginPage() {
     <div style={styles.page}>
       <BrandPanel />
 
-      <main style={styles.formPanel} className="login-form-panel">
+      <main style={styles.formPanel} className="form-panel">
         <style>{`
-@media (min-width: 1024px) {
-            .login-form-panel { width: 50%; flex: none !important; }
+          @media (min-width: 1024px) {
+            .form-panel { width: 50%; flex: none !important; }
           }
           @media (min-width: 1440px) {
-            .login-form-panel { width: 45%; }
-          }
-          /* Input styling */
-          .login-form-panel .ant-input-affix-wrapper {
-            border-radius: 10px !important;
-            height: 44px !important;
-            border-color: #E2E8F0 !important;
-            transition: all 0.2s ease !important;
-            background: #ffffff !important;
-          }
-          .login-form-panel .ant-input-affix-wrapper:hover {
-            border-color: ${brandColors.primary} !important;
-          }
-          .login-form-panel .ant-input-affix-wrapper-focused {
-            border-color: ${brandColors.primary} !important;
-            box-shadow: 0 0 0 3px ${brandColors.primaryLight} !important;
-          }
-          .login-form-panel .ant-form-item-label > label {
-            font-weight: 600 !important;
-            color: #334155 !important;
-            font-size: 12px !important;
-          }
-          .login-form-panel .ant-btn-primary:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45) !important;
-          }
-          .login-form-panel .ant-btn-primary:active {
-            transform: translateY(0) !important;
-          }
-          .social-btn:hover {
-            border-color: ${brandColors.primary} !important;
-            background: ${brandColors.primaryLight} !important;
-            color: ${brandColors.primary} !important;
-          }
-
-          /* Mobile: one screen */
-          @media (max-width: 480px) {
-            .login-form-panel { padding: 16px !important; }
-            .login-card { padding: 20px !important; border-radius: 16px !important; }
-            .login-title { font-size: 20px !important; }
-            .login-subtitle { margin-bottom: 16px !important; }
-            .login-divider { margin: 16px 0 !important; }
-            .login-footer { display: none !important; }
-            .login-welcome { display: none !important; }
-            .login-social { display: none !important; }
+            .form-panel { width: 45%; }
           }
         `}</style>
-
         <div style={styles.formContainer}>
           {/* Logo */}
           <div style={styles.logo}>
@@ -387,55 +198,26 @@ function LoginPage() {
             <span style={styles.logoText}>PSP Admin</span>
           </div>
 
-          {/* Welcome badge */}
-          <div style={styles.welcomeTag} className="login-welcome">
-            <span style={styles.welcomeBadge}>
-              👋 欢迎回来
-            </span>
-          </div>
+          <Typography.Title level={4} style={styles.title}>
+            登录
+          </Typography.Title>
 
-          <div style={{ ...styles.title, margin: 0 }} className="login-title">
-            <Typography.Title level={3} style={{ marginBottom: 4, fontWeight: 700, letterSpacing: -0.5 }}>
-              登录您的账户
-            </Typography.Title>
-          </div>
+          <Typography.Text style={styles.subtitle}>
+            输入您的账号信息以访问管理面板
+          </Typography.Text>
 
-          <p style={styles.subtitle} className="login-subtitle">
-            输入凭据以访问支付管理平台
-          </p>
-
-          {/* Login Card */}
-          <div style={styles.card} className="login-card">
+          <Card style={styles.card} styles={{ body: { padding: 32 } }}>
             <ErrorAlert
               visible={error.visible}
               code={error.code}
               message={error.message}
             />
 
-            {/* Social login */}
-            <div style={styles.socialRow} className="login-social">
-              <div className="social-btn" style={styles.socialBtn}>
-                <SsoIcon />
-                <span>SSO 登录</span>
-              </div>
-              <div className="social-btn" style={styles.socialBtn}>
-                <KeyIcon />
-                <span>Passkey</span>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div style={styles.dividerRow} className="login-divider">
-              <div style={styles.dividerLine} />
-              <span style={styles.dividerText}>或使用账号密码</span>
-              <div style={styles.dividerLine} />
-            </div>
-
             <Form<LoginFormValues>
               onFinish={handleLogin}
               layout="vertical"
               size="large"
-              initialValues={{ username: '', password: '', remember: false }}
+              initialValues={{ username: 'admin@psp.dev', password: '123456', remember: false }}
             >
               <Form.Item
                 name="username"
@@ -473,9 +255,7 @@ function LoginPage() {
 
               <div style={styles.forgotPassword}>
                 <Form.Item name="remember" valuePropName="checked" style={{ marginBottom: 0 }}>
-                  <Checkbox>
-                    <span style={{ fontSize: 13, color: '#475569' }}>记住此设备</span>
-                  </Checkbox>
+                  <Checkbox>记住此设备</Checkbox>
                 </Form.Item>
                 <span style={styles.forgotLink} onClick={handleForgotPassword}>
                   忘记密码？
@@ -488,31 +268,23 @@ function LoginPage() {
                   htmlType="submit"
                   block
                   loading={loading}
-                  style={styles.loginBtn}
+                  style={{
+                    height: 42,
+                    background: brandColors.primary,
+                    borderColor: brandColors.primary,
+                  }}
                 >
                   登录
                 </Button>
               </Form.Item>
             </Form>
-          </div>
+          </Card>
 
-          {/* Footer */}
-          <div style={styles.footer} className="login-footer">
-            <span style={styles.footerText}>
-              遇到问题？
-              <span style={styles.footerLink}>联系管理员</span>
-            </span>
-          </div>
-
-          <div style={styles.copyright}>
-            &copy; 2026 PSP Admin &middot; 安全连接
-            <span style={{ marginLeft: 4, display: 'inline-flex', verticalAlign: 'middle' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-            </span>
-          </div>
+          <footer style={styles.footer}>
+            <Typography.Text style={styles.copyright}>
+              &copy; 2026 PSP Admin
+            </Typography.Text>
+          </footer>
         </div>
       </main>
     </div>
