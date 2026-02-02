@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Card,
   Table,
@@ -9,7 +9,6 @@ import {
   Space,
   Dropdown,
   Typography,
-  Checkbox,
   Alert,
   message,
 } from 'antd';
@@ -25,8 +24,9 @@ import {
   PauseCircleOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from '@tanstack/react-router';
 import { PageHeader } from '@psp/ui';
-import { formatDate } from '@psp/shared';
+import { formatDate, baseColors } from '@psp/shared';
 import {
   MerchantStatusBadge,
   KybStatusBadge,
@@ -147,6 +147,7 @@ const countryOptions = [
 ];
 
 export const MerchantListPage: React.FC = () => {
+  const navigate = useNavigate();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchText, setSearchText] = useState('');
@@ -182,39 +183,56 @@ export const MerchantListPage: React.FC = () => {
     setSelectedRowKeys([]);
   };
 
-  const getActionMenu = (record: Merchant): MenuProps => ({
+  const handleViewDetail = useCallback((merchantId: string) => {
+    navigate({ to: '/merchants/$merchantId', params: { merchantId } });
+  }, [navigate]);
+
+  const handleBulkActivate = useCallback(() => {
+    message.success(`已激活 ${selectedRowKeys.length} 个商户`);
+    setSelectedRowKeys([]);
+  }, [selectedRowKeys]);
+
+  const handleBulkSuspend = useCallback(() => {
+    message.warning(`已暂停 ${selectedRowKeys.length} 个商户`);
+    setSelectedRowKeys([]);
+  }, [selectedRowKeys]);
+
+  const getActionMenu = useCallback((record: Merchant): MenuProps => ({
     items: [
       {
         key: 'view',
         icon: <EyeOutlined />,
         label: '详情',
-        onClick: () => {
-          // TODO: Navigate to detail page
-          console.log('View:', record.id);
-        },
+        onClick: () => handleViewDetail(record.id),
       },
       {
         key: 'edit',
         icon: <EditOutlined />,
         label: '编辑',
-        onClick: () => console.log('Edit:', record.id),
+        onClick: () => {
+          message.info('编辑功能开发中');
+        },
       },
       { type: 'divider' },
       {
         key: 'toggle',
         icon: record.status === 'active' ? <PauseCircleOutlined /> : <CheckCircleOutlined />,
         label: record.status === 'active' ? '暂停' : '激活',
-        onClick: () => console.log('Toggle:', record.id),
+        onClick: () => {
+          message.success(`已${record.status === 'active' ? '暂停' : '激活'}商户: ${record.name}`);
+        },
       },
       {
         key: 'delete',
         icon: <DeleteOutlined />,
         label: '删除',
         danger: true,
-        onClick: () => console.log('Delete:', record.id),
+        onClick: () => {
+          message.error('删除功能需要确认');
+        },
       },
     ],
-  });
+  }), [handleViewDetail]);
 
   const columns: TableColumnsType<Merchant> = [
     {
@@ -222,10 +240,14 @@ export const MerchantListPage: React.FC = () => {
       dataIndex: 'code',
       key: 'code',
       width: 100,
-      render: (code: string) => (
-        <Typography.Text strong style={{ color: '#6366f1', fontFamily: 'JetBrains Mono, monospace' }}>
+      render: (code: string, record: Merchant) => (
+        <Typography.Link
+          strong
+          style={{ color: '#6366f1', fontFamily: 'JetBrains Mono, monospace' }}
+          onClick={() => handleViewDetail(record.id)}
+        >
           {code}
-        </Typography.Text>
+        </Typography.Link>
       ),
     },
     {
@@ -233,7 +255,11 @@ export const MerchantListPage: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       width: 120,
-      render: (name: string) => <Typography.Text strong>{name}</Typography.Text>,
+      render: (name: string, record: Merchant) => (
+        <Typography.Link strong onClick={() => handleViewDetail(record.id)}>
+          {name}
+        </Typography.Link>
+      ),
     },
     {
       title: '法人名称',
@@ -353,10 +379,10 @@ export const MerchantListPage: React.FC = () => {
             message={
               <Space>
                 <span>已选 <strong>{selectedRowKeys.length}</strong> 项</span>
-                <Button size="small" type="primary" icon={<CheckCircleOutlined />}>
+                <Button size="small" type="primary" icon={<CheckCircleOutlined />} onClick={handleBulkActivate}>
                   批量激活
                 </Button>
-                <Button size="small" danger icon={<PauseCircleOutlined />}>
+                <Button size="small" danger icon={<PauseCircleOutlined />} onClick={handleBulkSuspend}>
                   批量暂停
                 </Button>
                 <Button size="small" type="link" onClick={() => setSelectedRowKeys([])}>

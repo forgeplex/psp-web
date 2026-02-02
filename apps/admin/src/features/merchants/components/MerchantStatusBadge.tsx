@@ -5,10 +5,10 @@ import {
   ClockCircleOutlined,
   PauseCircleOutlined,
   CloseCircleOutlined,
-  ExclamationCircleOutlined,
   SafetyCertificateOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
+import { baseColors } from '@psp/shared';
 import type { MerchantStatus, KybStatus, RiskLevel } from '../types';
 
 // ============================================================
@@ -90,7 +90,13 @@ interface MerchantTypeBadgeProps {
 
 export const MerchantTypeBadge: React.FC<MerchantTypeBadgeProps> = ({ type }) => {
   return (
-    <Tag style={{ backgroundColor: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' }}>
+    <Tag
+      style={{
+        backgroundColor: baseColors.secondary,
+        color: baseColors.secondaryForeground,
+        border: `1px solid ${baseColors.border}`,
+      }}
+    >
       {type}
     </Tag>
   );

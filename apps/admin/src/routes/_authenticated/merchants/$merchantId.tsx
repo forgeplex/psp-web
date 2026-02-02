@@ -8,6 +8,5 @@ export const Route = createFileRoute('/_authenticated/merchants/$merchantId')({
 
 function MerchantDetailPageRoute() {
   const { merchantId } = Route.useParams();
-  // TODO: Pass merchantId to page and fetch data
-  return <MerchantDetailPage />;
+  return <MerchantDetailPage merchantId={merchantId} />;
 }

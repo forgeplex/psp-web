@@ -14,6 +14,7 @@ import {
   Timeline,
   Tag,
   Empty,
+  Spin,
 } from 'antd';
 import type { MenuProps, TableColumnsType, TabsProps } from 'antd';
 import {
@@ -44,9 +45,9 @@ import type { Merchant, MerchantAccount, MerchantBalance, MerchantStats, StatusL
 
 const { Text, Link } = Typography;
 
-// Mock data
-const mockMerchant: Merchant = {
-  id: '1',
+// Mock data - will be replaced with API call using merchantId
+const getMockMerchant = (_merchantId: string): Merchant => ({
+  id: _merchantId,
   code: 'M001',
   name: '某某电商',
   legalName: '某某科技有限公司',
@@ -64,7 +65,7 @@ const mockMerchant: Merchant = {
   address: '圣保罗市某某街123号',
   createdAt: '2024-01-15T14:30:00Z',
   activatedAt: '2024-01-16T10:00:00Z',
-};
+});
 
 const mockBalance: MerchantBalance = {
   currency: 'BRL',
@@ -143,12 +144,18 @@ const mockLogs: StatusLog[] = [
 const cardStyle = { borderRadius: 8 };
 const monoStyle = { fontFamily: 'JetBrains Mono, monospace' };
 
-export const MerchantDetailPage: React.FC = () => {
+interface MerchantDetailPageProps {
+  merchantId: string;
+}
+
+export const MerchantDetailPage: React.FC<MerchantDetailPageProps> = ({ merchantId }) => {
   const [statusModalOpen, setStatusModalOpen] = useState(false);
 
-  const merchant = mockMerchant;
+  // TODO: Replace with actual API call using merchantId
+  const merchant = getMockMerchant(merchantId);
   const balance = mockBalance;
   const stats = mockStats;
+  const isLoading = false;
 
   const statusMenuItems: MenuProps['items'] = [
     {
@@ -336,6 +343,14 @@ export const MerchantDetailPage: React.FC = () => {
       ),
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: 100 }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div>
