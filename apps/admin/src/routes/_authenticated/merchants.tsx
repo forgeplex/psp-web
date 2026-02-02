@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { PageHeader } from '@psp/ui';
 import {
   Card,
@@ -137,6 +137,7 @@ const countryFlags: Record<string, string> = {
 };
 
 function MerchantsPage() {
+  const navigate = useNavigate();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchText, setSearchText] = useState('');
@@ -148,7 +149,7 @@ function MerchantsPage() {
       key: 'view',
       icon: <EyeOutlined />,
       label: '查看详情',
-      onClick: () => message.info(`查看商户: ${record.merchant_name}`),
+      onClick: () => navigate({ to: '/merchants/$merchantId', params: { merchantId: record.id } }),
     },
     {
       key: 'edit',

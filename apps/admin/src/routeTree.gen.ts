@@ -26,6 +26,7 @@ import { Route as AuthenticatedChannelsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
+import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -115,6 +116,12 @@ const AuthenticatedSettingsTrustedDevicesRoute =
     path: '/trusted-devices',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
+const AuthenticatedMerchantsMerchantIdRoute =
+  AuthenticatedMerchantsMerchantIdRouteImport.update({
+    id: '/$merchantId',
+    path: '/$merchantId',
+    getParentRoute: () => AuthenticatedMerchantsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -122,7 +129,7 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AuthenticatedAgentsRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/channels': typeof AuthenticatedChannelsRoute
-  '/merchants': typeof AuthenticatedMerchantsRoute
+  '/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/monitoring': typeof AuthenticatedMonitoringRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
@@ -133,13 +140,14 @@ export interface FileRoutesByFullPath {
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/agents': typeof AuthenticatedAgentsRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/channels': typeof AuthenticatedChannelsRoute
-  '/merchants': typeof AuthenticatedMerchantsRoute
+  '/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/monitoring': typeof AuthenticatedMonitoringRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
@@ -151,6 +159,7 @@ export interface FileRoutesByTo {
   '/mfa/verify': typeof MfaVerifyRoute
   '/': typeof AuthenticatedIndexRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -159,7 +168,7 @@ export interface FileRoutesById {
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/channels': typeof AuthenticatedChannelsRoute
-  '/_authenticated/merchants': typeof AuthenticatedMerchantsRoute
+  '/_authenticated/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/_authenticated/monitoring': typeof AuthenticatedMonitoringRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/rates': typeof AuthenticatedRatesRoute
@@ -171,6 +180,7 @@ export interface FileRoutesById {
   '/mfa/verify': typeof MfaVerifyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/mfa/setup'
     | '/mfa/verify'
     | '/settings/trusted-devices'
+    | '/merchants/$merchantId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/'
     | '/settings/trusted-devices'
+    | '/merchants/$merchantId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -228,6 +240,7 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/_authenticated/'
     | '/_authenticated/settings/trusted-devices'
+    | '/_authenticated/merchants/$merchantId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsTrustedDevicesRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
+    '/_authenticated/merchants/$merchantId': {
+      id: '/_authenticated/merchants/$merchantId'
+      path: '/$merchantId'
+      fullPath: '/merchants/$merchantId'
+      preLoaderRoute: typeof AuthenticatedMerchantsMerchantIdRouteImport
+      parentRoute: typeof AuthenticatedMerchantsRoute
+    }
   }
 }
 
@@ -375,11 +395,25 @@ const AuthenticatedSettingsRouteWithChildren =
     AuthenticatedSettingsRouteChildren,
   )
 
+interface AuthenticatedMerchantsRouteChildren {
+  AuthenticatedMerchantsMerchantIdRoute: typeof AuthenticatedMerchantsMerchantIdRoute
+}
+
+const AuthenticatedMerchantsRouteChildren: AuthenticatedMerchantsRouteChildren = {
+  AuthenticatedMerchantsMerchantIdRoute:
+    AuthenticatedMerchantsMerchantIdRoute,
+}
+
+const AuthenticatedMerchantsRouteWithChildren =
+  AuthenticatedMerchantsRoute._addFileChildren(
+    AuthenticatedMerchantsRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedChannelsRoute: typeof AuthenticatedChannelsRoute
-  AuthenticatedMerchantsRoute: typeof AuthenticatedMerchantsRoute
+  AuthenticatedMerchantsRoute: typeof AuthenticatedMerchantsRouteWithChildren
   AuthenticatedMonitoringRoute: typeof AuthenticatedMonitoringRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
@@ -394,7 +428,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedChannelsRoute: AuthenticatedChannelsRoute,
-  AuthenticatedMerchantsRoute: AuthenticatedMerchantsRoute,
+  AuthenticatedMerchantsRoute: AuthenticatedMerchantsRouteWithChildren,
   AuthenticatedMonitoringRoute: AuthenticatedMonitoringRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedRatesRoute: AuthenticatedRatesRoute,
