@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Form, Input, Button, Checkbox, Card } from 'antd';
+import { Form, Input, Button, Checkbox, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { brandColors } from '@psp/shared';
 import { apiClient } from '@psp/api';
 import { useAuthStore } from '../stores/auth';
+import { BrandPanel } from '../components/auth';
 
 export const Route = createFileRoute('/login')({
   component: Login,
@@ -66,146 +68,35 @@ function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* 左侧品牌区 */}
-      <div style={{
-        flex: 1,
-        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 64,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* 背景装饰 */}
-        <div style={{
-          position: 'absolute',
-          top: '10%',
-          right: '10%',
-          width: 400,
-          height: 400,
-          background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)',
-          borderRadius: '50%',
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '5%',
-          width: 300,
-          height: 300,
-          background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-        }} />
-        
-        {/* 网格背景 */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-        }} />
-
-        {/* 品牌内容 */}
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 12, 
-            marginBottom: 48 
-          }}>
-            <div style={{
-              width: 44,
-              height: 44,
-              background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-            </div>
-            <span style={{ 
-              fontSize: 24, 
-              fontWeight: 700, 
-              color: '#F8FAFC' 
-            }}>PSP Admin</span>
-          </div>
-
-          <h1 style={{
-            fontSize: 48,
-            fontWeight: 700,
-            color: '#F8FAFC',
-            lineHeight: 1.1,
-            margin: '0 0 24px 0',
-            letterSpacing: -1,
-          }}>
-            下一代<br />支付基础设施
-          </h1>
-          
-          <p style={{
-            fontSize: 18,
-            color: '#94A3B8',
-            lineHeight: 1.6,
-            margin: 0,
-            maxWidth: 400,
-          }}>
-            安全、高效、可扩展的企业级支付管理平台
-          </p>
-        </div>
-
-        {/* 底部特性 */}
-        <div style={{
-          position: 'absolute',
-          bottom: 64,
-          left: 64,
-          right: 64,
-          display: 'flex',
-          gap: 32,
-        }}>
-          {[
-            { icon: '⚡', text: '实时交易' },
-            { icon: '🛡️', text: '银行级安全' },
-            { icon: '📊', text: '数据分析' },
-          ].map((item) => (
-            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span>{item.icon}</span>
-              <span style={{ color: '#94A3B8', fontSize: 13 }}>{item.text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#FFFFFF' }}>
+      {/* 左侧品牌区 - 保持原有 BrandPanel */}
+      <BrandPanel />
 
       {/* 右侧表单区 */}
       <div style={{
-        width: 480,
+        flex: 1,
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: 64,
-        background: '#FFFFFF',
+        padding: '48px 32px',
       }}>
-        <div style={{ maxWidth: 360, width: '100%', margin: '0 auto' }}>
+        <div style={{ width: '100%', maxWidth: 360 }}>
           {/* 表单头部 */}
-          <div style={{ marginBottom: 32 }}>
-            <h2 style={{
-              fontSize: 28,
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <Typography.Title level={3} style={{ 
+              margin: '0 0 8px 0', 
               fontWeight: 600,
+              fontSize: 24,
               color: '#0F172A',
-              margin: '0 0 8px 0',
-            }}>登录</h2>
-            <p style={{
-              fontSize: 14,
+            }}>
+              欢迎回来
+            </Typography.Title>
+            <Typography.Text style={{ 
+              fontSize: 14, 
               color: '#64748B',
-              margin: 0,
-            }}>请输入您的账号信息以访问管理面板</p>
+            }}>
+              请输入您的账号信息以继续
+            </Typography.Text>
           </div>
 
           {/* 错误提示 */}
@@ -228,19 +119,19 @@ function Login() {
             onFinish={onFinish}
             layout="vertical"
             requiredMark={false}
-            initialValues={{ remember: false }}
+            initialValues={{ username: 'admin@psp.dev', password: '123456', remember: false }}
           >
             <Form.Item
               name="username"
               rules={[{ required: true, message: '请输入用户名' }]}
-              style={{ marginBottom: 20 }}
+              style={{ marginBottom: 16 }}
             >
               <Input
                 size="large"
                 placeholder="用户名 / 邮箱"
                 prefix={<UserOutlined style={{ color: '#94A3B8' }} />}
                 style={{
-                  height: 48,
+                  height: 44,
                   borderRadius: 8,
                   borderColor: '#E2E8F0',
                 }}
@@ -257,7 +148,7 @@ function Login() {
                 placeholder="密码"
                 prefix={<LockOutlined style={{ color: '#94A3B8' }} />}
                 style={{
-                  height: 48,
+                  height: 44,
                   borderRadius: 8,
                   borderColor: '#E2E8F0',
                 }}
@@ -281,7 +172,7 @@ function Login() {
                   padding: 0, 
                   fontSize: 13, 
                   height: 'auto',
-                  color: '#6366F1',
+                  color: brandColors.primary,
                 }}
                 onClick={() => navigate({ to: '/forgot-password' })}
               >
@@ -297,13 +188,13 @@ function Login() {
                 block
                 loading={loading}
                 style={{
-                  height: 48,
+                  height: 44,
                   borderRadius: 8,
                   fontSize: 15,
                   fontWeight: 500,
-                  background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                  background: brandColors.gradient || `linear-gradient(135deg, ${brandColors.primary} 0%, #8B5CF6 100%)`,
                   border: 'none',
-                  boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
+                  boxShadow: '0 4px 12px rgba(99, 102, 241, 0.35)',
                 }}
               >
                 登录
@@ -316,7 +207,7 @@ function Login() {
             textAlign: 'center',
             fontSize: 12,
             color: '#94A3B8',
-            marginTop: 48,
+            marginTop: 40,
           }}>
             © 2026 PSP Admin · 安全连接
           </p>
