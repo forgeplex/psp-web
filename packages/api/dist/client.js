@@ -7,7 +7,7 @@ function getBaseURL() {
             return win.__PSP_API_BASE_URL__;
         }
     }
-    return '/api';
+    return '';
 }
 export const apiClient = axios.create({
     baseURL: getBaseURL(),
