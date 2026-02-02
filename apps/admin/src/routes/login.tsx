@@ -73,8 +73,7 @@ const styles = {
   },
   forgotPassword: {
     display: 'flex',
-    justifyContent: 'flex-start',
-    gap: 40,
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
