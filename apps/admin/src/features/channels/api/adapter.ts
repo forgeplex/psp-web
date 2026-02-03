@@ -23,11 +23,13 @@ export async function getProviders(): Promise<Provider[]> {
 }
 
 export async function getChannels(): Promise<Channel[]> {
-  return listChannels();
+  const response = await listChannels();
+  return response.items;
 }
 
 export async function getChannelsByProvider(providerId: string): Promise<Channel[]> {
-  return listChannels({ providerId });
+  const response = await listChannels({ providerId });
+  return response.items;
 }
 
 export async function getChannelDetail(channelId: string): Promise<Channel | undefined> {

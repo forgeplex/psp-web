@@ -23,7 +23,9 @@ export interface ChannelStub {
   limits?: {
     min_amount?: number;
     max_amount?: number;
+    /** 单位待定：amount cents or count（MVP Spec 出后对齐） */
     daily_limit?: number;
+    /** 单位待定：amount cents or count（MVP Spec 出后对齐） */
     monthly_limit?: number;
   };
   created_at?: string;

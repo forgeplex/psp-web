@@ -54,8 +54,8 @@ export function ChannelsPage({ title = 'Channels', providerId }: ChannelsPagePro
   useEffect(() => {
     setLoading(true);
     Promise.all([listChannels(), getProviders()])
-      .then(([channels, providerList]) => {
-        setData(channels);
+      .then(([channelsResponse, providerList]) => {
+        setData(channelsResponse.items);
         setProviders(providerList);
       })
       .finally(() => setLoading(false));
@@ -100,14 +100,14 @@ export function ChannelsPage({ title = 'Channels', providerId }: ChannelsPagePro
       await createChannel(values);
     }
     const next = await listChannels();
-    setData(next);
+    setData(next.items);
     setModalOpen(false);
   };
 
   const handleStatusChange = async (record: Channel, status: Channel['status']) => {
     await setChannelStatus(record.id, status);
     const next = await listChannels();
-    setData(next);
+    setData(next.items);
   };
 
   return (

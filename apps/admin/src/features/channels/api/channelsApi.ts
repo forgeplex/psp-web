@@ -5,14 +5,25 @@ import { stubChannels } from '../data/stub';
 
 let channels: Channel[] = [...stubChannels];
 
+export type ChannelListResponse = {
+  items: Channel[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
 export async function listChannels(params?: {
   providerId?: string;
   status?: Channel['status'];
   keyword?: string;
-}): Promise<Channel[]> {
+  page?: number;
+  pageSize?: number;
+}): Promise<ChannelListResponse> {
   const { providerId, status, keyword } = params ?? {};
+  const page = params?.page ?? 1;
+  const pageSize = params?.pageSize ?? 10;
 
-  return channels.filter((item) => {
+  const filtered = channels.filter((item) => {
     if (providerId && item.provider_id !== providerId) return false;
     if (status && item.status !== status) return false;
     if (keyword) {
@@ -21,6 +32,16 @@ export async function listChannels(params?: {
     }
     return true;
   });
+
+  const start = (page - 1) * pageSize;
+  const items = filtered.slice(start, start + pageSize);
+
+  return {
+    items,
+    total: filtered.length,
+    page,
+    pageSize,
+  };
 }
 
 export async function getChannel(channelId: string): Promise<Channel | undefined> {
