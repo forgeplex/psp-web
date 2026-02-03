@@ -20,8 +20,7 @@ function TransactionDetailPage() {
   const { id } = Route.useParams();
   
   const { data: transaction, isLoading: isLoadingTransaction } = useTransaction(id);
-  // BE 端点已完成，使用真实 API
-  const { data: timeline, isLoading: isLoadingTimeline, error: timelineError } = useTransactionTimeline(id);
+  const { data: timelineData, isLoading: isLoadingTimeline, error: timelineError } = useTransactionTimeline(id);
 
   if (isLoadingTransaction) {
     return (
@@ -61,7 +60,7 @@ function TransactionDetailPage() {
             />
           )}
           <TransactionTimeline 
-            data={timeline} 
+            nodes={timelineData?.nodes || []} 
             loading={isLoadingTimeline} 
           />
         </>
