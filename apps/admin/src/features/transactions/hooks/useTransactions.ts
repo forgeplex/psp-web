@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
-import type { ListTransactionsParams, CreateRefundRequest } from '../types';
+import type { ListTransactionsParams } from '../types';
 import * as api from '../api';
 
 // Query keys
@@ -40,17 +40,12 @@ export function useTransaction(id: string) {
 
 /**
  * 获取交易时间线
- * Note: 14:00 前使用 mock 数据，之后切换真实 API
+ * BE 端点已完成，直接使用真实 API
  */
-export function useTransactionTimeline(id: string, useMock = false) {
+export function useTransactionTimeline(id: string) {
   return useQuery({
     queryKey: transactionKeys.timeline(id),
-    queryFn: () => {
-      if (useMock) {
-        return Promise.resolve(api.getMockTransactionTimeline());
-      }
-      return api.getTransactionTimeline(id);
-    },
+    queryFn: () => api.getTransactionTimeline(id),
     enabled: !!id,
   });
 }

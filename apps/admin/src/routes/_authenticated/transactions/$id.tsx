@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Card, Descriptions, Tabs, Tag, Typography, Spin, Button, Space } from 'antd';
+import { Card, Descriptions, Tabs, Tag, Typography, Spin, Button, Space, Alert } from 'antd';
 import { 
   ArrowLeftOutlined, 
   HistoryOutlined, 
@@ -20,8 +20,8 @@ function TransactionDetailPage() {
   const { id } = Route.useParams();
   
   const { data: transaction, isLoading: isLoadingTransaction } = useTransaction(id);
-  // 14:00 前使用 mock 数据，之后改为 false
-  const { data: timeline, isLoading: isLoadingTimeline } = useTransactionTimeline(id, true);
+  // BE 端点已完成，使用真实 API
+  const { data: timeline, isLoading: isLoadingTimeline, error: timelineError } = useTransactionTimeline(id);
 
   if (isLoadingTransaction) {
     return (
@@ -50,10 +50,21 @@ function TransactionDetailPage() {
         </span>
       ),
       children: (
-        <TransactionTimeline 
-          data={timeline} 
-          loading={isLoadingTimeline} 
-        />
+        <>
+          {timelineError && (
+            <Alert
+              message="时间线加载失败"
+              description={timelineError.message}
+              type="error"
+              showIcon
+              style={{ marginBottom: 16 }}
+            />
+          )}
+          <TransactionTimeline 
+            data={timeline} 
+            loading={isLoadingTimeline} 
+          />
+        </>
       ),
     },
     {
