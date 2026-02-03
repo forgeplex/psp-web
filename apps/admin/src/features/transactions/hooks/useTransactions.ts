@@ -1,37 +1,107 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { 
-  searchTransactions, 
-  getTransaction, 
-  getTransactionTimeline,
-  exportTransactions 
-} from '../api/transactions';
-import type { TransactionSearchParams } from '../types/transaction';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { message } from 'antd';
+import type { ListTransactionsParams, CreateRefundRequest } from '../types';
+import * as api from '../api';
 
-export function useTransactions(params: TransactionSearchParams) {
+// Query keys
+export const transactionKeys = {
+  all: ['transactions'] as const,
+  lists: () => [...transactionKeys.all, 'list'] as const,
+  list: (params: ListTransactionsParams) => [...transactionKeys.lists(), params] as const,
+  details: () => [...transactionKeys.all, 'detail'] as const,
+  detail: (id: string) => [...transactionKeys.details(), id] as const,
+  timeline: (id: string) => [...transactionKeys.all, 'timeline', id] as const,
+  history: (id: string) => [...transactionKeys.all, 'history', id] as const,
+  stats: () => [...transactionKeys.all, 'stats'] as const,
+};
+
+// ==================== Queries ====================
+
+/**
+ * 获取交易列表
+ */
+export function useTransactions(params: ListTransactionsParams = {}) {
   return useQuery({
-    queryKey: ['transactions', params],
-    queryFn: () => searchTransactions(params),
+    queryKey: transactionKeys.list(params),
+    queryFn: () => api.listTransactions(params),
   });
 }
 
+/**
+ * 获取交易详情
+ */
 export function useTransaction(id: string) {
   return useQuery({
-    queryKey: ['transaction', id],
-    queryFn: () => getTransaction(id),
+    queryKey: transactionKeys.detail(id),
+    queryFn: () => api.getTransaction(id),
     enabled: !!id,
   });
 }
 
-export function useTransactionTimeline(id: string) {
+/**
+ * 获取交易时间线
+ * Note: 14:00 前使用 mock 数据，之后切换真实 API
+ */
+export function useTransactionTimeline(id: string, useMock = false) {
   return useQuery({
-    queryKey: ['transaction-timeline', id],
-    queryFn: () => getTransactionTimeline(id),
+    queryKey: transactionKeys.timeline(id),
+    queryFn: () => {
+      if (useMock) {
+        return Promise.resolve(api.getMockTransactionTimeline());
+      }
+      return api.getTransactionTimeline(id);
+    },
     enabled: !!id,
   });
 }
 
-export function useExportTransactions() {
+/**
+ * 获取交易历史
+ */
+export function useTransactionHistory(id: string) {
+  return useQuery({
+    queryKey: transactionKeys.history(id),
+    queryFn: () => api.getTransactionHistory(id),
+    enabled: !!id,
+  });
+}
+
+// ==================== Mutations ====================
+
+/**
+ * 创建退款
+ */
+export function useCreateRefund() {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: exportTransactions,
+    mutationFn: api.createRefund,
+    onSuccess: () => {
+      message.success('退款申请已提交');
+      queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
+    },
+    onError: (error: Error) => {
+      message.error(`退款失败: ${error.message}`);
+    },
+  });
+}
+
+/**
+ * 取消交易
+ */
+export function useCancelTransaction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, reason, reasonCode }: { id: string; reason: string; reasonCode: string }) =>
+      api.cancelTransaction(id, { reason, reasonCode }),
+    onSuccess: (_, variables) => {
+      message.success('交易已取消');
+      queryClient.invalidateQueries({ queryKey: transactionKeys.detail(variables.id) });
+      queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
+    },
+    onError: (error: Error) => {
+      message.error(`取消失败: ${error.message}`);
+    },
   });
 }

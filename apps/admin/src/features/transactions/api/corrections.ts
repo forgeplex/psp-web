@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api';
+import { apiClient } from '@psp/api';
 import type {
   Correction,
   CreateCorrectionRequest,
