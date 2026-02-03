@@ -7,10 +7,13 @@ export type ChannelStatus = 'inactive' | 'active' | 'maintenance';
 export type HealthStatus = 'unknown' | 'healthy' | 'degraded' | 'failed';
 export type RoutingStrategyStatus = 'active' | 'inactive';
 export type RuleLogic = 'AND' | 'OR';
-export type Operator = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in';
+export type Operator = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'between';
 export type ProviderStatus = 'active' | 'inactive';
 export type HealthCheckType = 'scheduled' | 'manual' | 'auto_failover';
 export type HealthCheckStatus = 'healthy' | 'degraded' | 'failed';
+
+// Config field types per API Spec v0.9
+export type ConfigFieldType = 'string' | 'number' | 'enum' | 'boolean' | 'secret';
 
 // Channel types
 export interface ChannelLimits {
@@ -41,16 +44,17 @@ export interface Channel {
   updated_at: string;
 }
 
-// Routing Strategy types
+// Routing Strategy types - API Spec v0.9
 export interface RuleCondition {
   field: string;
   operator: Operator;
   value: any;
 }
 
-export interface Rule {
+// API Spec v0.9: 单层 AND 条件
+export interface RoutingRule {
   conditions: RuleCondition[];
-  logic: RuleLogic;
+  logic: 'AND'; // Sprint 2: 仅支持单层 AND
 }
 
 export interface FailoverConfig {
@@ -74,7 +78,7 @@ export interface RoutingStrategy {
   description?: string;
   priority: number;
   status: RoutingStrategyStatus;
-  rules: Rule;
+  rules: RoutingRule;
   failover_config: FailoverConfig;
   targets: RoutingTarget[];
   match_count_24h?: number;
@@ -116,13 +120,15 @@ export interface ChannelHealthStatus {
   avg_response_ms: number;
 }
 
-// Provider types
+// Provider types - API Spec v0.9: ConfigFieldType 5 种类型
 export interface ProviderConfigField {
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
+  type: ConfigFieldType;
   required: boolean;
   description: string;
-  sensitive: boolean;
+  default_value?: any;
+  options?: string[]; // for enum type
+  sensitive: boolean; // for secret type
 }
 
 export interface Provider {
@@ -138,6 +144,139 @@ export interface Provider {
   website?: string;
   created_at: string;
   updated_at: string;
+}
+
+// API Request/Response types
+export interface ListChannelsParams {
+  page?: number;
+  size?: number;
+  status?: ChannelStatus;
+  provider?: string;
+  keyword?: string;
+  type?: ChannelType;
+}
+
+export interface ListChannelsResponse {
+  code: number;
+  data: {
+    items: Channel[];
+    total: number;
+    page: number;
+    size: number;
+  };
+}
+
+export interface CreateChannelRequest {
+  code: string;
+  name: string;
+  description?: string;
+  provider_id: string;
+  type: ChannelType;
+  priority: number;
+  limits: ChannelLimits;
+  config: Record<string, any>;
+}
+
+export interface UpdateChannelRequest {
+  name?: string;
+  description?: string;
+  priority?: number;
+  limits?: Partial<ChannelLimits>;
+  config?: Record<string, any>;
+}
+
+export interface ToggleChannelRequest {
+  status: ChannelStatus;
+}
+
+export interface ListRoutingStrategiesParams {
+  page?: number;
+  size?: number;
+  status?: RoutingStrategyStatus;
+}
+
+export interface ListRoutingStrategiesResponse {
+  code: number;
+  data: {
+    items: RoutingStrategy[];
+    total: number;
+    page: number;
+    size: number;
+  };
+}
+
+export interface CreateRoutingStrategyRequest {
+  name: string;
+  description?: string;
+  priority: number;
+  rules: RoutingRule;
+  failover_config: FailoverConfig;
+  targets: Array<{
+    channel_id: string;
+    weight: number;
+    display_order: number;
+    failover_to_channel_id?: string;
+  }>;
+}
+
+export interface UpdateRoutingStrategyRequest {
+  name?: string;
+  description?: string;
+  rules?: RoutingRule;
+  failover_config?: Partial<FailoverConfig>;
+  targets?: Array<{
+    channel_id: string;
+    weight: number;
+    display_order: number;
+    failover_to_channel_id?: string;
+  }>;
+}
+
+// API Spec v0.9: POST /routing-strategies/reorder - 批量排序
+export interface ReorderRoutingStrategiesRequest {
+  items: Array<{
+    id: string;
+    priority: number;
+  }>;
+}
+
+export interface ListHealthChecksParams {
+  page?: number;
+  size?: number;
+  channel_id?: string;
+  status?: HealthCheckStatus;
+  check_type?: HealthCheckType;
+}
+
+export interface ListHealthChecksResponse {
+  code: number;
+  data: {
+    items: HealthCheck[];
+    total: number;
+    page: number;
+    size: number;
+  };
+}
+
+export interface TriggerHealthCheckRequest {
+  channel_id: string;
+}
+
+export interface ListProvidersParams {
+  page?: number;
+  size?: number;
+  status?: ProviderStatus;
+  type?: ChannelType;
+}
+
+export interface ListProvidersResponse {
+  code: number;
+  data: {
+    items: Provider[];
+    total: number;
+    page: number;
+    size: number;
+  };
 }
 
 // Form data types
@@ -156,7 +295,7 @@ export interface RoutingStrategyFormData {
   name: string;
   description?: string;
   priority: number;
-  rules: Rule;
+  rules: RoutingRule;
   failover_config: FailoverConfig;
   targets: Array<{
     channel_id: string;
