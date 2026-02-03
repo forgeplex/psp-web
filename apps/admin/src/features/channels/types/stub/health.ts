@@ -1,9 +1,12 @@
 // NON-FROZEN: stub types derived from DBA schema (channels-schema.md)
 // TODO(openapi): replace with codegen once v0.9 spec is published
 
+/** NON-FROZEN */
 export type HealthCheckType = 'scheduled' | 'manual' | 'auto_failover';
+/** NON-FROZEN */
 export type HealthCheckResult = 'healthy' | 'degraded' | 'failed';
 
+/** NON-FROZEN */
 export interface HealthCheckStub {
   id: string;
   channel_id: string;

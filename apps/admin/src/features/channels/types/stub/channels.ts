@@ -1,10 +1,14 @@
 // NON-FROZEN: stub types derived from DBA schema (channels-schema.md)
 // TODO(openapi): replace with codegen once v0.9 spec is published
 
+/** NON-FROZEN */
 export type ChannelType = 'payment' | 'payout' | 'combined';
+/** NON-FROZEN */
 export type ChannelStatus = 'inactive' | 'active' | 'maintenance';
+/** NON-FROZEN */
 export type HealthStatus = 'unknown' | 'healthy' | 'degraded' | 'failed';
 
+/** NON-FROZEN */
 export interface ChannelStub {
   id: string;
   tenant_id: string;
@@ -19,12 +23,14 @@ export interface ChannelStub {
   limits?: {
     min_amount?: number;
     max_amount?: number;
-    daily_amount?: number;
+    daily_limit?: number;
+    monthly_limit?: number;
   };
   created_at?: string;
   updated_at?: string;
 }
 
+/** NON-FROZEN */
 export interface ChannelConfigStub {
   channel_id: string;
   config?: Record<string, unknown>; // plain
