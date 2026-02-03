@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, Descriptions, Typography, Tag, Space } from 'antd';
-import { CodeOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CodeOutlined, ClockCircleOutlined, HistoryOutlined } from '@ant-design/icons';
 
 export const Route = createFileRoute('/version')({
   component: VersionPage,
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/version')({
 function VersionPage() {
   const gitCommit = import.meta.env.VITE_GIT_COMMIT || 'development';
   const buildTime = import.meta.env.VITE_BUILD_TIME || '-';
+  const gitTime = import.meta.env.VITE_GIT_TIME || '-';
   const isDev = gitCommit === 'development';
 
   return (
@@ -17,7 +18,7 @@ function VersionPage() {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      background: '#f5f5f5',
+      background: '#FFFFFF',
       padding: 24,
     }}>
       <Card 
@@ -38,6 +39,12 @@ function VersionPage() {
                 {gitCommit}
               </Typography.Text>
             )}
+          </Descriptions.Item>
+          <Descriptions.Item label="Commit Time">
+            <Space>
+              <HistoryOutlined />
+              <span>{gitTime}</span>
+            </Space>
           </Descriptions.Item>
           <Descriptions.Item label="Build Time">
             <Space>

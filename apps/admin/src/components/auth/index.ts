@@ -8,4 +8,5 @@ export { MfaMethodSelector, type MfaMethod } from './MfaMethodSelector';
 export { MfaRequiredBanner } from './MfaRequiredBanner';
 export { SuccessOverlay } from './SuccessOverlay';
 export { PasskeyPulse } from './PasskeyPulse';
+export { RecoveryCodeInput } from './RecoveryCodeInput';
 export { authStyles, brandColors } from './constants';

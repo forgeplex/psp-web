@@ -894,7 +894,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description 认证失败 */
@@ -903,16 +903,16 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description 账户已锁定 */
-                403: {
+                423: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -963,7 +963,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1016,7 +1016,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description MFA 验证失败 */
@@ -1025,7 +1025,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1078,7 +1078,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Token 无效或过期 */
@@ -1087,7 +1087,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1098,7 +1098,291 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/auth/tokens/revoke-all": {
+    "/api/admin/email/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取邮件配置
+         * @description 获取租户的邮件服务器配置（凭证脱敏）
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 更新邮件配置
+         * @description 更新租户的邮件服务器配置
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 更新请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_email_app.UpdateEmailConfigRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description 版本冲突 */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 创建邮件配置
+         * @description 为租户创建邮件服务器配置（SMTP/SendGrid/SES）
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 邮件配置请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_email_app.CreateEmailConfigRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 删除邮件配置
+         * @description 删除租户的邮件服务器配置及 Vault 中的凭证
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description 删除成功 */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/email/config/secrets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 更新邮件凭证
+         * @description 更新邮件服务的敏感凭证（密码、API Key）
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 凭证更新请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_email_app.UpdateEmailSecretsRequest"];
+                };
+            };
+            responses: {
+                /** @description 更新成功 */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Vault 不可用 */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/email/config/test": {
         parameters: {
             query?: never;
             header?: never;
@@ -1108,8 +1392,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * 撤销所有 Token
-         * @description 撤销当前用户的所有 Token，用于密码修改、安全事件等场景
+         * 测试邮件配置
+         * @description 发送测试邮件验证配置是否正确
          */
         post: {
             parameters: {
@@ -1118,47 +1402,47 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            /** @description 撤销请求 */
+            /** @description 测试请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["psp_com_internal_tenant_app.RevokeAllTokensRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_email_app.TestEmailConfigRequest"];
                 };
             };
             responses: {
-                /** @description 撤销成功 */
+                /** @description OK */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["psp_com_internal_tenant_app.RevokeTokenResponse"];
+                        "application/json": components["schemas"]["psp_com_internal_email_app.TestEmailConfigResponse"];
                     };
                 };
-                /** @description 请求参数错误 */
+                /** @description Bad Request */
                 400: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
-                /** @description 未授权 */
-                401: {
+                /** @description Not Found */
+                404: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
-                /** @description 服务器错误 */
+                /** @description Internal Server Error */
                 500: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
             };
@@ -1211,7 +1495,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Unauthorized */
@@ -1220,7 +1504,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1229,7 +1513,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1275,7 +1559,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1284,7 +1568,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1334,7 +1618,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1343,7 +1627,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Passkey 未配置 */
@@ -1352,7 +1636,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1405,7 +1689,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Unauthorized */
@@ -1414,7 +1698,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1423,7 +1707,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Passkey 未配置 */
@@ -1432,7 +1716,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1485,7 +1769,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Unauthorized */
@@ -1494,7 +1778,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1503,7 +1787,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Passkey 未配置 */
@@ -1512,7 +1796,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1560,7 +1844,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1569,7 +1853,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1624,7 +1908,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Unauthorized */
@@ -1633,7 +1917,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Not Found */
@@ -1642,7 +1926,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1651,7 +1935,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1697,7 +1981,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1706,7 +1990,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1763,7 +2047,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Unauthorized */
@@ -1772,7 +2056,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description 设置不存在或已过期 */
@@ -1781,7 +2065,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1790,7 +2074,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1838,7 +2122,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description TOTP 已绑定 */
@@ -1847,7 +2131,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1856,7 +2140,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1910,7 +2194,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Not Found */
@@ -1919,7 +2203,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1928,7 +2212,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
@@ -1980,7 +2264,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Not Found */
@@ -1989,7 +2273,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
                 /** @description Internal Server Error */
@@ -1998,11 +2282,515 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
+                        "application/json": components["schemas"]["psp_com_internal_tenant_app.AuthErrorResponse"];
                     };
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/v1/risk/global-blacklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出全局黑名单
+         * @description 查询全局黑名单列表（仅超级管理员可访问）
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 列表类型 (ip, email, phone, cpf_cnpj, device_id) */
+                    list_type?: string;
+                    /** @description 分页大小 */
+                    limit?: number;
+                    /** @description 分页偏移 */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_risk_app.ListGlobalBlacklistResponse"];
+                    };
+                };
+                /** @description 未授权 */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 权限不足 */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 服务器错误 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * 添加到全局黑名单
+         * @description 将指定的值添加到全局黑名单（仅超级管理员可访问）
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 添加全局黑名单请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_risk_app.AddGlobalBlacklistRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_risk_app.GlobalBlacklistResponse"];
+                    };
+                };
+                /** @description 请求参数错误 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 未授权 */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 权限不足 */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 服务器错误 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/v1/risk/global-blacklist/{blacklist_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 从全局黑名单移除
+         * @description 从全局黑名单中移除指定条目（仅超级管理员可访问）
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 全局黑名单条目 ID */
+                    blacklist_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description 删除成功 */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 请求参数错误 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 未授权 */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 权限不足 */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 条目不存在 */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description 服务器错误 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/accounts/batch-assign-channel-group": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 批量绑定账户到通道组
+         * @description 批量将账户绑定到指定通道组
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 批量绑定请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.BatchAssignAccountsRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.BatchAssignAccountsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/accounts/{account_id}/channel-group": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查询账户的通道组
+         * @description 获取账户当前绑定的通道组信息
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * 绑定账户到通道组
+         * @description 将商户账户绑定到指定的通道组
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 绑定请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.AssignAccountToGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/accounts/{account_id}/channel-group/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查询通道组切换历史
+         * @description 获取账户的通道组绑定历史记录
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        }[];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4318,98 +5106,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/agent-users/{user_id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 变更代理商用户状态
-         * @description 统一的状态变更端点，支持 activate/deactivate/lock/unlock 操作
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 用户 ID */
-                    user_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 操作请求 (action: activate/deactivate/lock/unlock) */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_agent_app.AgentUserActionRequest"];
-                };
-            };
-            responses: {
-                /** @description 状态变更成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_agent_app.AgentUserActionResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 用户不存在 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 状态冲突 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
     "/api/v1/agent-users/{user_id}/unlock": {
         parameters: {
             query?: never;
@@ -4596,98 +5292,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/agents/{agent_id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 变更代理商状态
-         * @description 统一的状态变更端点，支持 approve/reject/reset/activate/suspend/close 操作
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 代理商 ID */
-                    agent_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 操作请求 (action: approve/reject/reset/activate/suspend/close) */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_agent_app.AgentActionRequest"];
-                };
-            };
-            responses: {
-                /** @description 状态变更成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_agent_app.AgentActionResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 代理商不存在 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 状态冲突 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
         trace?: never;
     };
     "/api/v1/agents/{agent_id}/users": {
@@ -7122,333 +7726,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/analytics/realtime/enhanced": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取增强版实时指标
-         * @description 获取实时交易指标及待处理订单统计
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 商户ID（可选，UUID格式） */
-                    merchant_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 增强版实时指标数据 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_analytics_app.RealTimeMetricsEnhancedResponse"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/success-rate/trend": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取成功率趋势
-         * @description 获取指定时间范围内按通道或支付方式分组的成功率趋势数据
-         */
-        get: {
-            parameters: {
-                query: {
-                    /** @description 开始时间（Unix毫秒） */
-                    start_time: number;
-                    /** @description 结束时间（Unix毫秒） */
-                    end_time: number;
-                    /** @description 时间粒度 */
-                    granularity?: "hour" | "day";
-                    /** @description 分组维度 */
-                    group_by?: "channel" | "payment_method";
-                    /** @description 商户ID（可选，UUID格式） */
-                    merchant_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功率趋势数据 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_analytics_app.SuccessRateTrendResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/transactions/anomalies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取异常订单统计
-         * @description 获取指定时间范围内按失败原因分组的异常订单统计
-         */
-        get: {
-            parameters: {
-                query: {
-                    /** @description 开始时间（Unix毫秒） */
-                    start_time: number;
-                    /** @description 结束时间（Unix毫秒） */
-                    end_time: number;
-                    /** @description 商户ID（可选，UUID格式） */
-                    merchant_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 异常订单统计数据 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_analytics_app.TransactionAnomaliesResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/transactions/currency-distribution": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取币种分布统计
-         * @description 获取指定时间范围内各币种的交易统计及占比
-         */
-        get: {
-            parameters: {
-                query: {
-                    /** @description 开始时间（Unix毫秒） */
-                    start_time: number;
-                    /** @description 结束时间（Unix毫秒） */
-                    end_time: number;
-                    /** @description 商户ID（可选，UUID格式） */
-                    merchant_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 币种分布数据 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_analytics_app.CurrencyDistributionResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/transactions/period-summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取时段摘要（快捷对比）
-         * @description 获取预设时段（今天/本周/本月）的交易统计及与上一时段的对比数据
-         */
-        get: {
-            parameters: {
-                query: {
-                    /** @description 时段类型 */
-                    period: "today" | "this_week" | "this_month";
-                    /** @description 商户ID（可选，UUID格式） */
-                    merchant_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 时段摘要数据 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_analytics_app.PeriodSummaryResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/analytics/transactions/stats": {
         parameters: {
             query?: never;
@@ -8751,308 +9028,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/sensitive-action/passkey/options": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 获取 Passkey 敏感操作验证选项
-         * @description 获取 WebAuthn 验证选项，用于 Passkey 用户执行敏感操作前的验证
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 请求参数 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["handler.SensitiveActionPasskeyOptionsInput"];
-                };
-            };
-            responses: {
-                /** @description 获取成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["handler.SensitiveActionPasskeyOptionsOutput"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 未认证 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/sensitive-action/verify": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 敏感操作 MFA 验证
-         * @description 验证 MFA 码并生成敏感操作 Token，用于执行高风险操作
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 验证请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["handler.SensitiveActionVerifyInput"];
-                };
-            };
-            responses: {
-                /** @description 验证成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["handler.SensitiveActionVerifyOutput"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description MFA 验证失败 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 用户被锁定 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/sensitive-action/verify-passkey": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Passkey 敏感操作 MFA 验证
-         * @description 验证 Passkey (WebAuthn) 并生成敏感操作 Token，用于执行高风险操作
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 验证请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["handler.SensitiveActionPasskeyVerifyInput"];
-                };
-            };
-            responses: {
-                /** @description 验证成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["handler.SensitiveActionVerifyOutput"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Passkey 验证失败 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 用户被锁定 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/tokens/revoke-all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 撤销所有 Token
-         * @description 撤销当前用户的所有 Token，用于密码修改、安全事件等场景
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 撤销请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_admin_app.HandlerRevokeAllTokensRequest"];
-                };
-            };
-            responses: {
-                /** @description 撤销成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_admin_app.HandlerRevokeTokenResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 未授权 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 服务器错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/auth/trusted-devices": {
         parameters: {
             query?: never;
@@ -9307,6 +9282,770 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/api/v1/channel-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出通道组
+         * @description 获取租户的所有通道组列表
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 仅返回激活的通道组 */
+                    active_only?: boolean;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"][];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * 创建通道组
+         * @description 创建新的通道组，用于管理多个支付通道
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 创建通道组请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.CreateChannelGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取通道组详情
+         * @description 根据 ID 获取通道组的详细信息
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 更新通道组
+         * @description 更新通道组的配置信息
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 更新通道组请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateChannelGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /**
+         * 删除通道组
+         * @description 删除指定的通道组（如果通道组仍有关联账户，则无法删除）
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 激活通道组
+         * @description 激活指定的通道组
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出组内通道
+         * @description 获取通道组内所有通道的列表
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 仅返回激活的通道 */
+                    active_only?: boolean;
+                };
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelResponse"][];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * 添加通道到组
+         * @description 将通道添加到指定的通道组中
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 添加通道请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.AddChannelToGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}/channels/{channel_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 更新组内通道配置
+         * @description 更新通道在组内的优先级、权重等配置
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                    /** @description 通道 ID */
+                    channel_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 更新通道配置请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateChannelInGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /**
+         * 从组中移除通道
+         * @description 从通道组中移除指定的通道
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                    /** @description 通道 ID */
+                    channel_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 停用通道组
+         * @description 停用指定的通道组
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channel-groups/{channel_group_id}/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取通道组统计
+         * @description 获取通道组的统计信息（通道数量、账户数量等）
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道组 ID */
+                    channel_group_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelGroupStatsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/channels": {
@@ -9645,133 +10384,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/channels/{channel_id}/config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取通道配置
-         * @description 获取指定通道的结构化配置（包含 common_config、payin_config、payout_config、auth_config）
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 通道 ID */
-                    channel_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.GetChannelConfigResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        /**
-         * 更新通道配置
-         * @description 更新指定通道的结构化配置，支持部分更新（只更新传入的字段）
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 通道 ID */
-                    channel_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 配置更新请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateChannelConfigRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.GetChannelConfigResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/channels/{channel_id}/disable": {
         parameters: {
             query?: never;
@@ -10050,6 +10662,133 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channels/{channel_id}/private-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取通道私有配置
+         * @description 获取指定通道的私有配置，密钥字段显示为脱敏值
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道 ID */
+                    channel_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelPrivateConfigResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 更新通道私有配置
+         * @description 更新指定通道的私有配置（如 API 凭证、密钥等）
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 通道 ID */
+                    channel_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 私有配置 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateChannelPrivateConfigRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelPrivateConfigResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
             };
@@ -11946,361 +12685,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/email/config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取邮件配置
-         * @description 获取租户的邮件服务器配置（凭证脱敏）
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        /**
-         * 更新邮件配置
-         * @description 更新租户的邮件服务器配置
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 更新请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_email_app.UpdateEmailConfigRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description 版本冲突 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        /**
-         * 创建邮件配置
-         * @description 为租户创建邮件服务器配置（SMTP/SendGrid/SES）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 邮件配置请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_email_app.CreateEmailConfigRequest"];
-                };
-            };
-            responses: {
-                /** @description Created */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_email_app.EmailConfigResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        /**
-         * 删除邮件配置
-         * @description 删除租户的邮件服务器配置及 Vault 中的凭证
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 删除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/email/config/secrets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * 更新邮件凭证
-         * @description 更新邮件服务的敏感凭证（密码、API Key）
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 凭证更新请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_email_app.UpdateEmailSecretsRequest"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Vault 不可用 */
-                503: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/email/config/test": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 测试邮件配置
-         * @description 发送测试邮件验证配置是否正确
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 测试请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_email_app.TestEmailConfigRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_email_app.TestEmailConfigResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/emails/config": {
         parameters: {
             query?: never;
@@ -12763,6 +13147,317 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查询费率列表
+         * @description 查询费率列表（支持按商户、账户、交易类型筛选和分页）
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 商户 ID (UUID) */
+                    merchant_id?: string;
+                    /** @description 商户账户 ID (UUID) */
+                    merchant_account_id?: string;
+                    /** @description 交易类型 */
+                    transaction_type?: string;
+                    /** @description 每页数量 */
+                    limit?: number;
+                    /** @description 偏移量 */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListFeesResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * 配置费率
+         * @description 为账户配置手续费率
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 配置费率请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.ConfigureFeeRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.FeeResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fees/batch-update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 批量更新费率
+         * @description 批量设置费率过期时间
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 批量更新请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.BatchUpdateFeeRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.BatchUpdateFeeResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fees/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 计算手续费
+         * @description 计算指定金额的手续费
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description 计算手续费请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.CalculateFeeRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.CalculateFeeResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fees/effective": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取有效费率
+         * @description 获取账户指定时间点的有效费率
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description 账户 ID */
+                    account_id: string;
+                    /** @description 交易类型 */
+                    transaction_type: string;
+                    /** @description 时间点（RFC3339格式），默认为当前时间 */
+                    at?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.FeeResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/fees/import": {
         parameters: {
             query?: never;
@@ -12871,6 +13566,115 @@ export interface paths {
             };
         };
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fees/{fee_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取费率详情
+         * @description 根据 ID 获取费率详情
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 费率 ID */
+                    fee_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.FeeResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        /**
+         * 更新费率
+         * @description 更新费率配置（设置过期时间）
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 费率 ID */
+                    fee_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 更新费率请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.UpdateFeeRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.FeeResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
         post?: never;
         delete?: never;
         options?: never;
@@ -13530,7 +14334,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/funds-operations/{operation_id}/status": {
+    "/api/v1/funds-operations/{id}/confirm-execution": {
         parameters: {
             query?: never;
             header?: never;
@@ -13539,28 +14343,24 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
         /**
-         * 变更资金操作状态
-         * @description 统一的状态变更端点，支持 first_approve/final_approve/reject/confirm_execution
+         * 确认提现执行完成
+         * @description 运营人员确认线下提现已执行完成
          */
-        patch: {
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
                     /** @description 操作ID */
-                    operation_id: string;
+                    id: string;
                 };
                 cookie?: never;
             };
-            /** @description 操作请求 */
+            /** @description 确认请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationActionRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_ops_app.ConfirmExecutionRequest"];
                 };
             };
             responses: {
@@ -13570,7 +14370,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationActionResponse"];
+                        "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationResponse"];
                     };
                 };
                 /** @description Bad Request */
@@ -13582,8 +14382,55 @@ export interface paths {
                         "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
-                /** @description Forbidden */
-                403: {
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/funds-operations/{id}/final-approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 终审通过
+         * @description 终审人员审核通过待终审的资金操作申请（充值/调账自动执行，提现进入待确认状态）
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 操作ID */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 审批请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_ops_app.ApprovalRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13591,7 +14438,7 @@ export interface paths {
                         "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
-                /** @description Conflict */
+                /** @description 状态不允许终审 */
                 409: {
                     headers: {
                         [name: string]: unknown;
@@ -13602,6 +14449,131 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/funds-operations/{id}/first-approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 初审通过
+         * @description 初审人员审核通过待初审的资金操作申请
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 操作ID */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 审批请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_ops_app.ApprovalRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description 状态不允许初审 */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/funds-operations/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 拒绝申请
+         * @description 拒绝待初审或待终审的资金操作申请（提现自动释放冻结）
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 操作ID */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 拒绝请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_ops_app.RejectRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_ops_app.FundsOperationResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/gateway-webhooks/events": {
@@ -14247,358 +15219,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/kyb/evaluate/{merchant_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 执行 KYB 评估
-         * @description 对指定商户执行 KYB 自动审核评估
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 评估请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.EvaluateKYBRequest"];
-                };
-            };
-            responses: {
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/kyb/rules": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 列出 KYB 规则
-         * @description 查询 KYB 自动审核规则列表（支持筛选和分页）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 规则类型 */
-                    rule_type?: string;
-                    /** @description 是否激活 */
-                    is_active?: boolean;
-                    /** @description 分页大小 */
-                    limit?: number;
-                    /** @description 分页偏移 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 创建 KYB 规则
-         * @description 创建新的 KYB 自动审核规则
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/kyb/rules/{rule_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取 KYB 规则详情
-         * @description 根据 ID 获取 KYB 规则详情
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        /**
-         * 更新 KYB 规则
-         * @description 更新现有的 KYB 自动审核规则
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 删除 KYB 规则
-         * @description 删除指定的 KYB 自动审核规则
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description No Content */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/ledger/accounts": {
         parameters: {
             query?: never;
@@ -14608,7 +15228,7 @@ export interface paths {
         };
         /**
          * 查询账本账户列表
-         * @description 查询租户下的账本账户列表，支持按币种、类型、状态、商户账户ID筛选，返回带余额信息
+         * @description 查询租户下的账本账户列表，支持按币种、类型、状态筛选，返回带余额信息
          */
         get: {
             parameters: {
@@ -14619,8 +15239,6 @@ export interface paths {
                     category?: string;
                     /** @description 状态筛选 (active, frozen, closed) */
                     status?: string;
-                    /** @description 商户账户 ID 筛选 */
-                    merchant_account_id?: string;
                     /** @description 每页大小 */
                     limit?: number;
                     /** @description 偏移量 */
@@ -14643,6 +15261,249 @@ export interface paths {
                 };
                 /** @description Bad Request */
                 400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ledger/accounts/{account_id}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取账户余额
+         * @description 获取商户账户的余额信息
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 商户账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ledger/accounts/{account_id}/entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查询账户分录列表
+         * @description 查询商户账户的账本分录（支持分页和筛选）
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 业务类型筛选 */
+                    business_type?: string;
+                    /** @description 方向筛选 (debit/credit) */
+                    direction?: string;
+                    /** @description 开始时间 (RFC3339) */
+                    start_time?: string;
+                    /** @description 结束时间 (RFC3339) */
+                    end_time?: string;
+                    /** @description 每页数量 */
+                    limit?: number;
+                    /** @description 偏移量 */
+                    offset?: number;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ledger/accounts/{account_id}/entries/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 游标分页批量查询分录
+         * @description 使用游标分页查询商户账户的账本分录（高性能，适合大数据量场景）
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 业务类型筛选 */
+                    business_type?: string;
+                    /** @description 方向筛选 (debit/credit) */
+                    direction?: string;
+                    /** @description 开始时间 (RFC3339) */
+                    start_time?: string;
+                    /** @description 结束时间 (RFC3339) */
+                    end_time?: string;
+                    /** @description 最小金额 */
+                    min_amount?: number;
+                    /** @description 最大金额 */
+                    max_amount?: number;
+                    /** @description 游标（首页不传，翻页传入上一页返回的 next_cursor） */
+                    cursor?: string;
+                    /** @description 每页数量 */
+                    page_size?: number;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14746,6 +15607,158 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ledger/accounts/{account_id}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取交易汇总
+         * @description 获取商户账户的交易汇总统计
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 开始时间 (RFC3339) */
+                    start_time?: string;
+                    /** @description 结束时间 (RFC3339) */
+                    end_time?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ledger/accounts/{account_id}/summary-by-type": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取按类型分组的交易汇总
+         * @description 获取商户账户按业务类型分组的交易汇总统计
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 开始时间 (RFC3339) */
+                    start_time?: string;
+                    /** @description 结束时间 (RFC3339) */
+                    end_time?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户账户 ID */
+                    account_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -14922,401 +15935,6 @@ export interface paths {
                 path: {
                     /** @description 分录 ID */
                     entry_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/ledger/merchant-accounts/{merchant_account_id}/balance": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取账户余额
-         * @description 获取商户账户的余额信息
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户账户 ID */
-                    merchant_account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/ledger/merchant-accounts/{merchant_account_id}/entries": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 查询账户分录列表
-         * @description 查询商户账户的账本分录（支持分页和筛选）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 业务类型筛选 */
-                    business_type?: string;
-                    /** @description 方向筛选 (debit/credit) */
-                    direction?: string;
-                    /** @description 开始时间 (RFC3339) */
-                    start_time?: string;
-                    /** @description 结束时间 (RFC3339) */
-                    end_time?: string;
-                    /** @description 每页数量 */
-                    limit?: number;
-                    /** @description 偏移量 */
-                    offset?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户账户 ID */
-                    merchant_account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/ledger/merchant-accounts/{merchant_account_id}/entries/batch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 游标分页批量查询分录
-         * @description 使用游标分页查询商户账户的账本分录（高性能，适合大数据量场景）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 业务类型筛选 */
-                    business_type?: string;
-                    /** @description 方向筛选 (debit/credit) */
-                    direction?: string;
-                    /** @description 开始时间 (RFC3339) */
-                    start_time?: string;
-                    /** @description 结束时间 (RFC3339) */
-                    end_time?: string;
-                    /** @description 最小金额 */
-                    min_amount?: number;
-                    /** @description 最大金额 */
-                    max_amount?: number;
-                    /** @description 游标（首页不传，翻页传入上一页返回的 next_cursor） */
-                    cursor?: string;
-                    /** @description 每页数量 */
-                    page_size?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户账户 ID */
-                    merchant_account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/ledger/merchant-accounts/{merchant_account_id}/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取交易汇总
-         * @description 获取商户账户的交易汇总统计
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 开始时间 (RFC3339) */
-                    start_time?: string;
-                    /** @description 结束时间 (RFC3339) */
-                    end_time?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户账户 ID */
-                    merchant_account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/ledger/merchant-accounts/{merchant_account_id}/summary-by-type": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取按类型分组的交易汇总
-         * @description 获取商户账户按业务类型分组的交易汇总统计
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 开始时间 (RFC3339) */
-                    start_time?: string;
-                    /** @description 结束时间 (RFC3339) */
-                    end_time?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户账户 ID */
-                    merchant_account_id: string;
                 };
                 cookie?: never;
             };
@@ -15930,8 +16548,6 @@ export interface paths {
                     user_type?: string;
                     /** @description 关键词搜索（用户名/邮箱/姓名/商户名/商户编码） */
                     keyword?: string;
-                    /** @description 角色代码筛选（如 admin, operator 等） */
-                    role?: string;
                     /** @description 创建时间起始 (RFC3339) */
                     created_from?: string;
                     /** @description 创建时间结束 (RFC3339) */
@@ -16070,11 +16686,6 @@ export interface paths {
                      * @example "active"
                      */
                     status?: string;
-                    /**
-                     * @description KYB 状态筛选 (pending/in_review/verified/rejected)
-                     * @example "verified"
-                     */
-                    kyb_status?: string;
                     /**
                      * @description 国家代码筛选
                      * @example "BR"
@@ -16249,77 +16860,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/batch-status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 批量变更商户状态
-         * @description 批量变更商户状态，支持 activate/suspend 操作。一次最多支持 100 个商户。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 批量操作请求 (action: activate/suspend) */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.BatchActionRequest"];
-                };
-            };
-            responses: {
-                /** @description 批量操作结果 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.BatchActionResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
         trace?: never;
     };
     "/api/v1/merchants/batch-suspend": {
@@ -16616,54 +17156,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/merchants/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取商户统计数据
-         * @description 获取商户按状态和 KYB 状态的统计数据
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.MerchantStatsResponse"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/merchants/{id}": {
         parameters: {
             query?: never;
@@ -16897,6 +17389,368 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/merchants/{id}/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * [内部] 查询商户的 API 密钥列表
+         * @description 获取指定商户的所有 API 密钥（不包含密钥内容）
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 按类型筛选: sandbox / production */
+                    key_type?: string;
+                    /** @description 按状态筛选: active / revoked / expired */
+                    status?: string;
+                    /** @description 每页数量 */
+                    limit?: number;
+                    /** @description 偏移量 */
+                    offset?: number;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户 ID */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListAdminAPIKeysResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/merchants/{id}/api-keys/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * [内部] 获取商户 API 密钥使用统计
+         * @description 获取商户所有 API 密钥的调用统计信息
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 开始日期 (YYYY-MM-DD) */
+                    start_date?: string;
+                    /** @description 结束日期 (YYYY-MM-DD) */
+                    end_date?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description 商户 ID */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.MerchantAPIKeysStatsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/merchants/{id}/api-keys/{api_key_id}/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * [内部] 禁用 API 密钥
+         * @description 禁用指定的 API 密钥
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 商户 ID */
+                    id: string;
+                    /** @description API 密钥 ID */
+                    api_key_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 禁用原因 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/merchants/{id}/api-keys/{api_key_id}/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * [内部] 启用 API 密钥
+         * @description 启用已禁用的 API 密钥
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 商户 ID */
+                    id: string;
+                    /** @description API 密�� ID */
+                    keyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description 启用原因 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/merchants/{id}/api-keys/{api_key_id}/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * [内部] 重置 API 密钥
+         * @description 重置 API 密钥（创建新密钥，旧密钥设置 Grace Period 后过期）
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 商户 ID */
+                    id: string;
+                    /** @description API 密钥 ID */
+                    api_key_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description 重置请求 */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminResetAPIKeyRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminResetAPIKeyResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
                     };
                 };
             };
@@ -17728,287 +18582,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/merchants/{merchant_id}/ip-whitelists": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [内部] 查询商户的 IP 白名单列表
-         * @description 获取指定商户的所有 IP 白名单配置
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListIPWhitelistsResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * [内部] 创建 IP 白名单
-         * @description 为商户添加 IP 白名单规则（支持单个 IP 或 CIDR 格式）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 创建请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.CreateIPWhitelistRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.IPWhitelistResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description IP 地址已存在 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/ip-whitelists/{whitelist_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * [内部] 删除 IP 白名单
-         * @description 删除指定的 IP 白名单规则（软删除）
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 白名单 ID */
-                    whitelist_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 删除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * [内部] 启用/禁用 IP 白名单
-         * @description 更新 IP 白名单的启用状态
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 白名单 ID */
-                    whitelist_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 状态更新请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.UpdateIPWhitelistStatusRequest"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
     "/api/v1/merchants/{merchant_id}/limits": {
         parameters: {
             query?: never;
@@ -18328,222 +18901,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/merchants/{merchant_id}/merchant-accounts/{account_id}/api-keys": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [内部] 查询账户的 API 密钥列表
-         * @description 获取指定账户的所有 API 密钥（不包含密钥内容）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 按类型筛选: sandbox / production */
-                    key_type?: string;
-                    /** @description 按状态筛选: active / revoked / expired */
-                    status?: string;
-                    /** @description 每页数量 */
-                    limit?: number;
-                    /** @description 偏移量 */
-                    offset?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 账户 ID */
-                    account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListAdminAPIKeysResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/merchant-accounts/{account_id}/api-keys/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [内部] 获取账户 API 密钥使用统计
-         * @description 获取账户所有 API 密钥的调用统计信息
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 开始日期 (YYYY-MM-DD) */
-                    start_date?: string;
-                    /** @description 结束日期 (YYYY-MM-DD) */
-                    end_date?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 账户 ID */
-                    account_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.AccountAPIKeysStatsResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/merchant-accounts/{account_id}/api-keys/{api_key_id}/disable": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * [内部] 禁用 API 密钥
-         * @description 禁用指定的 API 密钥
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 账户 ID */
-                    account_id: string;
-                    /** @description API 密钥 ID */
-                    api_key_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 禁用原因 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyActionResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_pkg_apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/merchants/{merchant_id}/merchant-accounts/{account_id}/deactivate": {
         parameters: {
             query?: never;
@@ -18755,321 +19112,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/secrets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [内部] 查询商户的签名公钥列表
-         * @description 获取指定商户的所有签名公钥配置（Ed25519/RSA）
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListSecretsResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * [内部] 创建签名公钥
-         * @description 为商户添加签名公钥（支持 Ed25519、RSA2048、RSA4096）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 创建请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.CreateSecretRequest"];
-                };
-            };
-            responses: {
-                /** @description Created */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.SecretResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 公钥名称已存在 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/secrets/{secret_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * [内部] 撤销签名公钥
-         * @description 撤销指定的签名公钥（状态变为 revoked）
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                    /** @description 公钥 ID */
-                    secret_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 撤销成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 公钥已撤销 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/merchants/{merchant_id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 变更商户状态
-         * @description 统一的状态变更端点，支持 activate/suspend/approve/reject/reset 操作
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 操作请求 (action: activate/suspend/approve/reject/reset) */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.ActionRequest"];
-                };
-            };
-            responses: {
-                /** @description 状态变更成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ActionResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 商户不存在 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 状态冲突（如商户已激活） */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description 服务器内部错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
         trace?: never;
     };
     "/api/v1/merchants/{merchant_id}/users": {
@@ -21693,361 +21735,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/onboarding": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 查询入驻申请列表
-         * @description 查询商户入驻申请列表，支持多条件筛选和分页
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /**
-                     * @description 状态筛选 (draft/submitted/under_review/approved/rejected/archived)
-                     * @example "submitted"
-                     */
-                    status?: string;
-                    /**
-                     * @description 步骤筛选 (basic_info/kyb_verification/documents_upload/fee_config/api_setup/completed)
-                     * @example "basic_info"
-                     */
-                    current_step?: string;
-                    /**
-                     * @description 国家代码筛选
-                     * @example "BR"
-                     */
-                    country_code?: string;
-                    /**
-                     * @description 关键字搜索（商户名称/申请编号/邮箱/税号）
-                     * @example "Loja"
-                     */
-                    keyword?: string;
-                    /**
-                     * @description 提交时间起始 (RFC3339)
-                     * @example "2024-01-01T00:00:00Z"
-                     */
-                    submitted_from?: string;
-                    /**
-                     * @description 提交时间结束 (RFC3339)
-                     * @example "2024-12-31T23:59:59Z"
-                     */
-                    submitted_to?: string;
-                    /**
-                     * @description 创建时间起始 (RFC3339)
-                     * @example "2024-01-01T00:00:00Z"
-                     */
-                    created_from?: string;
-                    /**
-                     * @description 创建时间结束 (RFC3339)
-                     * @example "2024-12-31T23:59:59Z"
-                     */
-                    created_to?: string;
-                    /** @description 每页数量 (1-100) */
-                    limit?: number;
-                    /** @description 偏移量 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.ListOnboardingsResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/onboarding/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取入驻统计数据
-         * @description 获取入驻申请的状态统计和步骤统计
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.OnboardingStatsResponse"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/onboarding/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取入驻申请详情
-         * @description 根据 ID 获取入驻申请详情
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 入驻申请 ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.OnboardingResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/onboarding/{id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 更新入驻申请状态
-         * @description 审批入驻申请（开始审核、批准、拒绝、归档）
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 入驻申请 ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 更新状态请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_merchant_app.UpdateOnboardingStatusRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.UpdateOnboardingStatusResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
     "/api/v1/pricing/default": {
         parameters: {
             query?: never;
@@ -22383,246 +22070,6 @@ export interface paths {
                 };
             };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/providers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 查询提供商列表
-         * @description 查询支付通道提供商列表，支持按支付方式过滤
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 支付方式过滤（如 pix, spei, creditcard） */
-                    payment_method?: string;
-                    /** @description 分页大小 */
-                    limit?: number;
-                    /** @description 分页偏移 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data?: components["schemas"]["psp_com_internal_channel_app.ProviderResponse"][];
-                            total?: number;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 创建提供商
-         * @description 创建新的支付通道提供商
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 创建提供商请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_channel_app.CreateProviderRequest"];
-                };
-            };
-            responses: {
-                /** @description Created */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.ProviderResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/providers/{provider_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取提供商详情
-         * @description 根据 ID 获取提供商详情
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 提供商 ID */
-                    provider_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.ProviderResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        /**
-         * 更新提供商
-         * @description 更新提供商信息
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 提供商 ID */
-                    provider_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 更新提供商请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateProviderRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.ProviderResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -23639,7 +23086,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reconciliation/batches/{batch_id}/status": {
+    "/api/v1/reconciliation/batches/{batch_id}/complete": {
         parameters: {
             query?: never;
             header?: never;
@@ -23648,15 +23095,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
         /**
-         * Update reconciliation batch status
-         * @description Unified endpoint for batch status changes (Issue #2943)
+         * Complete reconciliation batch
+         * @description Complete a reconciliation batch with statistics
          */
-        patch: {
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -23666,10 +23109,10 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            /** @description Action request */
+            /** @description Complete batch request */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["psp_com_internal_recon_app.ReconBatchActionRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_recon_app.CompleteReconBatchRequest"];
                 };
             };
             responses: {
@@ -23679,7 +23122,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconBatchActionResponse"];
+                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconBatchDTO"];
                     };
                 };
                 /** @description Bad Request */
@@ -23704,8 +23147,72 @@ export interface paths {
                         };
                     };
                 };
-                /** @description Unprocessable Entity */
-                422: {
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reconciliation/batches/{batch_id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start reconciliation batch
+         * @description Start processing a reconciliation batch
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Batch ID */
+                    batch_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconBatchDTO"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23728,6 +23235,10 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/reconciliation/differences": {
@@ -23864,7 +23375,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reconciliation/differences/{difference_id}/status": {
+    "/api/v1/reconciliation/differences/{difference_id}/assign": {
         parameters: {
             query?: never;
             header?: never;
@@ -23873,15 +23384,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
         /**
-         * Update reconciliation difference status
-         * @description Unified endpoint for difference status changes (Issue #2943)
+         * Assign reconciliation difference
+         * @description Assign a reconciliation difference to a user
          */
-        patch: {
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -23891,10 +23398,10 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            /** @description Action request */
+            /** @description Assign difference request */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["psp_com_internal_recon_app.ReconDifferenceActionRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_recon_app.AssignDifferenceRequest"];
                 };
             };
             responses: {
@@ -23904,7 +23411,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconDifferenceActionResponse"];
+                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconDifferenceDTO"];
                     };
                 };
                 /** @description Bad Request */
@@ -23929,8 +23436,77 @@ export interface paths {
                         };
                     };
                 };
-                /** @description Unprocessable Entity */
-                422: {
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reconciliation/differences/{difference_id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resolve reconciliation difference
+         * @description Resolve a reconciliation difference
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Difference ID */
+                    difference_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Resolve difference request */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["psp_com_internal_recon_app.ResolveDifferenceRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["psp_com_internal_recon_app.ReconDifferenceDTO"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** @description Not Found */
+                404: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23953,6 +23529,10 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/reconciliation/reports/{report_id}": {
@@ -24214,430 +23794,6 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/pending-final-approval": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取待终审退款列表
-         * @description 获取所有等待终审的退款列表
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 每页数量 */
-                    limit?: number;
-                    /** @description 偏移量 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/pending-first-approval": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取待初审退款列表
-         * @description 获取所有等待初审的退款列表
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 每页数量 */
-                    limit?: number;
-                    /** @description 偏移量 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/{refund_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取退款详情
-         * @description 获取指定退款的详细信息
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 退款 ID */
-                    refund_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_payment_core_app.PaymentRefundResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/{refund_id}/final-approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 退款终审通过
-         * @description 对待终审的退款进行终审通过操作（不能与初审是同一人）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 退款 ID */
-                    refund_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 终审请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_payment_core_app.RefundApprovalRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 同一人不能进行初审和终审 */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/{refund_id}/first-approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 退款初审通过
-         * @description 对待初审的退款进行初审通过操作
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 退款 ID */
-                    refund_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 初审请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_payment_core_app.RefundApprovalRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/refunds/{refund_id}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 拒绝退款
-         * @description 对待审批的退款进行拒绝操作
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 退款 ID */
-                    refund_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 拒绝请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_payment_core_app.RefundRejectRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Conflict */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
         delete?: never;
         options?: never;
         head?: never;
@@ -25914,252 +25070,6 @@ export interface paths {
                     };
                 };
                 /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/risk/global-blacklist": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 列出全局黑名单
-         * @description 查询全局黑名单列表（仅超级管理员可访问）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 列表类型 (ip, email, phone, cpf_cnpj, device_id) */
-                    list_type?: string;
-                    /** @description 分页大小 */
-                    limit?: number;
-                    /** @description 分页偏移 */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_risk_app.ListGlobalBlacklistResponse"];
-                    };
-                };
-                /** @description 未授权 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 添加到全局黑名单
-         * @description 将指定的值添加到全局黑名单（仅超级管理员可访问）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description 添加全局黑名单请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_risk_app.AddGlobalBlacklistRequest"];
-                };
-            };
-            responses: {
-                /** @description Created */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_risk_app.GlobalBlacklistResponse"];
-                    };
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 未授权 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器错误 */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/risk/global-blacklist/{blacklist_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * 从全局黑名单移除
-         * @description 从全局黑名单中移除指定条目（仅超级管理员可访问）
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 全局黑名单条目 ID */
-                    blacklist_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 删除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 请求参数错误 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 未授权 */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 权限不足 */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 条目不存在 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description 服务器错误 */
                 500: {
                     headers: {
                         [name: string]: unknown;
@@ -27473,238 +26383,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/routing-strategies/{strategy_id}/rules/{rule_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * 更新路由规则
-         * @description 更新路由策略中的规则
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 策略 ID */
-                    strategy_id: string;
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 更新信息 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateRoutingRuleRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.RoutingRuleResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 删除路由规则
-         * @description 从路由策略中删除规则
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 策略 ID */
-                    strategy_id: string;
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description No Content */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/routing-strategies/{strategy_id}/rules/{rule_id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 更新规则状态
-         * @description 启用或停用路由规则
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 策略 ID */
-                    strategy_id: string;
-                    /** @description 规则 ID */
-                    rule_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 状态信息 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_channel_app.UpdateRuleStatusRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_channel_app.RoutingRuleResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
         trace?: never;
     };
     "/api/v1/scheduler/jobs": {
@@ -29468,97 +28146,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/settlements/{settlement_id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 变更结算单状态
-         * @description 统一的状态变更端点，支持 execute/retry/cancel/approve/reject
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 结算单ID */
-                    settlement_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 操作请求 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_settlement_app.SettlementActionRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_settlement_app.SettlementActionResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
         trace?: never;
     };
     "/api/v1/telegram/balance-alerts": {
@@ -32817,20 +31404,7 @@ export interface paths {
         put?: never;
         /**
          * 搜索交易
-         * @description 跨支付方式、跨交易类型的统一交易搜索。
-         *
-         *     **使用 POST 方法说明（Issue #2944）**：
-         *     由于搜索条件可能包含多个复杂参数（merchant_id, transaction_type, payment_method, status, start_time, end_time 等），
-         *     当同时使用多个筛选条件时，URL 查询字符串可能超过浏览器和服务器的 URL 长度限制（通常为 2048 字符）。
-         *     因此，此端点使用 POST 方法将搜索条件放在请求体中，以支持更复杂的查询场景。
-         *
-         *     **扩展搜索参数**：
-         *     - `merchant_ids[]`: 多商户筛选（如 ["uuid1", "uuid2"]）
-         *     - `statuses[]`: 多状态筛选（如 ["pending", "processing"]）
-         *     - `state`: 单个内部状态筛选（向后兼容）
-         *     - `states[]`: 多内部状态筛选（如 ["risk_checking", "queued"]）
-         *     - `search_term`: 关键词搜索（搜索 Transaction ID, Merchant Order ID, Provider Ref, E2E ID）
-         *     - `customer_tax_id`: 客户税号精确搜索
+         * @description 跨支付方式、跨交易类型的统一交易搜索
          */
         post: {
             parameters: {
@@ -32875,158 +31449,6 @@ export interface paths {
                 };
             };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions/stats/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取交易统计概览
-         * @description 获取交易统计 Dashboard 数据，包括代收代付总额、成功率、支付方式分布、队列状态等
-         *
-         *     **返回内容**：
-         *     - `metrics`: 核心指标（代收/代付总额、成功率、系统健康状态）
-         *     - `trends`: 趋势数据（按时间粒度统计）
-         *     - `channel_health`: 渠道健康状态
-         *     - `payment_methods`: 支付方式统计分布
-         *     - `queues`: 队列统计（待审批、失败 Webhook、卡单等）
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 开始时间 (RFC3339 格式，默认 24 小时前) */
-                    start_time?: string;
-                    /** @description 结束时间 (RFC3339 格式，默认当前时间) */
-                    end_time?: string;
-                    /** @description 币种筛选 (可选) */
-                    currency?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_admin_app.HandlerTransactionStatsResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取交易详情
-         * @description 根据交易 ID 获取完整的交易详情，包括状态历史
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 交易类型 (invoice/transfer)，可选，不提供则自动检测 */
-                    transaction_type?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 交易 ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_transaction_app.GetTransactionResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -33326,218 +31748,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/transactions/{transaction_id}/approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 批准风控检查
-         * @description 批准处于 risk_checking 状态的代付交易（需要 transaction:approve_risk 权限）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 交易 ID */
-                    transaction_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_ops_app.RiskApprovalResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions/{transaction_id}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 拒绝风控检查
-         * @description 拒绝处于 risk_checking 状态的代付交易（需要 transaction:approve_risk 权限）
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 交易 ID */
-                    transaction_id: string;
-                };
-                cookie?: never;
-            };
-            /** @description 拒绝原因 */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["psp_com_internal_admin_app.HandlerRiskRejectRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_ops_app.RiskApprovalResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/transactions/{transaction_id}/webhook/retry": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 按交易 ID 重试 Webhook 投递
-         * @description 根据交易 ID 查找最新的 Webhook 投递记录并重试
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 交易 ID */
-                    transaction_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_webhook_merchant_app.DeliveryDetail"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["apierror.APIError"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/treasury/currencies": {
         parameters: {
             query?: never;
@@ -33615,7 +31825,7 @@ export interface paths {
             /** @description 白名单配置 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.UpdateCurrencyWhitelistRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.UpdateCurrencyWhitelistRequest"];
                 };
             };
             responses: {
@@ -33844,7 +32054,7 @@ export interface paths {
             /** @description 启用货币请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.EnableCurrencyRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.EnableCurrencyRequest"];
                 };
             };
             responses: {
@@ -34707,7 +32917,7 @@ export interface paths {
             /** @description 转换请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.FXConvertRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.FXConvertRequest"];
                 };
             };
             responses: {
@@ -34797,7 +33007,7 @@ export interface paths {
             /** @description 报价请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.FXQuoteRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.FXQuoteRequest"];
                 };
             };
             responses: {
@@ -35002,7 +33212,7 @@ export interface paths {
             /** @description 创建请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.CreateMarkupConfigRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.CreateMarkupConfigRequest"];
                 };
             };
             responses: {
@@ -35365,7 +33575,7 @@ export interface paths {
             /** @description 更新请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.UpdateMarkupConfigRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.UpdateMarkupConfigRequest"];
                 };
             };
             responses: {
@@ -35645,7 +33855,7 @@ export interface paths {
             /** @description 创建汇率请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.CreateExchangeRateRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.CreateExchangeRateRequest"];
                 };
             };
             responses: {
@@ -35853,7 +34063,7 @@ export interface paths {
             /** @description 批量导入请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.BatchImportRatesRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.BatchImportRatesRequest"];
                 };
             };
             responses: {
@@ -36149,7 +34359,7 @@ export interface paths {
             /** @description 更新汇率请求 */
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["treasury.CreateExchangeRateRequest"];
+                    "application/json": components["schemas"]["psp_com_internal_treasury_app.CreateExchangeRateRequest"];
                 };
             };
             responses: {
@@ -38204,103 +36414,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/merchants/{merchant_id}/kyb": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取商户 KYB 认证详情
-         * @description 根据商户 ID 获取其 KYB (Know Your Business) 企业认证详情，包括法人代表信息、注册地址、营业执照、UBO 信息、风险评估和审核状态等
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 商户 ID */
-                    merchant_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["psp_com_internal_merchant_app.MerchantKYBResponse"];
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/telegram/health": {
         parameters: {
             query?: never;
@@ -38528,46 +36641,6 @@ export interface components {
             max_latency_p99_ms?: number;
             min_success_count?: number;
         };
-        "handler.SensitiveActionPasskeyOptionsInput": {
-            /** @description 敏感操作类型 */
-            action_type: string;
-        };
-        "handler.SensitiveActionPasskeyOptionsOutput": {
-            /** @description 允许的凭证列表 */
-            allow_credentials?: {
-                [key: string]: unknown;
-            }[];
-            /** @description Base64 URL 编码的 challenge */
-            challenge?: string;
-            /** @description Relying Party ID */
-            rp_id?: string;
-            /** @description 超时时间（毫秒） */
-            timeout?: number;
-            /** @description 用户验证要求 */
-            user_verification?: string;
-        };
-        "handler.SensitiveActionPasskeyVerifyInput": {
-            /** @description 敏感操作类型 */
-            action_type: string;
-            /** @description WebAuthn 断言响应 */
-            assertion_response: {
-                [key: string]: unknown;
-            };
-        };
-        "handler.SensitiveActionVerifyInput": {
-            /** @description 敏感操作类型 */
-            action_type: string;
-            /** @description MFA 验证码（6位TOTP或8位备用码） */
-            code: string;
-        };
-        "handler.SensitiveActionVerifyOutput": {
-            /** @description 敏感操作 Token */
-            action_token?: string;
-            /** @description 允许的操作类型 */
-            allowed_actions?: string[];
-            /** @description Token 过期时间（ISO 8601） */
-            expires_at?: string;
-        };
         "http.AlertManagerAlert": {
             annotations?: {
                 [key: string]: string;
@@ -38599,18 +36672,6 @@ export interface components {
             status?: string;
             truncatedAlerts?: number;
             version?: string;
-        };
-        "psp_com_internal_admin_app.ChannelHealthItem": {
-            avg_latency_ms?: number;
-            channel_code?: string;
-            channel_id?: string;
-            channel_name?: string;
-            failed_count?: number;
-            last_health_check?: string;
-            /** @description healthy, degraded, down */
-            status?: string;
-            success_rate?: number;
-            transaction_count?: number;
         };
         "psp_com_internal_admin_app.HandlerAdminLoginRequest": {
             /** @description 设备指纹 */
@@ -38691,26 +36752,33 @@ export interface components {
             action?: string;
             action_category?: string;
             created_at?: string;
-            data_after?: number[];
-            data_before?: number[];
+            data_after?: {
+                [key: string]: unknown;
+            };
+            data_before?: {
+                [key: string]: unknown;
+            };
             error_message?: string;
             id?: string;
             ip_address?: string;
-            /** @description Issue #2986: Metadata 保留 map[string]interface{} 但添加验证器 */
             metadata?: {
                 [key: string]: unknown;
             };
             operator_id?: string;
             operator_name?: string;
             operator_role?: string;
-            request_body?: number[];
+            request_body?: {
+                [key: string]: unknown;
+            };
             request_id?: string;
             request_method?: string;
             request_path?: string;
             resource_id?: string;
             resource_name?: string;
             resource_type?: string;
-            response_body?: number[];
+            response_body?: {
+                [key: string]: unknown;
+            };
             response_status?: number;
             result?: string;
             tenant_id?: string;
@@ -39109,28 +37177,6 @@ export interface components {
         "psp_com_internal_admin_app.HandlerResetUserMFARequest": {
             revoke_devices?: boolean;
         };
-        "psp_com_internal_admin_app.HandlerRevokeAllTokensRequest": {
-            /**
-             * @description 撤销原因: logout, password_change, security_breach, admin_action, session_kicked, device_revoked, mfa_reset, account_locked, user_request
-             * @example password_change
-             */
-            reason: string;
-        };
-        "psp_com_internal_admin_app.HandlerRevokeTokenResponse": {
-            /**
-             * @description 响应消息
-             * @example All tokens have been revoked
-             */
-            message?: string;
-            /**
-             * @description 是否成功
-             * @example true
-             */
-            success?: boolean;
-        };
-        "psp_com_internal_admin_app.HandlerRiskRejectRequest": {
-            reason: string;
-        };
         "psp_com_internal_admin_app.HandlerRotationProgressResponse": {
             batch_failed?: number;
             batch_processed?: number;
@@ -39145,27 +37191,13 @@ export interface components {
             total_tokens?: number;
         };
         "psp_com_internal_admin_app.HandlerSearchTransactionsRequest": {
-            /** @description 客户税号搜索 */
-            customer_tax_id?: string;
             end_time?: string;
             limit?: number;
-            /** @description 单个商户 ID（向后兼容） */
             merchant_id?: string;
-            /** @description 多商户筛选 */
-            merchant_ids?: string[];
             offset?: number;
             payment_method?: string;
-            /** @description 关键词搜索 (Transaction ID, Merchant Order ID, Provider Ref, E2E ID) */
-            search_term?: string;
             start_time?: string;
-            /** @description 单个内部状态（向后兼容） */
-            state?: string;
-            /** @description 多内部状态筛选 */
-            states?: string[];
-            /** @description 单个状态（向后兼容） */
             status?: string;
-            /** @description 多状态筛选 */
-            statuses?: string[];
             transaction_type?: string;
         };
         "psp_com_internal_admin_app.HandlerStartRotationRequest": {
@@ -39195,14 +37227,6 @@ export interface components {
             tenant_name?: string;
             /** @description 用户名/邮箱（用于 TOTP 标签） */
             username?: string;
-        };
-        "psp_com_internal_admin_app.HandlerTransactionStatsResponse": {
-            channel_health?: components["schemas"]["psp_com_internal_admin_app.ChannelHealthItem"][];
-            generated_at?: string;
-            metrics?: components["schemas"]["psp_com_internal_admin_app.TransactionMetrics"];
-            payment_methods?: components["schemas"]["psp_com_internal_admin_app.PaymentMethodStatItem"][];
-            queues?: components["schemas"]["psp_com_internal_admin_app.QueueStats"];
-            trends?: components["schemas"]["psp_com_internal_admin_app.TransactionTrendItem"][];
         };
         "psp_com_internal_admin_app.HandlerTrustedDeviceResponse": {
             browser_name?: string;
@@ -39328,27 +37352,6 @@ export interface components {
             total_amount?: number;
             total_count?: number;
         };
-        "psp_com_internal_admin_app.PaymentMethodStatItem": {
-            failed_count?: number;
-            /** @description pix, spei, upi, credit_card */
-            payment_method?: string;
-            /** @description 占比 (%) */
-            percentage?: number;
-            success_count?: number;
-            success_rate?: number;
-            total_count?: number;
-            total_volume?: string;
-        };
-        "psp_com_internal_admin_app.QueueStats": {
-            /** @description 失败 Webhook 数量 */
-            failed_webhooks_count?: number;
-            /** @description 待处理代付 */
-            pending_payouts?: number;
-            /** @description 待审批数量 */
-            pending_reviews_count?: number;
-            /** @description 卡单数量 */
-            stuck_transactions?: number;
-        };
         "psp_com_internal_admin_app.RecentMerchantItem": {
             business_name?: string;
             created_at?: string;
@@ -39369,76 +37372,6 @@ export interface components {
             status?: string;
             transaction_amount?: number;
             transaction_count?: number;
-        };
-        "psp_com_internal_admin_app.TransactionMetrics": {
-            /** @description 平均处理时间 (秒) */
-            avg_processing_time?: number;
-            /** @description 净收入 (手续费收入) */
-            net_revenue?: string;
-            /** @description 成功率 (%) */
-            success_rate?: number;
-            /** @description healthy, degraded, down */
-            system_health?: string;
-            /** @description 代收笔数 */
-            total_payin_count?: number;
-            /** @description 代收总额 */
-            total_payin_volume?: string;
-            /** @description 代付笔数 */
-            total_payout_count?: number;
-            /** @description 代付总额 */
-            total_payout_volume?: string;
-        };
-        "psp_com_internal_admin_app.TransactionTrendItem": {
-            payin_count?: number;
-            payin_volume?: string;
-            payout_count?: number;
-            payout_volume?: string;
-            success_rate?: number;
-            timestamp?: string;
-        };
-        "psp_com_internal_agent_app.AgentActionRequest": {
-            /**
-             * @description 操作类型
-             * @example activate
-             * @enum {string}
-             */
-            action: "approve" | "reject" | "reset" | "activate" | "suspend" | "close";
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 审核通过
-             */
-            reason: string;
-        };
-        "psp_com_internal_agent_app.AgentActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example activate
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example active
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_agent_app.AgentAssignRoleRequest": {
             role_id: string;
@@ -39571,50 +37504,6 @@ export interface components {
             reason?: string;
             timestamp?: string;
         };
-        "psp_com_internal_agent_app.AgentUserActionRequest": {
-            /**
-             * @description 操作类型
-             * @example activate
-             * @enum {string}
-             */
-            action: "activate" | "deactivate" | "lock" | "unlock";
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 用户激活
-             */
-            reason: string;
-        };
-        "psp_com_internal_agent_app.AgentUserActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example activate
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example active
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example inactive
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
-        };
         "psp_com_internal_agent_app.AgentUserResponse": {
             agent_id?: string;
             created_at?: string;
@@ -39705,10 +37594,12 @@ export interface components {
             parent_agent_id?: string;
         };
         "psp_com_internal_agent_app.CreateAgentUserRequest": {
+            agent_id: string;
             email: string;
             name: string;
             password: string;
             role_id: string;
+            tenant_id?: string;
         };
         "psp_com_internal_agent_app.ListAgentUsersResponse": {
             total?: number;
@@ -39856,32 +37747,6 @@ export interface components {
             status?: string;
             /** @example 1 */
             tenant_id?: string;
-        };
-        /** @description 异常订单摘要统计 */
-        "psp_com_internal_analytics_app.AnomalySummaryDTO": {
-            /**
-             * @description 异常率（相对于总失败数）
-             * @example 5
-             */
-            anomaly_rate?: number;
-            /** @example 500000 */
-            total_amount_cents?: number;
-            /** @example 50 */
-            total_anomalies?: number;
-        };
-        /** @description 按异常类型分组的统计数据 */
-        "psp_com_internal_analytics_app.AnomalyTypeStatDTO": {
-            /** @example 200000 */
-            amount_cents?: number;
-            /** @example timeout */
-            anomaly_type?: string;
-            /** @example 20 */
-            count?: number;
-            /**
-             * @description 占比百分比
-             * @example 40
-             */
-            percentage?: number;
         };
         "psp_com_internal_analytics_app.AsyncExportTaskResponse": {
             completed_at?: string;
@@ -40040,29 +37905,6 @@ export interface components {
             status?: string;
             task_id?: string;
         };
-        /** @description 币种分布统计响应 */
-        "psp_com_internal_analytics_app.CurrencyDistributionResponse": {
-            currencies?: components["schemas"]["psp_com_internal_analytics_app.CurrencyStatDTO"][];
-            time_range?: components["schemas"]["psp_com_internal_analytics_app.TimeRangeDTO"];
-        };
-        /** @description 单个币种的统计数据 */
-        "psp_com_internal_analytics_app.CurrencyStatDTO": {
-            /** @example BRL */
-            currency?: string;
-            /**
-             * @description 占比百分比
-             * @example 50
-             */
-            percentage?: number;
-            /** @example 480 */
-            success_count?: number;
-            /** @example 96 */
-            success_rate?: number;
-            /** @example 5000000 */
-            total_amount_cents?: number;
-            /** @example 500 */
-            transaction_count?: number;
-        };
         /** @description 仪表盘数据响应 */
         "psp_com_internal_analytics_app.DashboardResponse": {
             /** @description 分布数据 */
@@ -40135,15 +37977,6 @@ export interface components {
             total_fee_cents?: number;
             transaction_count?: number;
         };
-        /** @description 按支付方式分组的待处理订单统计 */
-        "psp_com_internal_analytics_app.PaymentMethodPendingDTO": {
-            /** @example 500000 */
-            amount_cents?: number;
-            /** @example 50 */
-            count?: number;
-            /** @example pix */
-            payment_method?: string;
-        };
         /** @description 支付方式统计数据 */
         "psp_com_internal_analytics_app.PaymentMethodStatDTO": {
             /** @example pix */
@@ -40155,62 +37988,6 @@ export interface components {
             /** @example 300 */
             transaction_count?: number;
         };
-        /** @description 待处理订单统计信息 */
-        "psp_com_internal_analytics_app.PendingOrdersDTO": {
-            by_payment_method?: components["schemas"]["psp_com_internal_analytics_app.PaymentMethodPendingDTO"][];
-            /**
-             * @description 最早的待处理订单等待时间（秒）
-             * @example 3600
-             */
-            oldest_pending_seconds?: number;
-            /** @example 1000000 */
-            total_amount_cents?: number;
-            /** @example 100 */
-            total_count?: number;
-        };
-        /** @description 当前时段相对于上一时段的变化率 */
-        "psp_com_internal_analytics_app.PeriodChangesDTO": {
-            /**
-             * @description 百分比变化
-             * @example 15.2
-             */
-            amount_change?: number;
-            /**
-             * @description 绝对值变化
-             * @example 2
-             */
-            success_rate_change?: number;
-            /**
-             * @description 百分比变化
-             * @example 10.5
-             */
-            transaction_count_change?: number;
-        };
-        /** @description 单个时段的统计数据 */
-        "psp_com_internal_analytics_app.PeriodCompareDTO": {
-            /**
-             * @description Unix 毫秒
-             * @example 1703088000000
-             */
-            end_time?: number;
-            /** @example 50 */
-            failed_count?: number;
-            /**
-             * @description Unix 毫秒
-             * @example 1703001600000
-             */
-            start_time?: number;
-            /** @example 950 */
-            success_count?: number;
-            /** @example 95 */
-            success_rate?: number;
-            /** @example 10000000 */
-            total_amount_cents?: number;
-            /** @example 100000 */
-            total_fee_cents?: number;
-            /** @example 1000 */
-            transaction_count?: number;
-        };
         "psp_com_internal_analytics_app.PeriodStatsDTO": {
             end_time?: number;
             start_time?: number;
@@ -40220,16 +37997,6 @@ export interface components {
             total_count?: number;
             total_fee_cents?: number;
         };
-        /** @description 时段摘要响应，包含当前时段、上一时段统计及变化率 */
-        "psp_com_internal_analytics_app.PeriodSummaryResponse": {
-            changes?: components["schemas"]["psp_com_internal_analytics_app.PeriodChangesDTO"];
-            current?: components["schemas"]["psp_com_internal_analytics_app.PeriodCompareDTO"];
-            /** @example today */
-            period?: components["schemas"]["psp_com_internal_analytics_app.PeriodType"];
-            previous?: components["schemas"]["psp_com_internal_analytics_app.PeriodCompareDTO"];
-        };
-        /** @enum {string} */
-        "psp_com_internal_analytics_app.PeriodType": "today" | "this_week" | "this_month";
         "psp_com_internal_analytics_app.PredictionConfigDTO": {
             /** @example 0.3 */
             alpha?: number;
@@ -40271,29 +38038,6 @@ export interface components {
              */
             upper_bound?: string;
         };
-        /** @description 增强版实时指标响应，包含待处理订单统计 */
-        "psp_com_internal_analytics_app.RealTimeMetricsEnhancedResponse": {
-            /** @description 最近1小时 */
-            hour?: {
-                amount_cents?: number;
-                failed?: number;
-                success?: number;
-                success_rate?: number;
-                transactions?: number;
-            };
-            /** @description 最近1分钟 */
-            minute?: {
-                amount_cents?: number;
-                failed?: number;
-                success?: number;
-                success_rate?: number;
-                transactions?: number;
-            };
-            /** @description 待处理订单（新增） */
-            pending?: components["schemas"]["psp_com_internal_analytics_app.PendingOrdersDTO"];
-            tenant_id?: string;
-            timestamp?: number;
-        };
         "psp_com_internal_analytics_app.RealTimeMetricsResponse": {
             /** @description 最近1小时 */
             hour?: {
@@ -40320,39 +38064,6 @@ export interface components {
             total_amount_cents?: number;
             /** @example 10 */
             total_refunds?: number;
-        };
-        /** @description 单个时间点的成功率数据 */
-        "psp_com_internal_analytics_app.SuccessRateTrendPoint": {
-            /** @example 4 */
-            failed_count?: number;
-            /** @example 96 */
-            success_count?: number;
-            /** @example 95.5 */
-            success_rate?: number;
-            /** @example 1703001600000 */
-            timestamp?: number;
-            /** @example 100 */
-            transaction_count?: number;
-        };
-        /** @description 成功率趋势响应 */
-        "psp_com_internal_analytics_app.SuccessRateTrendResponse": {
-            /** @example hour */
-            granularity?: string;
-            /** @example channel */
-            group_by?: string;
-            series?: components["schemas"]["psp_com_internal_analytics_app.SuccessRateTrendSeries"][];
-            time_range?: components["schemas"]["psp_com_internal_analytics_app.TimeRangeDTO"];
-        };
-        /** @description 单个分组的成功率趋势数据 */
-        "psp_com_internal_analytics_app.SuccessRateTrendSeries": {
-            /** @description 分组 ID（仅 channel 分组时有值） */
-            id?: string;
-            /**
-             * @description 分组名称（channel_code 或 payment_method）
-             * @example pix
-             */
-            name?: string;
-            points?: components["schemas"]["psp_com_internal_analytics_app.SuccessRateTrendPoint"][];
         };
         "psp_com_internal_analytics_app.TimeDistributionsDTO": {
             /** @description 每天占比 */
@@ -40386,12 +38097,6 @@ export interface components {
         "psp_com_internal_analytics_app.TopMerchantsResponse": {
             merchants?: components["schemas"]["psp_com_internal_analytics_app.MerchantStatDTO"][];
             tenant_id?: string;
-            time_range?: components["schemas"]["psp_com_internal_analytics_app.TimeRangeDTO"];
-        };
-        /** @description 异常订单统计响应 */
-        "psp_com_internal_analytics_app.TransactionAnomaliesResponse": {
-            by_type?: components["schemas"]["psp_com_internal_analytics_app.AnomalyTypeStatDTO"][];
-            summary?: components["schemas"]["psp_com_internal_analytics_app.AnomalySummaryDTO"];
             time_range?: components["schemas"]["psp_com_internal_analytics_app.TimeRangeDTO"];
         };
         /** @description 交易概览统计 */
@@ -40753,67 +38458,95 @@ export interface components {
             thresholds?: components["schemas"]["app.ThresholdsResponse"];
             violation?: string;
         };
-        "psp_com_internal_channel_app.AddRoutingRuleRequest": {
+        "psp_com_internal_channel_app.AddChannelToGroupRequest": {
             channel_id: string;
-            /** @description 新增：条件配置 */
-            conditions?: {
-                [key: string]: unknown;
-            };
-            /** @enum {string} */
-            direction: "payin" | "payout";
             priority?: number;
             weight?: number;
         };
-        "psp_com_internal_channel_app.AuthConfigDTO": {
-            /** @description 共用模式的凭证 */
-            app_id?: string;
-            /** @description 响应时脱敏 */
-            app_key?: string;
-            /** @description 证书 */
-            certificates?: components["schemas"]["psp_com_internal_channel_app.CertificatesDTO"];
-            /** @description 自定义模式（任意结构） */
-            custom?: {
-                [key: string]: unknown;
-            };
-            /** @description 独立模式的凭证 */
-            payin?: components["schemas"]["psp_com_internal_channel_app.CredentialsDTO"];
-            payout?: components["schemas"]["psp_com_internal_channel_app.CredentialsDTO"];
-            secret_id?: string;
-            /** @description 响应时脱敏 */
-            secret_key?: string;
+        "psp_com_internal_channel_app.AddRoutingRuleRequest": {
+            channel_id: string;
+            priority?: number;
+            weight?: number;
         };
-        "psp_com_internal_channel_app.CertificatesDTO": {
-            /** @description 响应时脱敏 */
-            client_private_key?: string;
-            client_public_key?: string;
-            server_public_key?: string;
+        "psp_com_internal_channel_app.AssignAccountToGroupRequest": {
+            group_id: string;
+            reason?: string;
         };
-        "psp_com_internal_channel_app.ChannelResponse": {
-            channel_code?: string;
-            channel_name?: string;
+        "psp_com_internal_channel_app.BatchAssignAccountResult": {
+            account_id?: string;
+            error?: string;
+            success?: boolean;
+        };
+        "psp_com_internal_channel_app.BatchAssignAccountsRequest": {
+            account_ids: string[];
+            group_id: string;
+            reason?: string;
+        };
+        "psp_com_internal_channel_app.BatchAssignAccountsResponse": {
+            failure_count?: number;
+            results?: components["schemas"]["psp_com_internal_channel_app.BatchAssignAccountResult"][];
+            success_count?: number;
+        };
+        "psp_com_internal_channel_app.ChannelGroupResponse": {
+            channel_count?: number;
             country_code?: string;
-            /** @description 审计时间 */
             created_at?: string;
             currency?: string;
             description?: string;
-            environment?: string;
+            group_code?: string;
+            group_name?: string;
+            id?: string;
+            is_active?: boolean;
+            payment_method?: string;
+            tenant_id?: string;
+            updated_at?: string;
+        };
+        "psp_com_internal_channel_app.ChannelGroupStatsResponse": {
+            account_count?: number;
+            channel_count?: number;
+        };
+        "psp_com_internal_channel_app.ChannelPrivateConfigResponse": {
+            channel_id?: string;
+            /** @description Configs 普通配置键值对 */
+            configs?: {
+                [key: string]: string;
+            };
+            /** @description LastUpdatedAt 最后更新时间 */
+            last_updated_at?: string;
+            /** @description Secrets 敏感密钥状态（值显示为 "***已配置***" 或 "未配置"） */
+            secrets?: {
+                [key: string]: string;
+            };
+        };
+        "psp_com_internal_channel_app.ChannelResponse": {
+            channel_code?: string;
+            channel_fee_fixed?: number;
+            channel_fee_percentage?: number;
+            channel_name?: string;
+            country_code?: string;
+            created_at?: string;
+            currency?: string;
+            daily_limit?: number;
+            health_status?: string;
             id?: string;
             is_test_mode?: boolean;
-            /** @description 元数据 */
+            last_health_check?: string;
+            max_amount?: number;
             metadata?: {
                 [key: string]: unknown;
             };
+            min_amount?: number;
             payment_method?: string;
-            provider_code?: string;
+            priority?: number;
             provider_id?: string;
-            /** @description Provider 信息（便于前端展示） */
-            provider_name?: string;
-            /** @description 状态和模式 */
+            retry_max_attempts?: number;
             status?: string;
-            /** @description 方向支持 */
-            supports_payin?: boolean;
-            supports_payout?: boolean;
+            supports_invoice?: boolean;
+            supports_refund?: boolean;
+            supports_transfer?: boolean;
+            supports_webhook?: boolean;
             tenant_id?: string;
+            timeout_seconds?: number;
             updated_at?: string;
         };
         "psp_com_internal_channel_app.ChannelVerifyRequest": {
@@ -40834,93 +38567,46 @@ export interface components {
             results?: components["schemas"]["psp_com_internal_channel_app.VerificationItem"][];
             verified_at?: string;
         };
-        "psp_com_internal_channel_app.CommonConfigDTO": {
-            api_base_url?: string;
-            ip_whitelist?: string[];
-            retry_max_attempts?: number;
-            timeout_seconds?: number;
-            webhook_url?: string;
+        "psp_com_internal_channel_app.CreateChannelGroupRequest": {
+            country_code?: string;
+            currency?: string;
+            description?: string;
+            group_code: string;
+            group_name: string;
+            payment_method?: string;
         };
         "psp_com_internal_channel_app.CreateChannelRequest": {
             channel_code: string;
+            channel_fee_fixed?: number;
+            channel_fee_percentage?: number;
             channel_name: string;
             country_code: string;
             currency: string;
-            description?: string;
-            /** @description sandbox, staging, production */
-            environment?: string;
-            /** @description 模式和环境 */
+            daily_limit?: number;
             is_test_mode?: boolean;
-            payment_method: string;
-            provider_id: string;
-            /** @description 方向支持 */
-            supports_payin?: boolean;
-            supports_payout?: boolean;
-        };
-        "psp_com_internal_channel_app.CreateProviderRequest": {
-            contact_email?: string;
-            contact_phone?: string;
-            provider_code: string;
-            provider_name: string;
-            /** @enum {string} */
-            provider_type: "psp" | "bank" | "aggregator" | "gateway";
-            support_url?: string;
-            supported_countries?: string[];
-            supported_currencies?: string[];
-            supported_methods: string[];
-        };
-        "psp_com_internal_channel_app.CreateRoutingStrategyRequest": {
-            country_code: string;
-            currency: string;
             max_amount?: number;
             min_amount?: number;
             payment_method: string;
             priority?: number;
+            provider_id: string;
+            retry_max_attempts?: number;
+            supports_invoice?: boolean;
+            supports_refund?: boolean;
+            supports_transfer?: boolean;
+            supports_webhook?: boolean;
+            timeout_seconds?: number;
+        };
+        "psp_com_internal_channel_app.CreateRoutingStrategyRequest": {
+            country_code?: string;
+            currency?: string;
+            max_amount?: number;
+            min_amount?: number;
+            payment_method?: string;
+            priority?: number;
             strategy_code: string;
             strategy_name: string;
             /** @enum {string} */
-            strategy_type: "priority" | "weighted" | "smart";
-        };
-        "psp_com_internal_channel_app.CredentialsDTO": {
-            app_id?: string;
-            /** @description 响应时脱敏 */
-            app_key?: string;
-            secret_id?: string;
-            /** @description 响应时脱敏 */
-            secret_key?: string;
-        };
-        "psp_com_internal_channel_app.DirectionConfigDTO": {
-            /** @description 可选：覆盖公共 base URL */
-            base_url?: string;
-            enabled?: boolean;
-            endpoints?: {
-                [key: string]: string;
-            };
-            fail_fees?: components["schemas"]["psp_com_internal_channel_app.FeeConfigDTO"];
-            fees?: components["schemas"]["psp_com_internal_channel_app.FeeConfigDTO"];
-            limits?: components["schemas"]["psp_com_internal_channel_app.LimitConfigDTO"];
-            test?: {
-                [key: string]: unknown;
-            };
-        };
-        "psp_com_internal_channel_app.FeeConfigDTO": {
-            /** @description 固定费用（分） */
-            fixed?: number;
-            /** @description 最低费用（分） */
-            minimum?: number;
-            /** @description 费率（万分比） */
-            ratio?: number;
-        };
-        "psp_com_internal_channel_app.GetChannelConfigResponse": {
-            auth_config?: components["schemas"]["psp_com_internal_channel_app.AuthConfigDTO"];
-            auth_mode?: string;
-            channel_id?: string;
-            common_config?: components["schemas"]["psp_com_internal_channel_app.CommonConfigDTO"];
-            config_version?: number;
-            id?: string;
-            payin_config?: components["schemas"]["psp_com_internal_channel_app.DirectionConfigDTO"];
-            payout_config?: components["schemas"]["psp_com_internal_channel_app.DirectionConfigDTO"];
-            updated_at?: string;
+            strategy_type: "priority" | "random" | "weighted" | "failover" | "smart";
         };
         "psp_com_internal_channel_app.HealthCheckResultDTO": {
             channel_code?: string;
@@ -40932,35 +38618,11 @@ export interface components {
             provider_type?: string;
             response_time_ms?: number;
         };
-        "psp_com_internal_channel_app.LimitConfigDTO": {
-            daily_limit?: number;
-            max_amount?: number;
-            min_amount?: number;
-        };
         "psp_com_internal_channel_app.ListRoutingStrategiesResponse": {
             limit?: number;
             offset?: number;
             strategies?: components["schemas"]["psp_com_internal_channel_app.RoutingStrategyResponse"][];
             total?: number;
-        };
-        "psp_com_internal_channel_app.ProviderResponse": {
-            contact_email?: string;
-            contact_phone?: string;
-            created_at?: string;
-            id?: string;
-            metadata?: {
-                [key: string]: unknown;
-            };
-            provider_code?: string;
-            provider_name?: string;
-            provider_type?: string;
-            status?: string;
-            support_url?: string;
-            supported_countries?: string[];
-            supported_currencies?: string[];
-            supported_methods?: string[];
-            tenant_id?: string;
-            updated_at?: string;
         };
         "psp_com_internal_channel_app.RoutingRuleResponse": {
             channel_id?: string;
@@ -40968,8 +38630,6 @@ export interface components {
                 [key: string]: unknown;
             };
             created_at?: string;
-            /** @description 新增：payin | payout */
-            direction?: string;
             id?: string;
             is_active?: boolean;
             priority?: number;
@@ -41024,46 +38684,50 @@ export interface components {
             /** @description UPI VPA */
             vpa?: string;
         };
-        "psp_com_internal_channel_app.UpdateChannelConfigRequest": {
-            auth_config?: components["schemas"]["psp_com_internal_channel_app.AuthConfigDTO"];
-            auth_mode?: string;
-            common_config?: components["schemas"]["psp_com_internal_channel_app.CommonConfigDTO"];
-            payin_config?: components["schemas"]["psp_com_internal_channel_app.DirectionConfigDTO"];
-            payout_config?: components["schemas"]["psp_com_internal_channel_app.DirectionConfigDTO"];
-        };
-        "psp_com_internal_channel_app.UpdateChannelRequest": {
-            channel_name?: string;
+        "psp_com_internal_channel_app.UpdateChannelGroupRequest": {
+            country_code?: string;
+            currency?: string;
             description?: string;
-            is_test_mode?: boolean;
-            /**
-             * @description 状态和模式
-             * @enum {string}
-             */
-            status?: "active" | "inactive" | "maintenance";
-            /** @description 方向支持更新 */
-            supports_payin?: boolean;
-            supports_payout?: boolean;
+            payment_method?: string;
         };
-        "psp_com_internal_channel_app.UpdateProviderRequest": {
-            contact_email?: string;
-            contact_phone?: string;
-            provider_name?: string;
-            /** @enum {string} */
-            status?: "active" | "inactive" | "maintenance";
-            support_url?: string;
-            supported_countries?: string[];
-            supported_currencies?: string[];
-            supported_methods?: string[];
-        };
-        "psp_com_internal_channel_app.UpdateRoutingRuleRequest": {
-            channel_id?: string;
-            conditions?: {
-                [key: string]: unknown;
-            };
-            /** @enum {string} */
-            direction?: "payin" | "payout";
+        "psp_com_internal_channel_app.UpdateChannelInGroupRequest": {
+            is_active?: boolean;
             priority?: number;
             weight?: number;
+        };
+        "psp_com_internal_channel_app.UpdateChannelPrivateConfigRequest": {
+            /**
+             * @description Configs 普通配置（不加密）
+             *     示例: {"account": "sitobank_123", "api_version": "v2", "base_url": "https://api.sitobank.com"}
+             */
+            configs?: {
+                [key: string]: string;
+            };
+            /**
+             * @description Secrets 敏感密钥（加密存储）
+             *     示例: {"signing_key": "-----BEGIN RSA PRIVATE KEY-----...", "public_key": "-----BEGIN PUBLIC KEY-----..."}
+             */
+            secrets?: {
+                [key: string]: string;
+            };
+        };
+        "psp_com_internal_channel_app.UpdateChannelRequest": {
+            channel_fee_fixed?: number;
+            channel_fee_percentage?: number;
+            channel_name?: string;
+            daily_limit?: number;
+            is_test_mode?: boolean;
+            max_amount?: number;
+            min_amount?: number;
+            priority?: number;
+            retry_max_attempts?: number;
+            /** @enum {string} */
+            status?: "active" | "inactive" | "maintenance";
+            supports_invoice?: boolean;
+            supports_refund?: boolean;
+            supports_transfer?: boolean;
+            supports_webhook?: boolean;
+            timeout_seconds?: number;
         };
         "psp_com_internal_channel_app.UpdateRoutingStrategyRequest": {
             country_code?: string;
@@ -41074,9 +38738,6 @@ export interface components {
             payment_method?: string;
             priority?: number;
             strategy_name?: string;
-        };
-        "psp_com_internal_channel_app.UpdateRuleStatusRequest": {
-            is_active?: boolean;
         };
         "psp_com_internal_channel_app.VerificationItem": {
             /** @description health_check, credentials, test_transaction, webhook_config */
@@ -41285,15 +38946,13 @@ export interface components {
         "psp_com_internal_ledger_app.AccountDetailResult": {
             account_code?: string;
             account_name?: string;
-            balance?: components["schemas"]["psp_com_internal_ledger_domain_ports.BalanceInfo"];
+            balance?: components["schemas"]["psp_com_internal_ledger_app.BalanceInfo"];
             category?: string;
             created_at?: string;
             currency?: string;
             /** @description 冻结原因（仅 frozen 状态有值） */
             freeze_reason?: string;
             id?: string;
-            /** @description 商户账户 ID */
-            merchant_account_id?: string;
             /** @description 商户名称（关联查询） */
             merchant_name?: string;
             status?: string;
@@ -41303,7 +38962,7 @@ export interface components {
         "psp_com_internal_ledger_app.AccountWithBalance": {
             account_code?: string;
             account_name?: string;
-            balance?: components["schemas"]["psp_com_internal_ledger_domain_ports.BalanceInfo"];
+            balance?: components["schemas"]["psp_com_internal_ledger_app.BalanceInfo"];
             /** @description 账户类型: merchant_settlement, platform_revenue 等 */
             category?: string;
             created_at?: string;
@@ -41311,16 +38970,32 @@ export interface components {
             /** @description 冻结原因（仅 frozen 状态有值） */
             freeze_reason?: string;
             id?: string;
-            /** @description 商户账户 ID */
-            merchant_account_id?: string;
             /** @description active, frozen, closed */
             status?: string;
             tenant_id?: string;
             updated_at?: string;
         };
-        "psp_com_internal_ledger_domain_ports.BalanceInfo": {
-            /** @description 账户余额（单一值） */
-            balance?: number;
+        "psp_com_internal_ledger_app.BalanceInfo": {
+            available_balance?: number;
+            frozen_balance?: number;
+            processing_balance?: number;
+            settlement_balance?: number;
+            total_balance?: number;
+        };
+        "psp_com_internal_merchant_app.APIKeyCreationResponse": {
+            account_id?: string;
+            created_at?: string;
+            description?: string;
+            expires_at?: string;
+            id?: string;
+            is_active?: boolean;
+            /** @description 明文密钥（只在创建时返回一次） */
+            key_string?: string;
+            key_type?: string;
+            merchant_id?: string;
+            tenant_id?: string;
+            /** @description 安全提示 */
+            warning?: string;
         };
         "psp_com_internal_merchant_app.APIKeyDailyStats": {
             /** @description 日期 (YYYY-MM-DD) */
@@ -41350,64 +39025,12 @@ export interface components {
             status?: string;
             summary?: components["schemas"]["psp_com_internal_merchant_app.APIKeyStatsSummary"];
         };
-        "psp_com_internal_merchant_app.AccountAPIKeysStatsResponse": {
-            account_id?: string;
-            active_keys?: number;
-            api_keys?: components["schemas"]["psp_com_internal_merchant_app.APIKeyUsageStatsResponse"][];
-            merchant_id?: string;
-            summary?: components["schemas"]["psp_com_internal_merchant_app.APIKeyStatsSummary"];
-            total_keys?: number;
-        };
         "psp_com_internal_merchant_app.AccountPricingResponse": {
             account_id?: string;
             account_number?: string;
             currency?: string;
             fees?: components["schemas"]["psp_com_internal_merchant_app.FeeResponse"][];
             payment_method?: string;
-        };
-        "psp_com_internal_merchant_app.ActionRequest": {
-            /**
-             * @description 操作类型
-             * @example activate
-             * @enum {string}
-             */
-            action: "activate" | "suspend" | "approve" | "reject" | "reset";
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 审核通过
-             */
-            reason: string;
-        };
-        "psp_com_internal_merchant_app.ActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example activate
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example active
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_merchant_app.ActivateMerchantRequest": {
             reason: string;
@@ -41439,6 +39062,26 @@ export interface components {
             status?: string;
             tenant_id?: string;
         };
+        "psp_com_internal_merchant_app.AdminResetAPIKeyRequest": {
+            /**
+             * @description GracePeriodHours 旧密钥的宽限期（小时）
+             *     旧密钥将在此期间内继续有效，允许平滑过渡
+             *     默认值: 24 小时，最大值: 168 小时（7 天），最小值: 0（立即失效）
+             */
+            grace_period_hours?: number;
+            /** @description Reason 操作原因（审计用途） */
+            reason: string;
+        };
+        "psp_com_internal_merchant_app.AdminResetAPIKeyResponse": {
+            /** @description GracePeriodEndsAt 宽限期结束时间（旧密钥过期时间） */
+            grace_period_ends_at?: string;
+            /** @description NewKey 新创建的 API 密钥（包含明文密钥，只返回一次） */
+            new_key?: components["schemas"]["psp_com_internal_merchant_app.APIKeyCreationResponse"];
+            /** @description OldKey 旧密钥信息（已设置过期时间） */
+            old_key?: components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyResponse"];
+            /** @description Warning 安全提示 */
+            warning?: string;
+        };
         "psp_com_internal_merchant_app.ApproveMerchantRequest": {
             reason: string;
         };
@@ -41448,72 +39091,6 @@ export interface components {
         };
         "psp_com_internal_merchant_app.AssignRolesRequest": {
             roles: string[];
-        };
-        "psp_com_internal_merchant_app.BatchActionRequest": {
-            /**
-             * @description 操作类型(仅支持 activate/suspend)
-             * @example activate
-             * @enum {string}
-             */
-            action: "activate" | "suspend";
-            /**
-             * @description 资源 ID 列表(最多100个)
-             * @example [
-             *       "[\"uuid1\"",
-             *       " \"uuid2\"]"
-             *     ]
-             */
-            ids: string[];
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 批量激活
-             */
-            reason: string;
-        };
-        "psp_com_internal_merchant_app.BatchActionResponse": {
-            /**
-             * @description 失败数量
-             * @example 2
-             */
-            failure_count?: number;
-            /** @description 单个结果列表 */
-            results?: components["schemas"]["psp_com_internal_merchant_app.BatchActionResult"][];
-            /**
-             * @description 成功数量
-             * @example 5
-             */
-            success_count?: number;
-        };
-        "psp_com_internal_merchant_app.BatchActionResult": {
-            /**
-             * @description 错误信息
-             * @example
-             */
-            error?: string;
-            /**
-             * @description 资源 ID
-             * @example 550e8400-e29b-41d4-a716-446655440000
-             */
-            id?: string;
-            /**
-             * @description 变更后状态
-             * @example active
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending
-             */
-            old_status?: string;
-            /**
-             * @description 是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_merchant_app.BatchApproveRequest": {
             notes?: string;
@@ -41545,13 +39122,40 @@ export interface components {
             old_status?: string;
             success?: boolean;
         };
-        "psp_com_internal_merchant_app.BusinessLicense": {
-            /** @description 有效期 */
-            expiry?: string;
-            /** @description 颁发机构 */
-            issuer?: string;
-            /** @description 执照号码 */
-            number?: string;
+        "psp_com_internal_merchant_app.BatchUpdateFeeRequest": {
+            effective_to?: string;
+            fee_ids: string[];
+        };
+        "psp_com_internal_merchant_app.BatchUpdateFeeResponse": {
+            failure_count?: number;
+            results?: components["schemas"]["psp_com_internal_merchant_app.BatchUpdateFeeResult"][];
+            success_count?: number;
+        };
+        "psp_com_internal_merchant_app.BatchUpdateFeeResult": {
+            effective_to?: string;
+            error?: string;
+            fee_id?: string;
+            success?: boolean;
+        };
+        "psp_com_internal_merchant_app.CalculateFeeRequest": {
+            account_id: string;
+            amount: number;
+            /** @enum {string} */
+            transaction_type: "invoice" | "transfer" | "refund";
+        };
+        "psp_com_internal_merchant_app.CalculateFeeResponse": {
+            /** @description 交易金额 */
+            amount?: number;
+            /** @description 应用的档位索引（阶梯费率） */
+            applied_tier?: number;
+            /** @description 手续费 */
+            fee?: number;
+            /** @description 使用的费率配置 ID */
+            fee_id?: string;
+            /** @description 费率类型 */
+            fee_type?: string;
+            /** @description 净金额（金额 - 手续费） */
+            net_amount?: number;
         };
         "psp_com_internal_merchant_app.ChangePasswordRequest": {
             new_password: string;
@@ -41563,28 +39167,36 @@ export interface components {
             old_status?: string;
             success?: boolean;
         };
-        "psp_com_internal_merchant_app.CompanyInfo": {
-            /** @description 商业模式 */
-            business_model?: string;
-            /** @description 注册国家 */
-            incorporation_country?: string;
-            /** @description 成立日期 */
-            incorporation_date?: string;
-            /** @description 行业描述 */
-            industry_description?: string;
-        };
-        "psp_com_internal_merchant_app.CreateIPWhitelistRequest": {
-            /** @description Description 描述（可选） */
-            description?: string;
-            /**
-             * @description Environment 环境：sandbox / staging / production
-             * @enum {string}
-             */
-            environment: "sandbox" | "staging" | "production";
-            /** @description IPAddress IP 地址或 CIDR 格式（如：192.168.1.1 或 192.168.1.0/24） */
-            ip_address: string;
+        "psp_com_internal_merchant_app.ConfigureFeeRequest": {
+            account_id: string;
+            /** @description 累计周期（daily/monthly） */
+            accumulation_period?: string;
+            /** @description 成本费率（平台成本） */
+            cost_rate?: number;
+            effective_from: string;
+            effective_to?: string;
+            /** @enum {string} */
+            fee_type: "simple" | "tiered";
+            /** @description 固定费用（分） */
+            fixed_fee?: number;
+            /** @description 最高费用（分） */
+            max_fee?: number;
+            /** @description 最低费用（分） */
+            min_fee?: number;
+            /** @description 简单费率配置（feeType = simple） */
+            percentage_rate?: number;
+            /** @description 阶梯计费配置（feeType = tiered） */
+            tiers?: components["schemas"]["psp_com_internal_merchant_app.FeeTierDTO"][];
+            /** @enum {string} */
+            transaction_type: "invoice" | "transfer" | "refund";
         };
         "psp_com_internal_merchant_app.CreateMerchantAccountRequest": {
+            /**
+             * @description 账户类型
+             * @example settlement
+             * @enum {string}
+             */
+            account_type: "settlement" | "reserve" | "fee";
             /**
              * @description 货币代码
              * @example BRL
@@ -41663,10 +39275,7 @@ export interface components {
              * @enum {string}
              */
             merchant_type: "individual" | "company";
-            /**
-             * @description 元数据
-             *     Issue #2986: 添加 metadata 验证器
-             */
+            /** @description 元数据 */
             metadata?: {
                 [key: string]: unknown;
             };
@@ -41711,42 +39320,11 @@ export interface components {
              */
             whatsapp?: string;
         };
-        "psp_com_internal_merchant_app.CreateSecretRequest": {
-            /** @enum {string} */
-            environment?: "sandbox" | "staging" | "production";
-            expires_at?: string;
-            /** @enum {string} */
-            key_algorithm?: "ed25519" | "rsa2048" | "rsa4096";
-            key_name: string;
-            public_key: string;
-        };
         "psp_com_internal_merchant_app.CreateUserRequest": {
             email: string;
             full_name: string;
             password: string;
             roles?: string[];
-        };
-        "psp_com_internal_merchant_app.CurrencyBalance": {
-            /**
-             * @description 可用余额 = Settlement - Frozen
-             * @example 450000
-             */
-            available_balance?: number;
-            /**
-             * @description 冻结余额（单位：分）
-             * @example 50000
-             */
-            frozen_balance?: number;
-            /**
-             * @description 处理中余额（单位：分）
-             * @example 100000
-             */
-            processing_balance?: number;
-            /**
-             * @description 已结算余额（单位：分）
-             * @example 500000
-             */
-            settlement_balance?: number;
         };
         "psp_com_internal_merchant_app.DefaultPricingResponse": {
             accumulation_period?: string;
@@ -41770,18 +39348,6 @@ export interface components {
         };
         "psp_com_internal_merchant_app.EnableMFARequest": {
             secret: string;
-        };
-        "psp_com_internal_merchant_app.EvaluateKYBRequest": {
-            /** @description 国家代码（2位ISO代码） */
-            country_code: string;
-            /** @description 行业代码 */
-            industry_code?: string;
-            /** @description KYB 记录 ID */
-            kyb_id: string;
-            /** @description 商户 ID */
-            merchant_id: string;
-            /** @description 商户类型：individual, company */
-            merchant_type: string;
         };
         "psp_com_internal_merchant_app.FeeResponse": {
             account_id?: string;
@@ -41812,46 +39378,8 @@ export interface components {
             min_accumulated_amount?: number;
             /** @description 最低费用（分） */
             min_fee?: number;
-            /** @description 该档位的比例费率（0-1.0） */
+            /** @description 该档位的比例费率 */
             percentage_rate?: number;
-        };
-        "psp_com_internal_merchant_app.IPWhitelistResponse": {
-            created_at?: string;
-            description?: string;
-            environment?: string;
-            id?: string;
-            ip_address?: string;
-            is_active?: boolean;
-        };
-        "psp_com_internal_merchant_app.KYBDocument": {
-            /** @description 文档类型 */
-            document_type?: string;
-            /** @description 文件名 */
-            file_name?: string;
-            /** @description 文件 URL（可选，敏感） */
-            file_url?: string;
-            /** @description 文档 ID */
-            id?: string;
-            /** @description 文档状态：pending, verified, rejected */
-            status?: string;
-            /** @description 上传时间 */
-            uploaded_at?: string;
-            /** @description 验证时间 */
-            verified_at?: string;
-        };
-        "psp_com_internal_merchant_app.LegalRepInfo": {
-            /** @description 证件有效期 */
-            id_expiry?: string;
-            /** @description 证件号码 */
-            id_number?: string;
-            /** @description 证件类型 */
-            id_type?: string;
-            /** @description 姓名 */
-            name?: string;
-            /** @description 国籍 */
-            nationality?: string;
-            /** @description 税号 */
-            tax_id?: string;
         };
         "psp_com_internal_merchant_app.ListAdminAPIKeysResponse": {
             api_keys?: components["schemas"]["psp_com_internal_merchant_app.AdminAPIKeyResponse"][];
@@ -41865,9 +39393,11 @@ export interface components {
             pricings?: components["schemas"]["psp_com_internal_merchant_app.DefaultPricingResponse"][];
             total?: number;
         };
-        "psp_com_internal_merchant_app.ListIPWhitelistsResponse": {
+        "psp_com_internal_merchant_app.ListFeesResponse": {
+            fees?: components["schemas"]["psp_com_internal_merchant_app.FeeResponse"][];
+            limit?: number;
+            offset?: number;
             total?: number;
-            whitelists?: components["schemas"]["psp_com_internal_merchant_app.IPWhitelistResponse"][];
         };
         "psp_com_internal_merchant_app.ListMerchantAccountsAdminResponse": {
             /** @description 账户列表 */
@@ -41922,29 +39452,6 @@ export interface components {
              */
             total?: number;
         };
-        "psp_com_internal_merchant_app.ListOnboardingsResponse": {
-            /**
-             * @description 每页数量
-             * @example 20
-             */
-            limit?: number;
-            /**
-             * @description 偏移量
-             * @example 0
-             */
-            offset?: number;
-            /** @description 入驻申请列表 */
-            onboardings?: components["schemas"]["psp_com_internal_merchant_app.OnboardingResponse"][];
-            /**
-             * @description 总记录数
-             * @example 100
-             */
-            total?: number;
-        };
-        "psp_com_internal_merchant_app.ListSecretsResponse": {
-            secrets?: components["schemas"]["psp_com_internal_merchant_app.SecretResponse"][];
-            total?: number;
-        };
         "psp_com_internal_merchant_app.ListUsersResponse": {
             limit?: number;
             offset?: number;
@@ -41957,6 +39464,14 @@ export interface components {
             total?: number;
             withdrawals?: components["schemas"]["psp_com_internal_merchant_app.WithdrawalAdminResponse"][];
         };
+        "psp_com_internal_merchant_app.MerchantAPIKeysStatsResponse": {
+            active_keys?: number;
+            api_keys?: components["schemas"]["psp_com_internal_merchant_app.APIKeyUsageStatsResponse"][];
+            merchant_id?: string;
+            merchant_name?: string;
+            summary?: components["schemas"]["psp_com_internal_merchant_app.APIKeyStatsSummary"];
+            total_keys?: number;
+        };
         "psp_com_internal_merchant_app.MerchantAccountAdminResponse": {
             /**
              * @description 账户编码
@@ -41964,10 +39479,10 @@ export interface components {
              */
             account_code?: string;
             /**
-             * @description 可用余额 = Settlement - Frozen
-             * @example 450000
+             * @description 账户类型
+             * @example settlement
              */
-            available_balance?: number;
+            account_type?: string;
             /**
              * @description 创建时间
              * @example 2024-01-01T00:00:00Z
@@ -41978,11 +39493,6 @@ export interface components {
              * @example BRL
              */
             currency?: string;
-            /**
-             * @description 冻结余额（单位：分）
-             * @example 50000
-             */
-            frozen_balance?: number;
             /**
              * @description 账户 ID
              * @example 550e8400-e29b-41d4-a716-446655440000
@@ -42014,16 +39524,6 @@ export interface components {
              */
             payment_method?: string;
             /**
-             * @description 余额信息（可选，仅在启用余额查询时填充）
-             * @example 100000
-             */
-            processing_balance?: number;
-            /**
-             * @description 已结算余额（单位：分）
-             * @example 500000
-             */
-            settlement_balance?: number;
-            /**
              * @description 状态
              * @example active
              */
@@ -42045,6 +39545,11 @@ export interface components {
              * @example ACC001
              */
             account_number?: string;
+            /**
+             * @description 账户类型
+             * @example settlement
+             */
+            account_type?: string;
             /**
              * @description 创建时间
              * @example 2024-01-01T00:00:00Z
@@ -42090,9 +39595,6 @@ export interface components {
              */
             updated_at?: string;
         };
-        "psp_com_internal_merchant_app.MerchantBalanceSummary": {
-            [key: string]: components["schemas"]["psp_com_internal_merchant_app.CurrencyBalance"];
-        };
         "psp_com_internal_merchant_app.MerchantDetailResponse": {
             /** @description 关联账户 */
             accounts?: components["schemas"]["psp_com_internal_merchant_app.MerchantAccountResponse"][];
@@ -42111,8 +39613,6 @@ export interface components {
              * @example Sala 100
              */
             address_line2?: string;
-            /** @description 余额汇总（按币种，可选） */
-            balances?: components["schemas"]["psp_com_internal_merchant_app.MerchantBalanceSummary"];
             /**
              * @description 商业模式
              * @example B2C
@@ -42279,66 +39779,6 @@ export interface components {
              */
             whatsapp?: string;
         };
-        "psp_com_internal_merchant_app.MerchantKYBResponse": {
-            /** @description 批准时间 */
-            approved_at?: string;
-            /** @description 营业执照 */
-            business_license?: components["schemas"]["psp_com_internal_merchant_app.BusinessLicense"];
-            /** @description 企业信息 */
-            company?: components["schemas"]["psp_com_internal_merchant_app.CompanyInfo"];
-            /** @description 时间戳 */
-            created_at?: string;
-            /** @description 文档列表 */
-            documents?: components["schemas"]["psp_com_internal_merchant_app.KYBDocument"][];
-            /** @description 基本信息 */
-            id?: string;
-            /** @description 法人代表信息 */
-            legal_rep?: components["schemas"]["psp_com_internal_merchant_app.LegalRepInfo"];
-            /** @description 商户 ID */
-            merchant_id?: string;
-            /** @description 元数据 */
-            metadata?: {
-                [key: string]: unknown;
-            };
-            /** @description 注册地址 */
-            registered_address?: components["schemas"]["psp_com_internal_merchant_app.RegisteredAddress"];
-            /** @description 拒绝时间 */
-            rejected_at?: string;
-            /** @description 审核信息 */
-            review?: components["schemas"]["psp_com_internal_merchant_app.ReviewInfo"];
-            /** @description 风险信息 */
-            risk?: components["schemas"]["psp_com_internal_merchant_app.RiskInfo"];
-            /** @description KYB 状态: pending, submitted, in_review, verified, rejected, expired */
-            status?: string;
-            /** @description 提交时间 */
-            submitted_at?: string;
-            /** @description UBO 信息 */
-            ubo_info?: components["schemas"]["psp_com_internal_merchant_app.UBOInfo"][];
-            /** @description 更新时间 */
-            updated_at?: string;
-        };
-        "psp_com_internal_merchant_app.MerchantKYBStats": {
-            /**
-             * @description 审核中
-             * @example 5
-             */
-            in_review?: number;
-            /**
-             * @description 待审核
-             * @example 10
-             */
-            pending?: number;
-            /**
-             * @description 已拒绝
-             * @example 5
-             */
-            rejected?: number;
-            /**
-             * @description 已验证
-             * @example 100
-             */
-            verified?: number;
-        };
         "psp_com_internal_merchant_app.MerchantPricingResponse": {
             accounts?: components["schemas"]["psp_com_internal_merchant_app.AccountPricingResponse"][];
             merchant_code?: string;
@@ -42361,8 +39801,6 @@ export interface components {
              * @example Sala 100
              */
             address_line2?: string;
-            /** @description 余额汇总（按币种，可选） */
-            balances?: components["schemas"]["psp_com_internal_merchant_app.MerchantBalanceSummary"];
             /**
              * @description 商业模式
              * @example B2C
@@ -42523,44 +39961,6 @@ export interface components {
              */
             whatsapp?: string;
         };
-        "psp_com_internal_merchant_app.MerchantStatsResponse": {
-            /** @description 按 KYB 状态统计 */
-            kyb_stats?: components["schemas"]["psp_com_internal_merchant_app.MerchantKYBStats"];
-            /** @description 按状态统计 */
-            status_stats?: components["schemas"]["psp_com_internal_merchant_app.MerchantStatusStats"];
-            /**
-             * @description 总数统计
-             * @example 143
-             */
-            total?: number;
-        };
-        "psp_com_internal_merchant_app.MerchantStatusStats": {
-            /**
-             * @description 活跃
-             * @example 100
-             */
-            active?: number;
-            /**
-             * @description 已关闭
-             * @example 3
-             */
-            closed?: number;
-            /**
-             * @description 待激活
-             * @example 10
-             */
-            pending?: number;
-            /**
-             * @description 已拒绝
-             * @example 2
-             */
-            rejected?: number;
-            /**
-             * @description 已暂停
-             * @example 5
-             */
-            suspended?: number;
-        };
         "psp_com_internal_merchant_app.MerchantUserAdminResponse": {
             avatar_url?: string;
             created_at?: string;
@@ -42579,207 +39979,6 @@ export interface components {
             updated_at?: string;
             user_type?: string;
             username?: string;
-        };
-        "psp_com_internal_merchant_app.OnboardingResponse": {
-            /**
-             * @description 申请编号
-             * @example ONB-2024-00001
-             */
-            application_id?: string;
-            /**
-             * @description 商户名称
-             * @example Loja Exemplo LTDA
-             */
-            business_name?: string;
-            /**
-             * @description 商户类型
-             * @example company
-             */
-            business_type?: string;
-            /**
-             * @description 联系邮箱
-             * @example contact@lojaexemplo.com.br
-             */
-            contact_email?: string;
-            /**
-             * @description 其他联系方式
-             * @example Line: lojaexemplo
-             */
-            contact_other?: string;
-            /**
-             * @description 联系电话
-             * @example +5511999999999
-             */
-            contact_phone?: string;
-            /**
-             * @description Telegram
-             * @example @lojaexemplo
-             */
-            contact_telegram?: string;
-            /**
-             * @description WhatsApp
-             * @example +5511999999999
-             */
-            contact_whatsapp?: string;
-            /**
-             * @description 国家代码
-             * @example BR
-             */
-            country_code?: string;
-            /**
-             * @description 时间戳
-             * @example 2024-01-01T00:00:00Z
-             */
-            created_at?: string;
-            /**
-             * @description 当前步骤
-             * @example basic_info
-             */
-            current_step?: string;
-            /** @description 文档和元数据 */
-            documents?: number[];
-            /**
-             * @description 入驻申请 ID
-             * @example 550e8400-e29b-41d4-a716-446655440000
-             */
-            id?: string;
-            /**
-             * @description 行业代码
-             * @example 5734
-             */
-            industry_code?: string;
-            /**
-             * @description 法人名称
-             * @example Loja Exemplo Comércio LTDA
-             */
-            legal_entity_name?: string;
-            /** @description 元数据 */
-            metadata?: number[];
-            /**
-             * @description 状态信息
-             * @example submitted
-             */
-            onboarding_status?: string;
-            /**
-             * @description 拒绝原因
-             * @example
-             */
-            rejection_reason?: string;
-            /**
-             * @description 审核备注
-             * @example 资料齐全，审核通过
-             */
-            review_notes?: string;
-            /**
-             * @description 审核时间
-             * @example 2024-01-02T00:00:00Z
-             */
-            reviewed_at?: string;
-            /**
-             * @description 审核人
-             * @example admin@psp.com
-             */
-            reviewed_by?: string;
-            /**
-             * @description 审核信息
-             * @example 2024-01-01T00:00:00Z
-             */
-            submitted_at?: string;
-            /**
-             * @description 税号
-             * @example 12345678000190
-             */
-            tax_id?: string;
-            /**
-             * @description 租户 ID
-             * @example 550e8400-e29b-41d4-a716-446655440001
-             */
-            tenant_id?: string;
-            /**
-             * @description 更新时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            updated_at?: string;
-            /**
-             * @description 网站
-             * @example https://www.lojaexemplo.com.br
-             */
-            website?: string;
-        };
-        "psp_com_internal_merchant_app.OnboardingStatsResponse": {
-            /** @description 按状态统计 */
-            status_stats?: components["schemas"]["psp_com_internal_merchant_app.OnboardingStatusStats"];
-            /** @description 按步骤统计 */
-            step_stats?: components["schemas"]["psp_com_internal_merchant_app.OnboardingStepStats"];
-            /**
-             * @description 全部入驻申请数量
-             * @example 143
-             */
-            total?: number;
-        };
-        "psp_com_internal_merchant_app.OnboardingStatusStats": {
-            /**
-             * @description 已批准
-             * @example 100
-             */
-            approved?: number;
-            /**
-             * @description 已归档
-             * @example 3
-             */
-            archived?: number;
-            /**
-             * @description 草稿
-             * @example 10
-             */
-            draft?: number;
-            /**
-             * @description 已拒绝
-             * @example 5
-             */
-            rejected?: number;
-            /**
-             * @description 已提交
-             * @example 20
-             */
-            submitted?: number;
-            /**
-             * @description 审核中
-             * @example 5
-             */
-            under_review?: number;
-        };
-        "psp_com_internal_merchant_app.OnboardingStepStats": {
-            /**
-             * @description API 设置
-             * @example 2
-             */
-            api_setup?: number;
-            /**
-             * @description 基本信息
-             * @example 10
-             */
-            basic_info?: number;
-            /**
-             * @description 已完成
-             * @example 100
-             */
-            completed?: number;
-            /**
-             * @description 文档上传
-             * @example 8
-             */
-            documents_upload?: number;
-            /**
-             * @description 费率配置
-             * @example 3
-             */
-            fee_config?: number;
-            /**
-             * @description 企业认证
-             * @example 5
-             */
-            kyb_verification?: number;
         };
         "psp_com_internal_merchant_app.PasskeyAuthenticationOptionsResponse": {
             /** @description 允许的凭证列表 */
@@ -42805,20 +40004,6 @@ export interface components {
             device_name?: string;
             mfa_id?: string;
         };
-        "psp_com_internal_merchant_app.RegisteredAddress": {
-            /** @description 地址行1 */
-            address_line1?: string;
-            /** @description 地址行2 */
-            address_line2?: string;
-            /** @description 城市 */
-            city?: string;
-            /** @description 国家代码 */
-            country_code?: string;
-            /** @description 邮编 */
-            postal_code?: string;
-            /** @description 州/省 */
-            state?: string;
-        };
         "psp_com_internal_merchant_app.RejectMerchantRequest": {
             reason: string;
         };
@@ -42828,35 +40013,6 @@ export interface components {
         };
         "psp_com_internal_merchant_app.ResetMerchantRequest": {
             reason: string;
-        };
-        "psp_com_internal_merchant_app.ReviewInfo": {
-            /** @description 拒绝原因 */
-            rejection_reason?: string;
-            /** @description 审核备注 */
-            review_notes?: string;
-            /** @description 审核时间 */
-            reviewed_at?: string;
-            /** @description 审核人 ID */
-            reviewed_by?: string;
-        };
-        "psp_com_internal_merchant_app.RiskInfo": {
-            /** @description 外部风险评分 */
-            external_risk_score?: number;
-            /** @description 风险等级: low, medium, high, critical */
-            risk_level?: string;
-            /** @description 综合风险分数 (0-100) */
-            risk_score?: number;
-        };
-        "psp_com_internal_merchant_app.SecretResponse": {
-            created_at?: string;
-            environment?: string;
-            expires_at?: string;
-            id?: string;
-            key_algorithm?: string;
-            key_name?: string;
-            merchant_id?: string;
-            public_key?: string;
-            status?: string;
         };
         "psp_com_internal_merchant_app.SetDefaultPricingRequest": {
             /** @description 累计周期 */
@@ -42913,23 +40069,9 @@ export interface components {
         "psp_com_internal_merchant_app.SuspendMerchantRequest": {
             reason: string;
         };
-        "psp_com_internal_merchant_app.UBOInfo": {
-            /** @description 是否政治敏感人物 (Politically Exposed Person) */
-            is_pep?: boolean;
-            /** @description 姓名 */
-            name?: string;
-            /** @description 国籍 */
-            nationality?: string;
-            /** @description 持股比例 (0-100) */
-            ownership?: number;
-            /** @description 税号 */
-            tax_id?: string;
-        };
-        "psp_com_internal_merchant_app.UpdateIPWhitelistStatusRequest": {
-            /** @description IsActive 是否启用 */
-            is_active?: boolean;
-            /** @description Reason 变更原因（必填，用于审计） */
-            reason: string;
+        "psp_com_internal_merchant_app.UpdateFeeRequest": {
+            /** @description 更新有效期 */
+            effective_to?: string;
         };
         "psp_com_internal_merchant_app.UpdateKYBStatusRequest": {
             /**
@@ -42980,10 +40122,7 @@ export interface components {
              * @example 5734
              */
             mcc?: string;
-            /**
-             * @description 元数据
-             *     Issue #2986: 添加 metadata 验证器
-             */
+            /** @description 元数据 */
             metadata?: {
                 [key: string]: unknown;
             };
@@ -43027,51 +40166,6 @@ export interface components {
              * @example +5511888888888
              */
             whatsapp?: string;
-        };
-        "psp_com_internal_merchant_app.UpdateOnboardingStatusRequest": {
-            /**
-             * @description 操作类型
-             * @example approve
-             * @enum {string}
-             */
-            action: "start_review" | "approve" | "reject" | "archive";
-            /**
-             * @description 拒绝原因（reject 时必填）
-             * @example
-             */
-            rejection_reason?: string;
-            /**
-             * @description 审核备注
-             * @example 资料齐全，审核通过
-             */
-            review_notes?: string;
-        };
-        "psp_com_internal_merchant_app.UpdateOnboardingStatusResponse": {
-            /**
-             * @description 执行的操作
-             * @example approve
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-02T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example approved
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example under_review
-             */
-            old_status?: string;
-            /**
-             * @description 是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_merchant_app.UpdateRiskLevelRequest": {
             /**
@@ -43612,6 +40706,9 @@ export interface components {
             status?: string;
             transaction_id?: string;
         };
+        "psp_com_internal_ops_app.ApprovalRequest": {
+            notes?: string;
+        };
         "psp_com_internal_ops_app.AttachmentResponse": {
             content_type?: string;
             description?: string;
@@ -43622,6 +40719,9 @@ export interface components {
             uploaded_at?: string;
             uploaded_by?: string;
             uploaded_by_name?: string;
+        };
+        "psp_com_internal_ops_app.ConfirmExecutionRequest": {
+            notes?: string;
         };
         "psp_com_internal_ops_app.CorrectionResponse": {
             approved_at?: string;
@@ -43664,7 +40764,6 @@ export interface components {
             idempotency_key: string;
             merchant_account_id: string;
             merchant_id: string;
-            /** @description Issue #2986: 添加 metadata 验证器 */
             metadata?: {
                 [key: string]: unknown;
             };
@@ -43678,7 +40777,6 @@ export interface components {
             idempotency_key: string;
             merchant_account_id: string;
             merchant_id: string;
-            /** @description Issue #2986: 添加 metadata 验证器 */
             metadata?: {
                 [key: string]: unknown;
             };
@@ -43693,7 +40791,6 @@ export interface components {
             idempotency_key: string;
             merchant_account_id: string;
             merchant_id: string;
-            /** @description Issue #2986: 添加 metadata 验证器 */
             metadata?: {
                 [key: string]: unknown;
             };
@@ -43705,51 +40802,6 @@ export interface components {
         };
         "psp_com_internal_ops_app.DownloadURLResponse": {
             download_url?: string;
-        };
-        "psp_com_internal_ops_app.FundsOperationActionRequest": {
-            /**
-             * @description 操作类型: first_approve(初审), final_approve(终审), reject(拒绝), confirm_execution(确认执行)
-             * @example first_approve
-             * @enum {string}
-             */
-            action: "first_approve" | "final_approve" | "reject" | "confirm_execution";
-            notes?: string;
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因/备注（reject 必填，其他可选）
-             * @example 审批通过
-             */
-            reason?: string;
-        };
-        "psp_com_internal_ops_app.FundsOperationActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example first_approve
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example pending_final
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending_first
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_ops_app.FundsOperationResponse": {
             adjustment_type?: string;
@@ -43802,15 +40854,8 @@ export interface components {
             operations?: components["schemas"]["psp_com_internal_ops_app.FundsOperationResponse"][];
             total?: number;
         };
-        "psp_com_internal_ops_app.RiskApprovalResponse": {
-            approved_at?: string;
-            reason?: string;
-            rejected_at?: string;
-            /** @description queued (if approved), risk_rejected (if rejected) */
-            state?: string;
-            /** @description approved, rejected */
-            status?: string;
-            transaction_id?: string;
+        "psp_com_internal_ops_app.RejectRequest": {
+            reason: string;
         };
         "psp_com_internal_ops_import.ImportError": {
             error?: string;
@@ -43849,57 +40894,6 @@ export interface components {
             offset?: number;
             tasks?: components["schemas"]["psp_com_internal_ops_import.ImportTaskResponse"][];
             total?: number;
-        };
-        "psp_com_internal_payment_core_app.PaymentRefundResponse": {
-            amount?: number;
-            channel_id?: string;
-            completed_at?: string;
-            created_at?: string;
-            currency?: string;
-            failed_at?: string;
-            failure_code?: string;
-            failure_reason?: string;
-            final_approval_notes?: string;
-            final_approved_at?: string;
-            /** @description 审批信息 - 终审 */
-            final_approved_by?: string;
-            final_approved_by_name?: string;
-            first_approval_notes?: string;
-            first_approved_at?: string;
-            /** @description 审批信息 - 初审 */
-            first_approved_by?: string;
-            first_approved_by_name?: string;
-            id?: string;
-            merchant_id?: string;
-            metadata?: {
-                [key: string]: unknown;
-            };
-            original_intent_id?: string;
-            payment_method?: string;
-            provider_refund_id?: string;
-            reason?: string;
-            refund_number?: string;
-            refunded_amount?: number;
-            rejected_at?: string;
-            /** @description 拒绝信息 */
-            rejected_by?: string;
-            rejected_by_name?: string;
-            /** @description "first" 或 "final" */
-            rejection_level?: string;
-            rejection_reason?: string;
-            /** @description 二级状态 */
-            state?: string;
-            status?: string;
-            tenant_id?: string;
-            updated_at?: string;
-            webhook_sent?: boolean;
-            webhook_url?: string;
-        };
-        "psp_com_internal_payment_core_app.RefundApprovalRequest": {
-            notes?: string;
-        };
-        "psp_com_internal_payment_core_app.RefundRejectRequest": {
-            reason: string;
         };
         "psp_com_internal_payment_creditcard_app.CreateDisputeRequest": {
             amount: number;
@@ -43968,6 +40962,18 @@ export interface components {
         };
         /** @enum {string} */
         "psp_com_internal_payment_creditcard_domain_valueobjects.DisputeReason": "fraud" | "product_not_received" | "product_unacceptable" | "duplicate" | "credit_not_processed" | "incorrect_amount" | "general";
+        "psp_com_internal_recon_app.AssignDifferenceRequest": {
+            assigned_to: string;
+        };
+        "psp_com_internal_recon_app.CompleteReconBatchRequest": {
+            discrepancy_amount: number;
+            discrepancy_count: number;
+            matched_amount: number;
+            matched_records: number;
+            total_amount: number;
+            total_records: number;
+            unmatched_records: number;
+        };
         "psp_com_internal_recon_app.CreateDifferenceRequest": {
             actual_amount?: number;
             batch_id: string;
@@ -43992,50 +40998,6 @@ export interface components {
             entity_type: "channel" | "merchant" | "platform" | "all";
             recon_period_end: string;
             recon_period_start: string;
-        };
-        "psp_com_internal_recon_app.ReconBatchActionRequest": {
-            /**
-             * @description 操作类型
-             * @example start
-             * @enum {string}
-             */
-            action: "start" | "complete";
-            /** @description 扩展参数 */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 启动对账
-             */
-            reason?: string;
-        };
-        "psp_com_internal_recon_app.ReconBatchActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example start
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example processing
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_recon_app.ReconBatchDTO": {
             batch_number?: string;
@@ -44063,54 +41025,6 @@ export interface components {
             total_records?: number;
             unmatched_records?: number;
             updated_at?: string;
-        };
-        "psp_com_internal_recon_app.ReconDifferenceActionRequest": {
-            /**
-             * @description 操作类型
-             * @example resolve
-             * @enum {string}
-             */
-            action: "assign" | "resolve";
-            /** @description 指派人ID（assign时使用） */
-            assignee_id?: string;
-            /** @description 扩展参数 */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因
-             * @example 差异已处理
-             */
-            reason?: string;
-            /** @description 解决方案（resolve时使用） */
-            resolution?: string;
-        };
-        "psp_com_internal_recon_app.ReconDifferenceActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example resolve
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example resolved
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_recon_app.ReconDifferenceDTO": {
             actual_amount?: number;
@@ -44144,6 +41058,11 @@ export interface components {
             status?: "open" | "in_progress" | "resolved" | "waived" | "escalated";
             tenant_id?: string;
             updated_at?: string;
+        };
+        "psp_com_internal_recon_app.ResolveDifferenceRequest": {
+            /** @enum {string} */
+            resolution_action: "approved" | "adjustment_created" | "refund_issued" | "disputed" | "waived" | "manual_review";
+            resolution_notes?: string;
         };
         "psp_com_internal_report_app.BalanceSummaryDTO": {
             active_accounts?: number;
@@ -44413,7 +41332,7 @@ export interface components {
             value?: string;
         };
         "psp_com_internal_risk_app.LimitRequest": {
-            /** @description 告警阈值（0-1.0） */
+            /** @description 0-1 */
             alert_threshold?: number;
             currency: string;
             daily_limit?: number;
@@ -44663,50 +41582,6 @@ export interface components {
             job?: components["schemas"]["psp_com_internal_scheduler_app.JobDTO"];
             message?: string;
             triggered_at?: string;
-        };
-        "psp_com_internal_settlement_app.SettlementActionRequest": {
-            /**
-             * @description 操作类型: execute(执行), retry(重试), cancel(取消), approve(审批通过), reject(审批拒绝)
-             * @example approve
-             * @enum {string}
-             */
-            action: "execute" | "retry" | "cancel" | "approve" | "reject";
-            /** @description 扩展参数（可选） */
-            params?: {
-                [key: string]: unknown;
-            };
-            /**
-             * @description 操作原因/备注（cancel/reject 必填，approve 可选）
-             * @example 审核通过
-             */
-            reason?: string;
-        };
-        "psp_com_internal_settlement_app.SettlementActionResponse": {
-            /**
-             * @description 执行的操作
-             * @example approve
-             */
-            action?: string;
-            /**
-             * @description 变更时间
-             * @example 2024-01-01T00:00:00Z
-             */
-            changed_at?: string;
-            /**
-             * @description 变更后状态
-             * @example approved
-             */
-            new_status?: string;
-            /**
-             * @description 变更前状态
-             * @example pending_review
-             */
-            old_status?: string;
-            /**
-             * @description 操作是否成功
-             * @example true
-             */
-            success?: boolean;
         };
         "psp_com_internal_systemconfig_app.APIRateLimits": {
             burst_size?: number;
@@ -44989,6 +41864,10 @@ export interface components {
         "psp_com_internal_tenant_app.AssignUserRoleRequest": {
             role_id: string;
         };
+        "psp_com_internal_tenant_app.AuthErrorResponse": {
+            code?: string;
+            message?: string;
+        };
         "psp_com_internal_tenant_app.AuthLoginRequest": {
             device_fingerprint?: string;
             email: string;
@@ -45164,17 +42043,6 @@ export interface components {
         "psp_com_internal_tenant_app.RegenerateBackupCodesInput": {
             verify_code: string;
         };
-        "psp_com_internal_tenant_app.RevokeAllTokensRequest": {
-            /**
-             * @description Reason 撤销原因（必填）
-             *     可选值: password_change, security_breach, admin_action, mfa_reset, account_locked, user_request
-             */
-            reason: string;
-        };
-        "psp_com_internal_tenant_app.RevokeTokenResponse": {
-            message?: string;
-            success?: boolean;
-        };
         "psp_com_internal_tenant_app.RoleResponse": {
             code?: string;
             created_at?: string;
@@ -45318,10 +42186,6 @@ export interface components {
             /** @example 650e8400-e29b-41d4-a716-446655440000 */
             transaction_id?: string;
         };
-        "psp_com_internal_transaction_app.GetTransactionResponse": {
-            events?: components["schemas"]["psp_com_internal_transaction_app.TransactionStatusHistoryDTO"][];
-            transaction?: components["schemas"]["psp_com_internal_transaction_app.TransactionExtendedDTO"];
-        };
         "psp_com_internal_transaction_app.SearchResponse": {
             /** @example 20 */
             limit?: number;
@@ -45332,152 +42196,19 @@ export interface components {
             transactions?: components["schemas"]["psp_com_internal_transaction_app.TransactionDTO"][];
         };
         "psp_com_internal_transaction_app.TransactionDTO": {
-            /** @example ACC001 */
-            account_name?: string;
             /**
              * @description 金额字符串
              * @example 100.00
              */
             amount?: string;
-            /**
-             * @description TIMELINE 信息
-             *     AuthorizedAt 授权时间（风控通过并请求上游的时间）
-             * @example 2024-01-01T12:00:30Z
-             */
-            authorized_at?: string;
-            /**
-             * @description ChannelCode 渠道代码（唯一标识符）
-             * @example sitobank_pix_br_001
-             */
-            channel_code?: string;
-            /** @example 0.50 */
-            channel_fee?: string;
-            /**
-             * @description ROUTE & CHANNEL 信息
-             *     ChannelID 实际使用的支付渠道ID
-             * @example 850e8400-e29b-41d4-a716-446655440003
-             */
-            channel_id?: string;
-            /**
-             * @description ChannelName 渠道名称（可读性描述）
-             * @example Sitobank PIX Channel
-             */
-            channel_name?: string;
-            /**
-             * @description CompletedAt 完成时间（交易到达终态的时间：paid/failed/cancelled/expired）
-             * @example 2024-01-01T12:01:00Z
-             */
-            completed_at?: string;
             /** @example 2024-01-01T12:00:00Z */
             created_at?: string;
             /** @example BRL */
             currency?: string;
-            /** @example john@example.com */
-            customer_email?: string;
-            /**
-             * @description 客户信息（从 JSON 解析）
-             * @example John Doe
-             */
-            customer_name?: string;
-            /** @example 12345678901 */
-            customer_tax_id?: string;
-            /** @example Insufficient funds */
-            failure_reason?: string;
-            /** @example 730e8400-e29b-41d4-a716-446655440002 */
-            merchant_account_id?: string;
-            /** @example 1.50 */
-            merchant_fee?: string;
             /** @example 720e8400-e29b-41d4-a716-446655440001 */
             merchant_id?: string;
-            /**
-             * @description 扩展字段
-             * @example Test Merchant
-             */
-            merchant_name?: string;
-            /** @example ORDER-123456 */
-            merchant_order_id?: string;
-            /**
-             * @description 计算字段：Amount - MerchantFee
-             * @example 98.00
-             */
-            net_amount?: string;
-            /**
-             * @description 退款特有字段（仅 invoice_refund 和 transfer_refund 有值）
-             * @example 650e8400-e29b-41d4-a716-446655440000
-             */
-            original_intent_id?: string;
-            /**
-             * @description 原始商户订单号
-             * @example ORDER-123456
-             */
-            original_order_id?: string;
-            /** @example pix */
+            /** @example PIX */
             payment_method?: string;
-            /**
-             * @description ProviderCode 通道提供商代码
-             * @example sitobank
-             */
-            provider_code?: string;
-            /**
-             * @description ProviderName 通道提供商名称
-             * @example Sitobank
-             */
-            provider_name?: string;
-            /**
-             * @description 渠道退款 ID
-             * @example PROV-RF-789
-             */
-            provider_refund_id?: string;
-            /** @example E2E-789 */
-            provider_transaction_id?: string;
-            /**
-             * @description ProviderType 通道提供商类型：bank(银行), gateway(支付网关), aggregator(聚合商), psp(支付服务商)
-             * @example bank
-             */
-            provider_type?: string;
-            /**
-             * @description 退款原因
-             * @example Customer request
-             */
-            reason?: string;
-            /**
-             * @description 退款单号
-             * @example RF-12345
-             */
-            refund_number?: string;
-            /**
-             * @description 已退款金额
-             * @example 50.00
-             */
-            refunded_amount?: string;
-            /**
-             * @description RiskDecision 风控决策：approved(通过), rejected(拒绝), pending_review(待审核), flagged(标记)
-             * @example approved
-             */
-            risk_decision?: string;
-            /**
-             * @description RiskLevel 风险等级：low(0-24), medium(25-49), high(50-79), critical(80-100)
-             * @example medium
-             */
-            risk_level?: string;
-            /**
-             * @description 风险评分信息
-             *     RiskScore 风险评分（0-100，越高风险越大）
-             * @example 45.50
-             */
-            risk_score?: string;
-            /**
-             * @description RoutingAlgorithm 路由算法：priority(优先级), weighted(加权), smart(智能路由), least_cost(最低成本)
-             * @example priority
-             */
-            routing_algorithm?: string;
-            /**
-             * @description RoutingStrategyID 使用的路由策略ID（fallback路由时为空）
-             * @example 950e8400-e29b-41d4-a716-446655440004
-             */
-            routing_strategy_id?: string;
-            /** @example payment_received */
-            state?: string;
             /** @example completed */
             status?: string;
             /** @example 550e8400-e29b-41d4-a716-446655440000 */
@@ -45485,183 +42216,12 @@ export interface components {
             /** @example 650e8400-e29b-41d4-a716-446655440000 */
             transaction_id?: string;
             /**
-             * @description invoice, invoice_refund, transfer, transfer_refund
+             * @description invoice, transfer, refund
              * @example invoice
              */
             transaction_type?: string;
             /** @example 2024-01-01T12:01:00Z */
             updated_at?: string;
-            /**
-             * @description sent, pending, failed, none
-             * @example sent
-             */
-            webhook_status?: string;
-        };
-        "psp_com_internal_transaction_app.TransactionExtendedDTO": {
-            /** @example ACC001 */
-            account_name?: string;
-            /**
-             * @description 金额字符串
-             * @example 100.00
-             */
-            amount?: string;
-            /**
-             * @description TIMELINE 信息
-             *     AuthorizedAt 授权时间（风控通过并请求上游的时间）
-             * @example 2024-01-01T12:00:30Z
-             */
-            authorized_at?: string;
-            /**
-             * @description ChannelCode 渠道代码（唯一标识符）
-             * @example sitobank_pix_br_001
-             */
-            channel_code?: string;
-            /** @example 0.50 */
-            channel_fee?: string;
-            /**
-             * @description ROUTE & CHANNEL 信息
-             *     ChannelID 实际使用的支付渠道ID
-             * @example 850e8400-e29b-41d4-a716-446655440003
-             */
-            channel_id?: string;
-            /**
-             * @description ChannelName 渠道名称（可读性描述）
-             * @example Sitobank PIX Channel
-             */
-            channel_name?: string;
-            /**
-             * @description CompletedAt 完成时间（交易到达终态的时间：paid/failed/cancelled/expired）
-             * @example 2024-01-01T12:01:00Z
-             */
-            completed_at?: string;
-            /** @example 2024-01-01T12:00:00Z */
-            created_at?: string;
-            /** @example BRL */
-            currency?: string;
-            /** @example john@example.com */
-            customer_email?: string;
-            /**
-             * @description 客户信息（从 JSON 解析）
-             * @example John Doe
-             */
-            customer_name?: string;
-            /** @example 12345678901 */
-            customer_tax_id?: string;
-            /** @example Insufficient funds */
-            failure_reason?: string;
-            /** @example 730e8400-e29b-41d4-a716-446655440002 */
-            merchant_account_id?: string;
-            /** @example 1.50 */
-            merchant_fee?: string;
-            /** @example 720e8400-e29b-41d4-a716-446655440001 */
-            merchant_id?: string;
-            /**
-             * @description 扩展字段
-             * @example Test Merchant
-             */
-            merchant_name?: string;
-            /** @example ORDER-123456 */
-            merchant_order_id?: string;
-            /**
-             * @description 计算字段：Amount - MerchantFee
-             * @example 98.00
-             */
-            net_amount?: string;
-            /**
-             * @description 退款特有字段（仅 invoice_refund 和 transfer_refund 有值）
-             * @example 650e8400-e29b-41d4-a716-446655440000
-             */
-            original_intent_id?: string;
-            /**
-             * @description 原始商户订单号
-             * @example ORDER-123456
-             */
-            original_order_id?: string;
-            /** @example pix */
-            payment_method?: string;
-            /**
-             * @description ProviderCode 通道提供商代码
-             * @example sitobank
-             */
-            provider_code?: string;
-            /**
-             * @description ProviderName 通道提供商名称
-             * @example Sitobank
-             */
-            provider_name?: string;
-            /**
-             * @description 渠道退款 ID
-             * @example PROV-RF-789
-             */
-            provider_refund_id?: string;
-            /** @example E2E-789 */
-            provider_transaction_id?: string;
-            /**
-             * @description ProviderType 通道提供商类型：bank(银行), gateway(支付网关), aggregator(聚合商), psp(支付服务商)
-             * @example bank
-             */
-            provider_type?: string;
-            /**
-             * @description 退款原因
-             * @example Customer request
-             */
-            reason?: string;
-            /**
-             * @description 退款单号
-             * @example RF-12345
-             */
-            refund_number?: string;
-            /**
-             * @description 已退款金额
-             * @example 50.00
-             */
-            refunded_amount?: string;
-            /**
-             * @description RiskDecision 风控决策：approved(通过), rejected(拒绝), pending_review(待审核), flagged(标记)
-             * @example approved
-             */
-            risk_decision?: string;
-            /**
-             * @description RiskLevel 风险等级：low(0-24), medium(25-49), high(50-79), critical(80-100)
-             * @example medium
-             */
-            risk_level?: string;
-            /**
-             * @description 风险评分信息
-             *     RiskScore 风险评分（0-100，越高风险越大）
-             * @example 45.50
-             */
-            risk_score?: string;
-            /**
-             * @description RoutingAlgorithm 路由算法：priority(优先级), weighted(加权), smart(智能路由), least_cost(最低成本)
-             * @example priority
-             */
-            routing_algorithm?: string;
-            /**
-             * @description RoutingStrategyID 使用的路由策略ID（fallback路由时为空）
-             * @example 950e8400-e29b-41d4-a716-446655440004
-             */
-            routing_strategy_id?: string;
-            /** @example payment_received */
-            state?: string;
-            /** @example completed */
-            status?: string;
-            /** @example 550e8400-e29b-41d4-a716-446655440000 */
-            tenant_id?: string;
-            /** @example 650e8400-e29b-41d4-a716-446655440000 */
-            transaction_id?: string;
-            /**
-             * @description invoice, invoice_refund, transfer, transfer_refund
-             * @example invoice
-             */
-            transaction_type?: string;
-            /** @example 2024-01-01T12:01:00Z */
-            updated_at?: string;
-            /**
-             * @description sent, pending, failed, none
-             * @example sent
-             */
-            webhook_status?: string;
         };
         "psp_com_internal_transaction_app.TransactionStatusHistoryDTO": {
             /** @example 2024-01-01T12:00:00Z */
@@ -45685,6 +42245,79 @@ export interface components {
             /** @example Payment successful */
             reason?: string;
         };
+        "psp_com_internal_treasury_app.BatchImportRatesRequest": Record<string, never>;
+        "psp_com_internal_treasury_app.CreateExchangeRateRequest": {
+            /** @example 5.55 */
+            ask_rate: string;
+            /** @example USD */
+            base_currency: string;
+            /** @example 5.45 */
+            bid_rate: string;
+            /** @example 5.50 */
+            mid_rate: string;
+            /** @example BRL */
+            quote_currency: string;
+            /** @example internal */
+            source: string;
+            /** @example BCB-2024-001 */
+            source_ref?: string;
+            /**
+             * @description 有效期(分钟)，默认15
+             * @example 15
+             */
+            validity_mins?: number;
+        };
+        "psp_com_internal_treasury_app.CreateMarkupConfigRequest": Record<string, never>;
+        "psp_com_internal_treasury_app.EnableCurrencyRequest": {
+            /** @example USD */
+            currency: string;
+            /** @example true */
+            is_settlement_currency?: boolean;
+        };
+        "psp_com_internal_treasury_app.FXConvertRequest": {
+            /** @example inv-001 */
+            business_id: string;
+            /**
+             * @description invoice, transfer, settlement
+             * @example invoice
+             */
+            business_type: string;
+            /** @example fx-convert-001 */
+            idempotency_key: string;
+            /** @example merchant-001 */
+            merchant_id: string;
+            /** @example 1000.00 */
+            source_amount?: string;
+            /** @example USD */
+            source_currency: string;
+            /** @example 5500.00 */
+            target_amount?: string;
+            /** @example BRL */
+            target_currency: string;
+        };
+        "psp_com_internal_treasury_app.FXQuoteRequest": {
+            /**
+             * @description 商户ID (用于获取 Markup 配置)
+             * @example merchant-001
+             */
+            merchant_id?: string;
+            /**
+             * @description 源金额 (与 target_amount 二选一)
+             * @example 1000.00
+             */
+            source_amount?: string;
+            /** @example USD */
+            source_currency: string;
+            /**
+             * @description 目标金额 (与 source_amount 二选一)
+             * @example 5500.00
+             */
+            target_amount?: string;
+            /** @example BRL */
+            target_currency: string;
+        };
+        "psp_com_internal_treasury_app.UpdateCurrencyWhitelistRequest": Record<string, never>;
+        "psp_com_internal_treasury_app.UpdateMarkupConfigRequest": Record<string, never>;
         "psp_com_internal_webhook_app.ProviderStats": {
             completed_count?: number;
             failed_count?: number;
@@ -45783,7 +42416,7 @@ export interface components {
             message?: string;
         };
         /** @enum {string} */
-        "psp_com_pkg_apierror.Code": "SUCCESS" | "INTERNAL_ERROR" | "INVALID_REQUEST" | "VALIDATION_ERROR" | "UNAUTHORIZED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "TOO_MANY_REQUESTS" | "REQUEST_TIMEOUT" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "MERCHANT_NOT_FOUND" | "MERCHANT_INACTIVE" | "MERCHANT_SUSPENDED" | "IP_NOT_WHITELISTED" | "INVALID_SIGNATURE" | "SIGNATURE_INVALID" | "SIGNATURE_EXPIRED" | "DUPLICATE_IDEMPOTENCY_KEY" | "INVOICE_NOT_FOUND" | "INVOICE_EXPIRED" | "INVOICE_ALREADY_PAID" | "INVOICE_CANCELED" | "INVOICE_ALREADY_CANCELED" | "INVOICE_CANNOT_CANCEL" | "INVOICE_AML_BLOCKED" | "INVALID_AMOUNT" | "INVALID_CURRENCY" | "TRANSFER_NOT_FOUND" | "TRANSFER_FAILED" | "TRANSFER_PENDING" | "INSUFFICIENT_FUNDS" | "INVALID_BENEFICIARY" | "REFUND_NOT_FOUND" | "REFUND_FAILED" | "REFUND_NOT_ALLOWED" | "REFUND_AMOUNT_EXCEEDED" | "ACCOUNT_NOT_FOUND" | "ACCOUNT_FROZEN" | "ACCOUNT_CLOSED" | "INSUFFICIENT_BALANCE" | "BANK_ACCOUNT_NOT_FOUND" | "FEE_NOT_FOUND" | "INVALID_PERCENTAGE_RATE" | "INVALID_ALERT_THRESHOLD" | "RISK_REJECTED" | "RISK_REVIEW" | "AML_CHECK_FAILED" | "CHANNEL_NOT_AVAILABLE" | "CHANNEL_TIMEOUT" | "CHANNEL_ERROR" | "ROUTING_STRATEGY_CODE_DUPLICATE" | "USER_NOT_FOUND" | "INVALID_PASSWORD" | "PASSWORD_TOO_WEAK" | "EMAIL_ALREADY_EXISTS" | "AGENT_NOT_FOUND" | "AGENT_CODE_DUPLICATE" | "AGENT_INVALID_STATUS" | "AGENT_ALREADY_ACTIVE" | "AGENT_ALREADY_SUSPENDED" | "COMMISSION_RULE_NOT_FOUND" | "COMMISSION_RULE_LIMIT_REACHED" | "ACCOUNT_LOCKED" | "ACCOUNT_INACTIVE" | "INVALID_CREDENTIALS" | "INVALID_MFA_CODE" | "INVALID_TOKEN" | "MFA_ALREADY_BOUND" | "MFA_SETUP_EXPIRED" | "MFA_SETUP_NOT_FOUND" | "MFA_NOT_FOUND" | "WEBAUTHN_NOT_CONFIGURED";
+        "psp_com_pkg_apierror.Code": "SUCCESS" | "INTERNAL_ERROR" | "INVALID_REQUEST" | "UNAUTHORIZED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "TOO_MANY_REQUESTS" | "REQUEST_TIMEOUT" | "NOT_IMPLEMENTED" | "SERVICE_UNAVAILABLE" | "MERCHANT_NOT_FOUND" | "MERCHANT_INACTIVE" | "MERCHANT_SUSPENDED" | "IP_NOT_WHITELISTED" | "INVALID_SIGNATURE" | "SIGNATURE_INVALID" | "SIGNATURE_EXPIRED" | "DUPLICATE_IDEMPOTENCY_KEY" | "INVOICE_NOT_FOUND" | "INVOICE_EXPIRED" | "INVOICE_ALREADY_PAID" | "INVOICE_CANCELED" | "INVOICE_ALREADY_CANCELED" | "INVOICE_CANNOT_CANCEL" | "INVOICE_AML_BLOCKED" | "INVALID_AMOUNT" | "INVALID_CURRENCY" | "TRANSFER_NOT_FOUND" | "TRANSFER_FAILED" | "TRANSFER_PENDING" | "INSUFFICIENT_FUNDS" | "INVALID_BENEFICIARY" | "REFUND_NOT_FOUND" | "REFUND_FAILED" | "REFUND_NOT_ALLOWED" | "REFUND_AMOUNT_EXCEEDED" | "ACCOUNT_NOT_FOUND" | "ACCOUNT_FROZEN" | "ACCOUNT_CLOSED" | "INSUFFICIENT_BALANCE" | "BANK_ACCOUNT_NOT_FOUND" | "FEE_NOT_FOUND" | "RISK_REJECTED" | "RISK_REVIEW" | "AML_CHECK_FAILED" | "CHANNEL_NOT_AVAILABLE" | "CHANNEL_TIMEOUT" | "CHANNEL_ERROR" | "USER_NOT_FOUND" | "INVALID_PASSWORD" | "PASSWORD_TOO_WEAK" | "EMAIL_ALREADY_EXISTS" | "AGENT_NOT_FOUND" | "AGENT_CODE_DUPLICATE" | "AGENT_INVALID_STATUS" | "AGENT_ALREADY_ACTIVE" | "AGENT_ALREADY_SUSPENDED" | "COMMISSION_RULE_NOT_FOUND" | "COMMISSION_RULE_LIMIT_REACHED";
         "psp_com_pkg_response.PaginatedResponse-psp_com_internal_admin_app_HandlerWebhookEventDTO": {
             items?: components["schemas"]["psp_com_internal_admin_app.HandlerWebhookEventDTO"][];
             limit?: number;
@@ -45806,133 +42439,7 @@ export interface components {
          * Format: int64
          * @enum {integer}
          */
-        "time.Duration": -9223372036854776000 | 9223372036854776000 | 1 | 1000 | 1000000 | 1000000000 | 60000000000 | 3600000000000 | -9223372036854776000 | 9223372036854776000 | 1 | 1000 | 1000000 | 1000000000 | 60000000000 | 3600000000000 | -9223372036854776000 | 9223372036854776000 | 1 | 1000 | 1000000 | 1000000000 | 60000000000 | 3600000000000;
-        "treasury.BatchImportRatesRequest": {
-            /**
-             * @description scheduled, manual, api
-             * @example manual
-             */
-            import_type?: string;
-            rates: components["schemas"]["treasury.CreateExchangeRateRequest"][];
-            /** @example bank_api */
-            source: string;
-            /** @example IMPORT-2024-001 */
-            source_ref?: string;
-        };
-        "treasury.CreateExchangeRateRequest": {
-            /** @example 5.55 */
-            ask_rate: string;
-            /** @example USD */
-            base_currency: string;
-            /** @example 5.45 */
-            bid_rate: string;
-            /** @example 5.50 */
-            mid_rate: string;
-            /** @example BRL */
-            quote_currency: string;
-            /** @example internal */
-            source: string;
-            /** @example BCB-2024-001 */
-            source_ref?: string;
-            /**
-             * @description 有效期(分钟)，默认15
-             * @example 15
-             */
-            validity_mins?: number;
-        };
-        "treasury.CreateMarkupConfigRequest": {
-            /** @example USD */
-            base_currency?: string;
-            /** @example 0.5 */
-            default_markup_rate: string;
-            /** @example merchant-001 */
-            merchant_id?: string;
-            /** @example BRL */
-            quote_currency?: string;
-            /** @example merchant */
-            scope: string;
-            tiers?: components["schemas"]["treasury.MarkupTierDTO"][];
-        };
-        "treasury.CurrencyConfigDTO": {
-            /** @example USD */
-            currency?: string;
-            /** @example true */
-            is_enabled?: boolean;
-            /** @example true */
-            is_settlement_currency?: boolean;
-            /** @example 1000000 */
-            max_amount?: string;
-            /** @example 100 */
-            min_amount?: string;
-        };
-        "treasury.EnableCurrencyRequest": {
-            /** @example USD */
-            currency: string;
-            /** @example true */
-            is_settlement_currency?: boolean;
-        };
-        "treasury.FXConvertRequest": {
-            /** @example inv-001 */
-            business_id: string;
-            /**
-             * @description invoice, transfer, settlement
-             * @example invoice
-             */
-            business_type: string;
-            /** @example fx-convert-001 */
-            idempotency_key: string;
-            /** @example merchant-001 */
-            merchant_id: string;
-            /** @example 1000.00 */
-            source_amount?: string;
-            /** @example USD */
-            source_currency: string;
-            /** @example 5500.00 */
-            target_amount?: string;
-            /** @example BRL */
-            target_currency: string;
-        };
-        "treasury.FXQuoteRequest": {
-            /**
-             * @description 商户ID (用于获取 Markup 配置)
-             * @example merchant-001
-             */
-            merchant_id?: string;
-            /**
-             * @description 源金额 (与 target_amount 二选一)
-             * @example 1000.00
-             */
-            source_amount?: string;
-            /** @example USD */
-            source_currency: string;
-            /**
-             * @description 目标金额 (与 source_amount 二选一)
-             * @example 5500.00
-             */
-            target_amount?: string;
-            /** @example BRL */
-            target_currency: string;
-        };
-        "treasury.MarkupTierDTO": {
-            /** @example USD */
-            currency?: string;
-            /** @example 0.3 */
-            markup_rate?: string;
-            /** @example 10000 */
-            max_amount?: string;
-            /** @example 0 */
-            min_amount?: string;
-        };
-        "treasury.UpdateCurrencyWhitelistRequest": {
-            currencies: components["schemas"]["treasury.CurrencyConfigDTO"][];
-        };
-        "treasury.UpdateMarkupConfigRequest": {
-            /** @example 0.6 */
-            default_markup_rate?: string;
-            /** @example true */
-            is_active?: boolean;
-            tiers?: components["schemas"]["treasury.MarkupTierDTO"][];
-        };
+        "time.Duration": -9223372036854776000 | 9223372036854776000 | 1 | 1000 | 1000000 | 1000000000 | 60000000000 | 3600000000000 | -9223372036854776000 | 9223372036854776000 | 1 | 1000 | 1000000 | 1000000000 | 60000000000 | 3600000000000;
     };
     responses: never;
     parameters: never;
@@ -45946,6 +42453,12 @@ export interface components {
         "psp_com_internal_channel_app.ChannelVerifyRequest": {
             content: {
                 "application/json": components["schemas"]["psp_com_internal_channel_app.ChannelVerifyRequest"];
+            };
+        };
+        /** @description 审批请求 */
+        "psp_com_internal_ops_app.ApprovalRequest": {
+            content: {
+                "application/json": components["schemas"]["psp_com_internal_ops_app.ApprovalRequest"];
             };
         };
         /** @description 限额配置 */

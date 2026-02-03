@@ -16,8 +16,8 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "generate": "openapi-typescript ../../../seafintech/psp/api/openapi/admin/openapi.yaml -o src/generated/admin.ts",
-    "generate:watch": "openapi-typescript ../../../seafintech/psp/api/openapi/admin/openapi.yaml -o src/generated/admin.ts --watch"
+    "generate": "openapi-typescript ../../../psp/api/openapi/admin/openapi.yaml -o src/generated/admin.ts",
+    "generate:watch": "openapi-typescript ../../../psp/api/openapi/admin/openapi.yaml -o src/generated/admin.ts --watch"
   },
   "dependencies": {
     "@psp/shared": "workspace:*",

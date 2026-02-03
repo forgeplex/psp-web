@@ -20,16 +20,28 @@ import { Route as AuthenticatedSettlementsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRiskRouteImport } from './routes/_authenticated/risk'
 import { Route as AuthenticatedRatesRouteImport } from './routes/_authenticated/rates'
+import { Route as AuthenticatedProvidersRouteImport } from './routes/_authenticated/providers'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedMonitoringRouteImport } from './routes/_authenticated/monitoring'
 import { Route as AuthenticatedMerchantsRouteImport } from './routes/_authenticated/merchants'
 import { Route as AuthenticatedChannelsRouteImport } from './routes/_authenticated/channels'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedTransactionsIndexRouteImport } from './routes/_authenticated/transactions/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedProvidersIndexRouteImport } from './routes/_authenticated/providers/index'
+import { Route as AuthenticatedChannelsIndexRouteImport } from './routes/_authenticated/channels/index'
+import { Route as AuthenticatedTransactionsIdRouteImport } from './routes/_authenticated/transactions/$id'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
+import { Route as AuthenticatedProvidersProviderIdChannelsRouteImport } from './routes/_authenticated/providers/channels'
 import { Route as AuthenticatedMerchantsDashboardRouteImport } from './routes/_authenticated/merchants/dashboard'
 import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
+import { Route as AuthenticatedChannelsStrategyRouteImport } from './routes/_authenticated/channels/strategy'
+import { Route as AuthenticatedChannelsRoutingRulesRouteImport } from './routes/_authenticated/channels/routing-rules'
+import { Route as AuthenticatedChannelsHealthRouteImport } from './routes/_authenticated/channels/health'
+import { Route as AuthenticatedChannelsChannelConfigsRouteImport } from './routes/_authenticated/channels/channel-configs'
+import { Route as AuthenticatedChannelsChannelIdRouteImport } from './routes/_authenticated/channels.$channelId'
+import { Route as AuthenticatedProvidersProviderIdChannelsRouteImport } from './routes/_authenticated/providers.$providerId.channels'
 
 const VersionRoute = VersionRouteImport.update({
   id: '/version',
@@ -87,6 +99,11 @@ const AuthenticatedRatesRoute = AuthenticatedRatesRouteImport.update({
   path: '/rates',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedProvidersRoute = AuthenticatedProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedNotificationsRoute =
   AuthenticatedNotificationsRouteImport.update({
     id: '/notifications',
@@ -118,17 +135,47 @@ const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTransactionsIndexRoute =
+  AuthenticatedTransactionsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedTransactionsRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
+const AuthenticatedProvidersIndexRoute =
+  AuthenticatedProvidersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedProvidersRoute,
+  } as any)
+const AuthenticatedChannelsIndexRoute =
+  AuthenticatedChannelsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedTransactionsIdRoute =
+  AuthenticatedTransactionsIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedTransactionsRoute,
+  } as any)
 const AuthenticatedSettingsTrustedDevicesRoute =
   AuthenticatedSettingsTrustedDevicesRouteImport.update({
     id: '/trusted-devices',
     path: '/trusted-devices',
     getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedProvidersProviderIdChannelsRoute =
+  AuthenticatedProvidersProviderIdChannelsRouteImport.update({
+    id: '/channels',
+    path: '/channels',
+    getParentRoute: () => AuthenticatedProvidersRoute,
   } as any)
 const AuthenticatedMerchantsDashboardRoute =
   AuthenticatedMerchantsDashboardRouteImport.update({
@@ -142,6 +189,42 @@ const AuthenticatedMerchantsMerchantIdRoute =
     path: '/$merchantId',
     getParentRoute: () => AuthenticatedMerchantsRoute,
   } as any)
+const AuthenticatedChannelsStrategyRoute =
+  AuthenticatedChannelsStrategyRouteImport.update({
+    id: '/strategy',
+    path: '/strategy',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedChannelsRoutingRulesRoute =
+  AuthenticatedChannelsRoutingRulesRouteImport.update({
+    id: '/routing-rules',
+    path: '/routing-rules',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedChannelsHealthRoute =
+  AuthenticatedChannelsHealthRouteImport.update({
+    id: '/health',
+    path: '/health',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedChannelsChannelConfigsRoute =
+  AuthenticatedChannelsChannelConfigsRouteImport.update({
+    id: '/channel-configs',
+    path: '/channel-configs',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedChannelsChannelIdRoute =
+  AuthenticatedChannelsChannelIdRouteImport.update({
+    id: '/$channelId',
+    path: '/$channelId',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedProvidersProviderIdChannelsRoute =
+  AuthenticatedProvidersProviderIdChannelsRouteImport.update({
+    id: '/$providerId/channels',
+    path: '/$providerId/channels',
+    getParentRoute: () => AuthenticatedProvidersRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -149,42 +232,63 @@ export interface FileRoutesByFullPath {
   '/version': typeof VersionRoute
   '/agents': typeof AuthenticatedAgentsRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
-  '/channels': typeof AuthenticatedChannelsRoute
+  '/channels': typeof AuthenticatedChannelsRouteWithChildren
   '/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/monitoring': typeof AuthenticatedMonitoringRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
+  '/providers': typeof AuthenticatedProvidersRouteWithChildren
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
   '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/settlements': typeof AuthenticatedSettlementsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
+  '/transactions': typeof AuthenticatedTransactionsRouteWithChildren
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
+  '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
+  '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
+  '/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
+  '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
+  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
+  '/channels/': typeof AuthenticatedChannelsIndexRoute
+  '/providers/': typeof AuthenticatedProvidersIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/transactions/': typeof AuthenticatedTransactionsIndexRoute
+  '/providers/$providerId/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/version': typeof VersionRoute
   '/agents': typeof AuthenticatedAgentsRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
-  '/channels': typeof AuthenticatedChannelsRoute
   '/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/monitoring': typeof AuthenticatedMonitoringRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
   '/settlements': typeof AuthenticatedSettlementsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
   '/': typeof AuthenticatedIndexRoute
+  '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
+  '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
+  '/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
+  '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
+  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
+  '/channels': typeof AuthenticatedChannelsIndexRoute
+  '/providers': typeof AuthenticatedProvidersIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/transactions': typeof AuthenticatedTransactionsIndexRoute
+  '/providers/$providerId/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -193,22 +297,34 @@ export interface FileRoutesById {
   '/version': typeof VersionRoute
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
-  '/_authenticated/channels': typeof AuthenticatedChannelsRoute
+  '/_authenticated/channels': typeof AuthenticatedChannelsRouteWithChildren
   '/_authenticated/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/_authenticated/monitoring': typeof AuthenticatedMonitoringRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
+  '/_authenticated/providers': typeof AuthenticatedProvidersRouteWithChildren
   '/_authenticated/rates': typeof AuthenticatedRatesRoute
   '/_authenticated/risk': typeof AuthenticatedRiskRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/settlements': typeof AuthenticatedSettlementsRoute
-  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
+  '/_authenticated/transactions': typeof AuthenticatedTransactionsRouteWithChildren
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
+  '/_authenticated/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
+  '/_authenticated/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/_authenticated/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
+  '/_authenticated/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/_authenticated/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
+  '/_authenticated/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
+  '/_authenticated/transactions/$id': typeof AuthenticatedTransactionsIdRoute
+  '/_authenticated/channels/': typeof AuthenticatedChannelsIndexRoute
+  '/_authenticated/providers/': typeof AuthenticatedProvidersIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/transactions/': typeof AuthenticatedTransactionsIndexRoute
+  '/_authenticated/providers/$providerId/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -222,6 +338,7 @@ export interface FileRouteTypes {
     | '/merchants'
     | '/monitoring'
     | '/notifications'
+    | '/providers'
     | '/rates'
     | '/risk'
     | '/settings'
@@ -229,31 +346,51 @@ export interface FileRouteTypes {
     | '/transactions'
     | '/mfa/setup'
     | '/mfa/verify'
+    | '/channels/$channelId'
+    | '/channels/channel-configs'
+    | '/channels/health'
+    | '/channels/routing-rules'
+    | '/channels/strategy'
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
+    | '/providers/channels'
     | '/settings/trusted-devices'
+    | '/transactions/$id'
+    | '/channels/'
+    | '/providers/'
     | '/settings/'
+    | '/transactions/'
+    | '/providers/$providerId/channels'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/version'
     | '/agents'
     | '/analytics'
-    | '/channels'
     | '/merchants'
     | '/monitoring'
     | '/notifications'
     | '/rates'
     | '/risk'
     | '/settlements'
-    | '/transactions'
     | '/mfa/setup'
     | '/mfa/verify'
     | '/'
+    | '/channels/$channelId'
+    | '/channels/channel-configs'
+    | '/channels/health'
+    | '/channels/routing-rules'
+    | '/channels/strategy'
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
+    | '/providers/channels'
     | '/settings/trusted-devices'
+    | '/transactions/$id'
+    | '/channels'
+    | '/providers'
     | '/settings'
+    | '/transactions'
+    | '/providers/$providerId/channels'
   id:
     | '__root__'
     | '/_authenticated'
@@ -265,6 +402,7 @@ export interface FileRouteTypes {
     | '/_authenticated/merchants'
     | '/_authenticated/monitoring'
     | '/_authenticated/notifications'
+    | '/_authenticated/providers'
     | '/_authenticated/rates'
     | '/_authenticated/risk'
     | '/_authenticated/settings'
@@ -273,10 +411,21 @@ export interface FileRouteTypes {
     | '/mfa/setup'
     | '/mfa/verify'
     | '/_authenticated/'
+    | '/_authenticated/channels/$channelId'
+    | '/_authenticated/channels/channel-configs'
+    | '/_authenticated/channels/health'
+    | '/_authenticated/channels/routing-rules'
+    | '/_authenticated/channels/strategy'
     | '/_authenticated/merchants/$merchantId'
     | '/_authenticated/merchants/dashboard'
+    | '/_authenticated/providers/channels'
     | '/_authenticated/settings/trusted-devices'
+    | '/_authenticated/transactions/$id'
+    | '/_authenticated/channels/'
+    | '/_authenticated/providers/'
     | '/_authenticated/settings/'
+    | '/_authenticated/transactions/'
+    | '/_authenticated/providers/$providerId/channels'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,6 +515,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRatesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/providers': {
+      id: '/_authenticated/providers'
+      path: '/providers'
+      fullPath: '/providers'
+      preLoaderRoute: typeof AuthenticatedProvidersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/notifications': {
       id: '/_authenticated/notifications'
       path: '/notifications'
@@ -408,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAgentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/transactions/': {
+      id: '/_authenticated/transactions/'
+      path: '/'
+      fullPath: '/transactions/'
+      preLoaderRoute: typeof AuthenticatedTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedTransactionsRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -415,12 +578,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
+    '/_authenticated/providers/': {
+      id: '/_authenticated/providers/'
+      path: '/'
+      fullPath: '/providers/'
+      preLoaderRoute: typeof AuthenticatedProvidersIndexRouteImport
+      parentRoute: typeof AuthenticatedProvidersRoute
+    }
+    '/_authenticated/channels/': {
+      id: '/_authenticated/channels/'
+      path: '/'
+      fullPath: '/channels/'
+      preLoaderRoute: typeof AuthenticatedChannelsIndexRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/transactions/$id': {
+      id: '/_authenticated/transactions/$id'
+      path: '/$id'
+      fullPath: '/transactions/$id'
+      preLoaderRoute: typeof AuthenticatedTransactionsIdRouteImport
+      parentRoute: typeof AuthenticatedTransactionsRoute
+    }
     '/_authenticated/settings/trusted-devices': {
       id: '/_authenticated/settings/trusted-devices'
       path: '/trusted-devices'
       fullPath: '/settings/trusted-devices'
       preLoaderRoute: typeof AuthenticatedSettingsTrustedDevicesRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/providers/channels': {
+      id: '/_authenticated/providers/channels'
+      path: '/channels'
+      fullPath: '/providers/channels'
+      preLoaderRoute: typeof AuthenticatedProvidersProviderIdChannelsRouteImport
+      parentRoute: typeof AuthenticatedProvidersRoute
     }
     '/_authenticated/merchants/dashboard': {
       id: '/_authenticated/merchants/dashboard'
@@ -436,8 +627,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMerchantsMerchantIdRouteImport
       parentRoute: typeof AuthenticatedMerchantsRoute
     }
+    '/_authenticated/channels/strategy': {
+      id: '/_authenticated/channels/strategy'
+      path: '/strategy'
+      fullPath: '/channels/strategy'
+      preLoaderRoute: typeof AuthenticatedChannelsStrategyRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/channels/routing-rules': {
+      id: '/_authenticated/channels/routing-rules'
+      path: '/routing-rules'
+      fullPath: '/channels/routing-rules'
+      preLoaderRoute: typeof AuthenticatedChannelsRoutingRulesRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/channels/health': {
+      id: '/_authenticated/channels/health'
+      path: '/health'
+      fullPath: '/channels/health'
+      preLoaderRoute: typeof AuthenticatedChannelsHealthRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/channels/channel-configs': {
+      id: '/_authenticated/channels/channel-configs'
+      path: '/channel-configs'
+      fullPath: '/channels/channel-configs'
+      preLoaderRoute: typeof AuthenticatedChannelsChannelConfigsRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/channels/$channelId': {
+      id: '/_authenticated/channels/$channelId'
+      path: '/$channelId'
+      fullPath: '/channels/$channelId'
+      preLoaderRoute: typeof AuthenticatedChannelsChannelIdRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/providers/$providerId/channels': {
+      id: '/_authenticated/providers/$providerId/channels'
+      path: '/$providerId/channels'
+      fullPath: '/providers/$providerId/channels'
+      preLoaderRoute: typeof AuthenticatedProvidersProviderIdChannelsRouteImport
+      parentRoute: typeof AuthenticatedProvidersRoute
+    }
   }
 }
+
+interface AuthenticatedChannelsRouteChildren {
+  AuthenticatedChannelsChannelIdRoute: typeof AuthenticatedChannelsChannelIdRoute
+  AuthenticatedChannelsChannelConfigsRoute: typeof AuthenticatedChannelsChannelConfigsRoute
+  AuthenticatedChannelsHealthRoute: typeof AuthenticatedChannelsHealthRoute
+  AuthenticatedChannelsRoutingRulesRoute: typeof AuthenticatedChannelsRoutingRulesRoute
+  AuthenticatedChannelsStrategyRoute: typeof AuthenticatedChannelsStrategyRoute
+  AuthenticatedChannelsIndexRoute: typeof AuthenticatedChannelsIndexRoute
+}
+
+const AuthenticatedChannelsRouteChildren: AuthenticatedChannelsRouteChildren = {
+  AuthenticatedChannelsChannelIdRoute: AuthenticatedChannelsChannelIdRoute,
+  AuthenticatedChannelsChannelConfigsRoute:
+    AuthenticatedChannelsChannelConfigsRoute,
+  AuthenticatedChannelsHealthRoute: AuthenticatedChannelsHealthRoute,
+  AuthenticatedChannelsRoutingRulesRoute:
+    AuthenticatedChannelsRoutingRulesRoute,
+  AuthenticatedChannelsStrategyRoute: AuthenticatedChannelsStrategyRoute,
+  AuthenticatedChannelsIndexRoute: AuthenticatedChannelsIndexRoute,
+}
+
+const AuthenticatedChannelsRouteWithChildren =
+  AuthenticatedChannelsRoute._addFileChildren(
+    AuthenticatedChannelsRouteChildren,
+  )
 
 interface AuthenticatedMerchantsRouteChildren {
   AuthenticatedMerchantsMerchantIdRoute: typeof AuthenticatedMerchantsMerchantIdRoute
@@ -456,6 +714,25 @@ const AuthenticatedMerchantsRouteWithChildren =
     AuthenticatedMerchantsRouteChildren,
   )
 
+interface AuthenticatedProvidersRouteChildren {
+  AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
+  AuthenticatedProvidersIndexRoute: typeof AuthenticatedProvidersIndexRoute
+  AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
+}
+
+const AuthenticatedProvidersRouteChildren: AuthenticatedProvidersRouteChildren =
+  {
+    AuthenticatedProvidersProviderIdChannelsRoute: AuthenticatedProvidersProviderIdChannelsRoute,
+    AuthenticatedProvidersIndexRoute: AuthenticatedProvidersIndexRoute,
+    AuthenticatedProvidersProviderIdChannelsRoute:
+      AuthenticatedProvidersProviderIdChannelsRoute,
+  }
+
+const AuthenticatedProvidersRouteWithChildren =
+  AuthenticatedProvidersRoute._addFileChildren(
+    AuthenticatedProvidersRouteChildren,
+  )
+
 interface AuthenticatedSettingsRouteChildren {
   AuthenticatedSettingsTrustedDevicesRoute: typeof AuthenticatedSettingsTrustedDevicesRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -472,33 +749,51 @@ const AuthenticatedSettingsRouteWithChildren =
     AuthenticatedSettingsRouteChildren,
   )
 
+interface AuthenticatedTransactionsRouteChildren {
+  AuthenticatedTransactionsIdRoute: typeof AuthenticatedTransactionsIdRoute
+  AuthenticatedTransactionsIndexRoute: typeof AuthenticatedTransactionsIndexRoute
+}
+
+const AuthenticatedTransactionsRouteChildren: AuthenticatedTransactionsRouteChildren =
+  {
+    AuthenticatedTransactionsIdRoute: AuthenticatedTransactionsIdRoute,
+    AuthenticatedTransactionsIndexRoute: AuthenticatedTransactionsIndexRoute,
+  }
+
+const AuthenticatedTransactionsRouteWithChildren =
+  AuthenticatedTransactionsRoute._addFileChildren(
+    AuthenticatedTransactionsRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
-  AuthenticatedChannelsRoute: typeof AuthenticatedChannelsRoute
+  AuthenticatedChannelsRoute: typeof AuthenticatedChannelsRouteWithChildren
   AuthenticatedMerchantsRoute: typeof AuthenticatedMerchantsRouteWithChildren
   AuthenticatedMonitoringRoute: typeof AuthenticatedMonitoringRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
+  AuthenticatedProvidersRoute: typeof AuthenticatedProvidersRouteWithChildren
   AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
   AuthenticatedRiskRoute: typeof AuthenticatedRiskRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedSettlementsRoute: typeof AuthenticatedSettlementsRoute
-  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
+  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
-  AuthenticatedChannelsRoute: AuthenticatedChannelsRoute,
+  AuthenticatedChannelsRoute: AuthenticatedChannelsRouteWithChildren,
   AuthenticatedMerchantsRoute: AuthenticatedMerchantsRouteWithChildren,
   AuthenticatedMonitoringRoute: AuthenticatedMonitoringRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
+  AuthenticatedProvidersRoute: AuthenticatedProvidersRouteWithChildren,
   AuthenticatedRatesRoute: AuthenticatedRatesRoute,
   AuthenticatedRiskRoute: AuthenticatedRiskRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedSettlementsRoute: AuthenticatedSettlementsRoute,
-  AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
+  AuthenticatedTransactionsRoute: AuthenticatedTransactionsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 

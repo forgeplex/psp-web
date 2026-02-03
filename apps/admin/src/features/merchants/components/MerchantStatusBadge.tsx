@@ -7,15 +7,15 @@ import {
   CloseCircleOutlined,
   SafetyCertificateOutlined,
   SyncOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { baseColors } from '@psp/shared';
-import type { MerchantStatus, KybStatus, RiskLevel } from '../types';
 
 // ============================================================
 // Merchant Status Badge
 // ============================================================
 
-const merchantStatusConfig: Record<MerchantStatus, { color: string; icon: React.ReactNode; label: string }> = {
+const merchantStatusConfig: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
   active: { color: 'success', icon: <CheckCircleOutlined />, label: 'Active' },
   pending: { color: 'warning', icon: <ClockCircleOutlined />, label: 'Pending' },
   suspended: { color: 'error', icon: <PauseCircleOutlined />, label: 'Suspended' },
@@ -24,11 +24,11 @@ const merchantStatusConfig: Record<MerchantStatus, { color: string; icon: React.
 };
 
 interface MerchantStatusBadgeProps {
-  status: MerchantStatus;
+  status: string;
 }
 
 export const MerchantStatusBadge: React.FC<MerchantStatusBadgeProps> = ({ status }) => {
-  const config = merchantStatusConfig[status];
+  const config = merchantStatusConfig[status] || { color: 'default', icon: null, label: status };
   return (
     <Tag color={config.color} icon={config.icon}>
       {config.label}
@@ -40,19 +40,26 @@ export const MerchantStatusBadge: React.FC<MerchantStatusBadgeProps> = ({ status
 // KYB Status Badge
 // ============================================================
 
-const kybStatusConfig: Record<KybStatus, { color: string; icon: React.ReactNode; label: string }> = {
-  verified: { color: 'processing', icon: <SafetyCertificateOutlined />, label: 'KYB Verified' },
-  pending: { color: 'warning', icon: <ClockCircleOutlined />, label: 'KYB Pending' },
-  in_review: { color: 'blue', icon: <SyncOutlined />, label: 'In Review' },
-  rejected: { color: 'error', icon: <CloseCircleOutlined />, label: 'KYB Rejected' },
+const kybStatusConfig: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
+  // API values (snake_case)
+  not_submitted: { color: 'default', icon: <ClockCircleOutlined />, label: 'Not Submitted' },
+  submitted: { color: 'processing', icon: <SyncOutlined spin />, label: 'Submitted' },
+  under_review: { color: 'blue', icon: <SyncOutlined spin />, label: 'Under Review' },
+  approved: { color: 'success', icon: <SafetyCertificateOutlined />, label: 'Approved' },
+  rejected: { color: 'error', icon: <CloseCircleOutlined />, label: 'Rejected' },
+  need_more_info: { color: 'warning', icon: <ExclamationCircleOutlined />, label: 'Need Info' },
+  // Legacy values
+  verified: { color: 'success', icon: <SafetyCertificateOutlined />, label: 'Verified' },
+  pending: { color: 'warning', icon: <ClockCircleOutlined />, label: 'Pending' },
+  in_review: { color: 'blue', icon: <SyncOutlined spin />, label: 'In Review' },
 };
 
 interface KybStatusBadgeProps {
-  status: KybStatus;
+  status: string;
 }
 
 export const KybStatusBadge: React.FC<KybStatusBadgeProps> = ({ status }) => {
-  const config = kybStatusConfig[status];
+  const config = kybStatusConfig[status] || { color: 'default', icon: null, label: status };
   return (
     <Tag color={config.color} icon={config.icon}>
       {config.label}
@@ -64,19 +71,20 @@ export const KybStatusBadge: React.FC<KybStatusBadgeProps> = ({ status }) => {
 // Risk Level Badge
 // ============================================================
 
-const riskLevelConfig: Record<RiskLevel, { color: string; label: string }> = {
+const riskLevelConfig: Record<string, { color: string; label: string }> = {
   low: { color: 'success', label: 'Low' },
   medium: { color: 'warning', label: 'Medium' },
   high: { color: 'orange', label: 'High' },
   critical: { color: 'error', label: 'Critical' },
+  blacklist: { color: '#000', label: 'Blacklist' },
 };
 
 interface RiskLevelBadgeProps {
-  level: RiskLevel;
+  level: string;
 }
 
 export const RiskLevelBadge: React.FC<RiskLevelBadgeProps> = ({ level }) => {
-  const config = riskLevelConfig[level];
+  const config = riskLevelConfig[level] || { color: 'default', label: level };
   return <Tag color={config.color}>{config.label}</Tag>;
 };
 
@@ -97,7 +105,7 @@ export const MerchantTypeBadge: React.FC<MerchantTypeBadgeProps> = ({ type }) =>
         border: `1px solid ${baseColors.border}`,
       }}
     >
-      {type}
+      {type === 'company' ? 'Company' : 'Individual'}
     </Tag>
   );
 };
