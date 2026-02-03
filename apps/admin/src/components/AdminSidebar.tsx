@@ -13,6 +13,7 @@ import {
   BellOutlined,
   SettingOutlined,
   MonitorOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 
@@ -22,6 +23,7 @@ const menuItems = [
   { key: '/transactions', icon: <CreditCardOutlined />, label: '交易中心' },
   { key: '/settlements', icon: <DollarOutlined />, label: '结算 & 资金' },
   { key: '/channels', icon: <ApartmentOutlined />, label: '通道 & 路由' },
+  { key: '/providers', icon: <AppstoreOutlined />, label: 'Provider 管理' },
   { key: '/rates', icon: <PercentageOutlined />, label: '费率管理' },
   { key: '/risk', icon: <SafetyOutlined />, label: '风控中心' },
   { key: '/agents', icon: <UserOutlined />, label: '代理商管理' },
