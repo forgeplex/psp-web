@@ -1,44 +1,54 @@
 import { useQuery } from '@tanstack/react-query';
-import { stubProviders } from '../data/stub';
 import type { Provider } from '../types/domain';
 
-// Query keys
-export const providerKeys = {
-  all: ['providers'] as const,
-  lists: () => [...providerKeys.all, 'list'] as const,
-  detail: (id: string) => [...providerKeys.all, 'detail', id] as const,
-};
+const PROVIDERS_QUERY_KEY = 'providers';
 
-// Stub API - 等待真实 API
-async function fetchProviders(): Promise<Provider[]> {
-  // TODO: Replace with real API call
-  return Promise.resolve(stubProviders);
+// Mock data - replace with real API when BE ready
+const mockProviders: Provider[] = [
+  {
+    id: 'prov_wechat',
+    code: 'WECHAT_PAY',
+    name: '微信支付',
+    status: 'active',
+    description: '腾讯微信支付官方渠道',
+  },
+  {
+    id: 'prov_alipay',
+    code: 'ALIPAY',
+    name: '支付宝',
+    status: 'active',
+    description: '蚂蚁金服支付宝官方渠道',
+  },
+  {
+    id: 'prov_paypal',
+    code: 'PAYPAL',
+    name: 'PayPal',
+    status: 'active',
+    description: 'PayPal 国际支付',
+  },
+];
+
+// API functions (mock mode)
+async function listProviders(): Promise<Provider[]> {
+  return mockProviders;
 }
 
-async function fetchProvider(id: string): Promise<Provider | undefined> {
-  // TODO: Replace with real API call
-  return Promise.resolve(stubProviders.find(p => p.id === id));
+async function getProvider(id: string): Promise<Provider | undefined> {
+  return mockProviders.find(p => p.id === id);
 }
 
-// ==================== Queries ====================
-
-/**
- * 获取提供商列表
- */
+// Hooks
 export function useProviders() {
   return useQuery({
-    queryKey: providerKeys.lists(),
-    queryFn: fetchProviders,
+    queryKey: [PROVIDERS_QUERY_KEY],
+    queryFn: listProviders,
   });
 }
 
-/**
- * 获取提供商详情
- */
-export function useProvider(id: string) {
+export function useProvider(id: string | undefined) {
   return useQuery({
-    queryKey: providerKeys.detail(id),
-    queryFn: () => fetchProvider(id),
+    queryKey: [PROVIDERS_QUERY_KEY, 'detail', id],
+    queryFn: () => getProvider(id!),
     enabled: !!id,
   });
 }
