@@ -76,3 +76,15 @@ export function useToggleChannel() {
     },
   });
 }
+
+// Delete channel
+export function useDeleteChannel() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (channelId: string) => channelsApi.deleteChannel(channelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY] });
+    },
+  });
+}

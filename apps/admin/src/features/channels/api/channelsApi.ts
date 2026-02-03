@@ -87,3 +87,7 @@ export async function setChannelStatus(
 ): Promise<Channel | undefined> {
   return updateChannel(channelId, { status });
 }
+
+export async function deleteChannel(channelId: string): Promise<void> {
+  channels = channels.filter((item) => item.id !== channelId);
+}
