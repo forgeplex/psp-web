@@ -1,7 +1,7 @@
 // Real API adapter - ready for BE deployment
 // Replace mock API calls with actual fetch
 
-import type { Channel, ChannelListResponse, RoutingStrategy, MoveStrategyRequest } from '../types/domain';
+import type { Channel, ChannelListResponse, RoutingStrategy, ReorderStrategiesRequest, MoveStrategyRequest } from '../types/domain';
 
 const API_BASE = '/api/v1';
 
@@ -59,7 +59,7 @@ export const channelsApi = {
     }),
 };
 
-// Routing Strategies API (v1.0 with move)
+// Routing Strategies API (v1.0 with reorder)
 export const strategiesApi = {
   list: () => apiCall<RoutingStrategy[]>('/routing-strategies'),
   
@@ -82,7 +82,17 @@ export const strategiesApi = {
       method: 'DELETE',
     }),
   
-  // v1.0 Move API - swap priority with target
+  // v1.0 Reorder API - batch update priorities
+  // POST /routing-strategies/reorder
+  // Body: { orders: [{ id, priority }] }
+  reorder: (request: ReorderStrategiesRequest) =>
+    apiCall<void>('/routing-strategies/reorder', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    }),
+  
+  // Deprecated: move API replaced by reorder
+  // Kept for backward compatibility during migration
   move: (id: string, request: MoveStrategyRequest) =>
     apiCall<void>(`/routing-strategies/${id}/move`, {
       method: 'POST',

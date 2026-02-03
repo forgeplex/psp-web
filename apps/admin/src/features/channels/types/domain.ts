@@ -49,7 +49,15 @@ export interface RoutingStrategy {
   updated_at?: string;
 }
 
-// v1.0 Move API request type
+// Reorder API request type - batch update priorities
+export interface ReorderStrategiesRequest {
+  orders: Array<{
+    id: string;
+    priority: number;
+  }>;
+}
+
+// Deprecated: MoveStrategyRequest removed, use ReorderStrategiesRequest
 export interface MoveStrategyRequest {
   targetId: string;
 }
