@@ -27,38 +27,24 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
+import { channelStatusMap, healthStatusMap } from '../../status-maps';
 
 const { Title, Text } = Typography;
-
-// 健康状态映射
-const healthStatusMap = {
-  HEALTHY: { color: 'success', text: '健康' },
-  WARNING: { color: 'warning', text: '警告' },
-  CRITICAL: { color: 'error', text: '严重' },
-  OFFLINE: { color: 'default', text: '离线' },
-};
-
-// 渠道状态映射
-const channelStatusMap = {
-  active: { color: 'success', text: '已启用' },
-  inactive: { color: 'default', text: '已禁用' },
-  error: { color: 'error', text: '错误' },
-  created: { color: 'processing', text: '创建中' },
-};
 
 export default function ChannelDetailPage({ params }: { params: { id: string } }) {
   const [showKey, setShowKey] = useState(false);
   const [testing, setTesting] = useState(false);
 
+  // 模拟渠道数据 - Schema 版本状态
   const channel = {
     id: params.id,
     name: 'Stripe-Brazil',
     provider: 'stripe',
-    status: 'active',
+    status: 'active' as const,
     weight: 60,
     success_rate: 98.5,
     avg_response_ms: 245,
-    health_status: 'HEALTHY',
+    health_status: 'healthy' as const,
     created_at: '2026-01-15T08:30:00Z',
     updated_at: '2026-02-03T10:20:00Z',
     config: {
@@ -87,8 +73,8 @@ export default function ChannelDetailPage({ params }: { params: { id: string } }
     }, 2000);
   };
 
-  const healthConfig = healthStatusMap[channel.health_status as keyof typeof healthStatusMap] || healthStatusMap.OFFLINE;
-  const statusConfig = channelStatusMap[channel.status as keyof typeof channelStatusMap] || channelStatusMap.inactive;
+  const healthConfig = healthStatusMap[channel.health_status] || healthStatusMap.unknown;
+  const statusConfig = channelStatusMap[channel.status] || channelStatusMap.inactive;
 
   const maskKey = (key: string) => {
     if (showKey) return key;
@@ -110,7 +96,7 @@ export default function ChannelDetailPage({ params }: { params: { id: string } }
               {channel.name}
             </Title>
             <Badge status={healthConfig.color as any} text={healthConfig.text} />
-            <Badge status={statusConfig.color as any} text={statusConfig.text} />
+            <Badge status={statusConfig.badge as any} text={statusConfig.text} />
           </Space>
           <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>
             ID: {channel.id} · 提供商: <Tag style={{ textTransform: 'uppercase' }}>{channel.provider}</Tag>

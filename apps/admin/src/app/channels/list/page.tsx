@@ -26,24 +26,9 @@ import {
   ExperimentOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
+import { channelStatusMap, healthStatusMap } from '../status-maps';
 
 const { Title, Text } = Typography;
-
-// 健康状态映射
-const healthStatusMap = {
-  HEALTHY: { color: 'success', text: '健康', icon: '🟢' },
-  WARNING: { color: 'warning', text: '警告', icon: '🟡' },
-  CRITICAL: { color: 'error', text: '严重', icon: '🔴' },
-  OFFLINE: { color: 'default', text: '离线', icon: '⚫' },
-};
-
-// 渠道状态映射
-const channelStatusMap = {
-  active: { color: 'success', text: '已启用' },
-  inactive: { color: 'default', text: '已禁用' },
-  error: { color: 'error', text: '错误' },
-  created: { color: 'processing', text: '创建中' },
-};
 
 // 提供商标签颜色
 const providerColors: Record<string, string> = {
@@ -54,7 +39,7 @@ const providerColors: Record<string, string> = {
   upi: 'cyan',
 };
 
-// 模拟数据
+// 模拟数据 - 使用 Schema 版本状态
 const mockData = [
   {
     id: 'ch_abc123',
@@ -64,7 +49,7 @@ const mockData = [
     weight: 60,
     success_rate: 98.5,
     avg_response_ms: 245,
-    health_status: 'HEALTHY',
+    health_status: 'healthy',
     created_at: '2026-01-15T08:30:00Z',
   },
   {
@@ -75,18 +60,18 @@ const mockData = [
     weight: 40,
     success_rate: 96.2,
     avg_response_ms: 320,
-    health_status: 'HEALTHY',
+    health_status: 'healthy',
     created_at: '2026-01-10T10:00:00Z',
   },
   {
     id: 'ch_ghi789',
     name: 'Pix-Local',
     provider: 'pix',
-    status: 'warning',
+    status: 'active',
     weight: 30,
     success_rate: 92.1,
     avg_response_ms: 1800,
-    health_status: 'WARNING',
+    health_status: 'degraded',
     created_at: '2026-01-05T14:20:00Z',
   },
   {
@@ -97,8 +82,19 @@ const mockData = [
     weight: 10,
     success_rate: 0,
     avg_response_ms: 0,
-    health_status: 'OFFLINE',
+    health_status: 'unknown',
     created_at: '2025-12-20T09:00:00Z',
+  },
+  {
+    id: 'ch_mno345',
+    name: 'UPI-India',
+    provider: 'upi',
+    status: 'maintenance',
+    weight: 0,
+    success_rate: 0,
+    avg_response_ms: 0,
+    health_status: 'failed',
+    created_at: '2025-12-15T11:00:00Z',
   },
 ];
 
@@ -143,7 +139,7 @@ export default function ChannelsListPage() {
       dataIndex: 'health_status',
       key: 'health_status',
       render: (status: keyof typeof healthStatusMap) => {
-        const config = healthStatusMap[status] || healthStatusMap.OFFLINE;
+        const config = healthStatusMap[status] || healthStatusMap.unknown;
         return (
           <Tooltip title={`最后检查: 5分钟前`}>
             <Badge status={config.color as any} text={config.text} />
@@ -173,7 +169,7 @@ export default function ChannelsListPage() {
       dataIndex: 'avg_response_ms',
       key: 'avg_response_ms',
       render: (ms: number, record: any) =>
-        record.status === 'inactive' ? (
+        record.status === 'inactive' || record.status === 'maintenance' ? (
           <Text type="secondary">-</Text>
         ) : (
           <Text style={{ color: ms > 1000 ? '#ff4d4f' : ms > 500 ? '#faad14' : '#52c41a' }}>
@@ -197,7 +193,7 @@ export default function ChannelsListPage() {
       key: 'status',
       render: (status: keyof typeof channelStatusMap) => {
         const config = channelStatusMap[status] || channelStatusMap.inactive;
-        return <Badge status={config.color as any} text={config.text} />;
+        return <Badge status={config.badge as any} text={config.text} />;
       },
     },
     {
@@ -248,6 +244,11 @@ export default function ChannelsListPage() {
     },
   ];
 
+  // 统计健康状态数量
+  const healthyCount = mockData.filter(d => d.health_status === 'healthy').length;
+  const degradedCount = mockData.filter(d => d.health_status === 'degraded').length;
+  const failedCount = mockData.filter(d => d.health_status === 'failed').length;
+
   return (
     <div style={{ padding: 24 }}>
       {/* 页面标题 */}
@@ -271,7 +272,7 @@ export default function ChannelsListPage() {
           <Card>
             <Statistic
               title="总渠道数"
-              value={4}
+              value={mockData.length}
               suffix="个"
               valueStyle={{ color: '#1677ff' }}
             />
@@ -281,7 +282,7 @@ export default function ChannelsListPage() {
           <Card>
             <Statistic
               title="已启用"
-              value={3}
+              value={mockData.filter(d => d.status === 'active').length}
               suffix="个"
               valueStyle={{ color: '#52c41a' }}
             />
@@ -291,7 +292,7 @@ export default function ChannelsListPage() {
           <Card>
             <Statistic
               title="健康渠道"
-              value={2}
+              value={healthyCount}
               suffix="个"
               valueStyle={{ color: '#52c41a' }}
             />
@@ -300,10 +301,10 @@ export default function ChannelsListPage() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="警告/异常"
-              value={1}
+              title="异常/维护"
+              value={degradedCount + failedCount}
               suffix="个"
-              valueStyle={{ color: '#faad14' }}
+              valueStyle={{ color: degradedCount + failedCount > 0 ? '#ff4d4f' : '#52c41a' }}
             />
           </Card>
         </Col>
