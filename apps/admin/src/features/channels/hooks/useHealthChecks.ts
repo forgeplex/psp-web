@@ -1,44 +1,44 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  getHealthChecks,
-  getHealthCheckDetail,
-  triggerHealthCheck,
-  getChannelHealthStatus,
-} from '../api/adapter';
-import type { ListHealthChecksParams, TriggerHealthCheckRequest } from '@psp/shared';
+import { useQuery } from '@tanstack/react-query';
+import { stubHealthChecks } from '../data/stub';
+import type { HealthCheck } from '../types/domain';
 
-const HEALTH_KEY = 'health-checks';
+// Query keys
+export const healthKeys = {
+  all: ['health-checks'] as const,
+  lists: () => [...healthKeys.all, 'list'] as const,
+  byChannel: (channelId: string) => [...healthKeys.all, 'channel', channelId] as const,
+};
 
-export function useHealthChecks(params?: ListHealthChecksParams) {
+// Stub API - 等待真实 API
+async function fetchHealthChecks(): Promise<HealthCheck[]> {
+  // TODO: Replace with real API call
+  return Promise.resolve(stubHealthChecks);
+}
+
+async function fetchHealthChecksByChannel(channelId: string): Promise<HealthCheck[]> {
+  // TODO: Replace with real API call
+  return Promise.resolve(stubHealthChecks.filter(h => h.channel_id === channelId));
+}
+
+// ==================== Queries ====================
+
+/**
+ * 获取健康检查列表
+ */
+export function useHealthChecks() {
   return useQuery({
-    queryKey: [HEALTH_KEY, params],
-    queryFn: () => getHealthChecks(params),
+    queryKey: healthKeys.lists(),
+    queryFn: fetchHealthChecks,
   });
 }
 
-export function useHealthCheckDetail(id: string) {
+/**
+ * 获取指定渠道的健康检查
+ */
+export function useChannelHealthChecks(channelId: string) {
   return useQuery({
-    queryKey: [HEALTH_KEY, id],
-    queryFn: () => getHealthCheckDetail(id),
-    enabled: !!id,
-  });
-}
-
-export function useTriggerHealthCheck() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: triggerHealthCheck,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [HEALTH_KEY] });
-    },
-  });
-}
-
-export function useChannelHealthStatus(channelId: string) {
-  return useQuery({
-    queryKey: [HEALTH_KEY, 'status', channelId],
-    queryFn: () => getChannelHealthStatus(channelId),
+    queryKey: healthKeys.byChannel(channelId),
+    queryFn: () => fetchHealthChecksByChannel(channelId),
     enabled: !!channelId,
-    refetchInterval: 30000, // 30s 自动刷新
   });
 }

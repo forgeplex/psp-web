@@ -1,15 +1,15 @@
 import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Spin, Alert } from 'antd';
-import { ChannelsPage } from '../../../features/channels/pages/ChannelsPage';
-import { useChannels } from '../../../features/channels/hooks/useChannels';
+import { ProvidersPage } from '../../../features/channels/pages/ProvidersPage';
+import { useProviders } from '../../../features/channels/hooks/useProviders';
 
-export const Route = createFileRoute('/_authenticated/providers/channels')({
-  component: ProvidersChannelsRoute,
+export const Route = createFileRoute('/_authenticated/channels/providers')({
+  component: ProvidersRoute,
 });
 
-function ProvidersChannelsRoute() {
-  const { data, isLoading, error } = useChannels();
+function ProvidersRoute() {
+  const { data, isLoading, error } = useProviders();
 
   if (isLoading) {
     return (
@@ -32,5 +32,5 @@ function ProvidersChannelsRoute() {
     );
   }
 
-  return <ChannelsPage title="Provider Channels" data={data?.items ?? []} />;
+  return <ProvidersPage data={data ?? []} />;
 }

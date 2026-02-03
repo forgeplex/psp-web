@@ -1,9 +1,16 @@
-import type { Channel } from '../types/domain';
+import type { Channel, ChannelLimits } from '../types/domain';
 import { stubChannels } from '../data/stub';
 
 // TODO(openapi): Replace with real API calls + OpenAPI types
 
 let channels: Channel[] = [...stubChannels];
+
+const defaultLimits: ChannelLimits = {
+  min_amount: 1,
+  max_amount: 1000000,
+  daily_limit: 10000000,
+  monthly_limit: 100000000,
+};
 
 export type ChannelListResponse = {
   items: Channel[];
@@ -51,16 +58,17 @@ export async function getChannel(channelId: string): Promise<Channel | undefined
 export async function createChannel(payload: Partial<Channel>): Promise<Channel> {
   const next: Channel = {
     id: `chn-${Math.random().toString(36).slice(2, 8)}`,
-    tenant_id: payload.tenant_id ?? 'tenant-001',
-    provider_id: payload.provider_id ?? 'prov-001',
     code: payload.code ?? 'new-channel',
     name: payload.name ?? 'New Channel',
-    description: payload.description ?? null,
+    description: payload.description,
+    provider_id: payload.provider_id ?? 'prov-001',
+    provider_name: payload.provider_name ?? 'Unknown Provider',
     type: payload.type ?? 'payment',
     status: payload.status ?? 'inactive',
     priority: payload.priority ?? 100,
     health_status: payload.health_status ?? 'unknown',
-    limits: payload.limits ?? {},
+    limits: payload.limits ?? { ...defaultLimits },
+    config: payload.config ?? {},
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

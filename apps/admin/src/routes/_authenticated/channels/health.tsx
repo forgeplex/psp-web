@@ -1,19 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { Spin, Alert } from 'antd';
 import { HealthChecksPage } from '../../../features/channels/pages/HealthChecksPage';
-import type { HealthCheck } from '../../../features/channels/types/domain';
-import { getHealthChecks } from '../../../features/channels/api/adapter';
+import { useHealthChecks } from '../../../features/channels/hooks/useHealthChecks';
 
 export const Route = createFileRoute('/_authenticated/channels/health')({
-  component: ChannelsHealthRoute,
+  component: HealthChecksRoute,
 });
 
-function ChannelsHealthRoute() {
-  const [data, setData] = useState<HealthCheck[]>([]);
+function HealthChecksRoute() {
+  const { data, isLoading, error } = useHealthChecks();
 
-  useEffect(() => {
-    void getHealthChecks().then(setData);
-  }, []);
+  if (isLoading) {
+    return (
+      <div style={{ padding: 24, textAlign: 'center' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-  return <HealthChecksPage data={data} />;
+  if (error) {
+    return (
+      <div style={{ padding: 24 }}>
+        <Alert
+          message="加载失败"
+          description={error.message}
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  }
+
+  return <HealthChecksPage data={data ?? []} />;
 }

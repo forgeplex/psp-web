@@ -9,18 +9,19 @@ interface HealthChecksPageProps {
 
 export function HealthChecksPage({ data }: HealthChecksPageProps) {
   const columns = [
-    { title: 'Channel', dataIndex: 'channel_id', key: 'channel_id' },
+    { title: 'Channel', dataIndex: 'channel_name', key: 'channel_name' },
     {
-      title: 'Result',
-      dataIndex: 'result',
-      key: 'result',
-      render: (value: HealthCheck['result']) => (
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (value: HealthCheck['status']) => (
         <Tag color={value === 'healthy' ? 'green' : value === 'degraded' ? 'orange' : 'red'}>
           {value}
         </Tag>
       ),
     },
-    { title: 'Latency(ms)', dataIndex: 'latency_ms', key: 'latency_ms' },
+    { title: 'Response Time(ms)', dataIndex: 'response_time_ms', key: 'response_time_ms' },
+    { title: 'Check Type', dataIndex: 'check_type', key: 'check_type' },
   ];
 
   return (

@@ -1,20 +1,44 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProviders, getProviderDetail } from '../api/adapter';
-import type { ListProvidersParams } from '@psp/shared';
+import { stubProviders } from '../data/stub';
+import type { Provider } from '../types/domain';
 
-const PROVIDERS_KEY = 'providers';
+// Query keys
+export const providerKeys = {
+  all: ['providers'] as const,
+  lists: () => [...providerKeys.all, 'list'] as const,
+  detail: (id: string) => [...providerKeys.all, 'detail', id] as const,
+};
 
-export function useProviders(params?: ListProvidersParams) {
+// Stub API - 等待真实 API
+async function fetchProviders(): Promise<Provider[]> {
+  // TODO: Replace with real API call
+  return Promise.resolve(stubProviders);
+}
+
+async function fetchProvider(id: string): Promise<Provider | undefined> {
+  // TODO: Replace with real API call
+  return Promise.resolve(stubProviders.find(p => p.id === id));
+}
+
+// ==================== Queries ====================
+
+/**
+ * 获取提供商列表
+ */
+export function useProviders() {
   return useQuery({
-    queryKey: [PROVIDERS_KEY, params],
-    queryFn: () => getProviders(params),
+    queryKey: providerKeys.lists(),
+    queryFn: fetchProviders,
   });
 }
 
-export function useProviderDetail(id: string) {
+/**
+ * 获取提供商详情
+ */
+export function useProvider(id: string) {
   return useQuery({
-    queryKey: [PROVIDERS_KEY, id],
-    queryFn: () => getProviderDetail(id),
+    queryKey: providerKeys.detail(id),
+    queryFn: () => fetchProvider(id),
     enabled: !!id,
   });
 }

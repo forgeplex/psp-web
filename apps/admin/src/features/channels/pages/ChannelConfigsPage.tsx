@@ -1,15 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { Card, Table, Tag, Typography } from 'antd';
 import { PageHeader } from '@psp/ui';
-import type { ChannelConfigMatrix } from '../types/domain';
-import type { ChannelConfigFieldStub } from '../types/stub/channel-configs';
-import { getChannelConfigMatrices } from '../api/adapter';
+import type { Channel } from '../types/domain';
+import { stubChannels } from '../data/stub';
 
-interface ChannelConfigRow extends ChannelConfigFieldStub {
+interface ChannelConfigRow {
   channel_id: string;
   channel_name: string;
-  confirm_required: boolean;
-  audit_required: boolean;
+  config_key: string;
+  config_value: string;
   updated_at: string;
 }
 
@@ -17,86 +16,43 @@ const booleanTag = (value: boolean, label: string) => (
   <Tag color={value ? 'green' : 'default'}>{label}</Tag>
 );
 
-export function ChannelConfigsPage() {
-  const [data, setData] = useState<ChannelConfigMatrix[]>([]);
-  const [loading, setLoading] = useState(false);
+// Stub data for channel configs
+const stubConfigRows: ChannelConfigRow[] = stubChannels.flatMap((channel) => [
+  {
+    channel_id: channel.id,
+    channel_name: channel.name,
+    config_key: 'api_endpoint',
+    config_value: 'https://api.stripe.com/v1',
+    updated_at: channel.updated_at,
+  },
+  {
+    channel_id: channel.id,
+    channel_name: channel.name,
+    config_key: 'timeout_ms',
+    config_value: '30000',
+    updated_at: channel.updated_at,
+  },
+]);
 
-  useEffect(() => {
-    setLoading(true);
-    getChannelConfigMatrices()
-      .then(setData)
-      .finally(() => setLoading(false));
-  }, []);
+interface ChannelConfigsPageProps {
+  data?: Channel[];
+}
 
-  const rows = useMemo<ChannelConfigRow[]>(
-    () =>
-      data.flatMap((matrix) =>
-        matrix.fields.map((field) => ({
-          ...field,
-          channel_id: matrix.channel_id,
-          channel_name: matrix.channel_name,
-          confirm_required: matrix.confirm_required,
-          audit_required: matrix.audit_required,
-          updated_at: matrix.updated_at,
-        })),
-      ),
-    [data],
-  );
-
+export function ChannelConfigsPage({ data }: ChannelConfigsPageProps) {
   return (
     <div>
-      <PageHeader title="Channel Configs" subtitle="配置字段矩阵（stub）" />
+      <PageHeader title="Channel Configs" subtitle="渠道配置管理" />
       <Card style={{ borderRadius: 8 }}>
         <Table
-          rowKey={(record) => `${record.channel_id}-${record.key}`}
-          loading={loading}
-          dataSource={rows}
+          rowKey={(record) => `${record.channel_id}-${record.config_key}`}
+          dataSource={stubConfigRows}
           columns={[
             { title: 'Channel', dataIndex: 'channel_name', key: 'channel_name' },
-            { title: '字段', dataIndex: 'label', key: 'label' },
-            { title: 'Key', dataIndex: 'key', key: 'key' },
-            { title: '类型', dataIndex: 'type', key: 'type' },
-            {
-              title: '必填',
-              dataIndex: 'required',
-              key: 'required',
-              render: (value: boolean) => booleanTag(value, value ? '是' : '否'),
-            },
-            {
-              title: '掩码',
-              dataIndex: 'masked',
-              key: 'masked',
-              render: (value: boolean) => booleanTag(value, value ? 'Mask' : 'No'),
-            },
-            {
-              title: 'W-only',
-              dataIndex: 'write_only',
-              key: 'write_only',
-              render: (value: boolean) => booleanTag(value, value ? 'Write' : 'Read'),
-            },
-            { title: 'PATCH', dataIndex: 'patch_strategy', key: 'patch_strategy' },
-            {
-              title: '确认',
-              dataIndex: 'confirm_required',
-              key: 'confirm_required',
-              render: (value: boolean) => booleanTag(value, value ? '需要' : '无需'),
-            },
-            {
-              title: '审计',
-              dataIndex: 'audit_required',
-              key: 'audit_required',
-              render: (value: boolean) => booleanTag(value, value ? '需要' : '无需'),
-            },
+            { title: 'Config Key', dataIndex: 'config_key', key: 'config_key' },
+            { title: 'Value', dataIndex: 'config_value', key: 'config_value' },
+            { title: 'Updated', dataIndex: 'updated_at', key: 'updated_at' },
           ]}
           pagination={false}
-          expandable={{
-            expandedRowRender: (record) => (
-              <Typography.Text type="secondary">
-                {record.description || '暂无描述'}
-              </Typography.Text>
-            ),
-            rowExpandable: (record) => Boolean(record.description),
-          }}
         />
       </Card>
     </div>
