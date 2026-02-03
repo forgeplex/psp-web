@@ -1,4 +1,5 @@
 // Domain models for Channels module
+// NON-FROZEN: stub types only, to be replaced by OpenAPI v0.9 codegen
 // TODO(openapi): reconcile with generated types once v0.9 spec is available
 
 import type { ProviderStub } from './stub/providers';
