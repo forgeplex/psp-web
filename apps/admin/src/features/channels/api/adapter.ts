@@ -1,23 +1,37 @@
 // Adapter layer to isolate API shape from domain models
 // TODO(openapi): replace stub data sources with real API calls
 
-import type { Channel, HealthCheck, Provider, RoutingStrategy } from '../types/domain';
-import { stubChannels, stubHealthChecks, stubProviders, stubRoutingStrategies } from '../data/stub';
+import type {
+  Channel,
+  HealthCheck,
+  Provider,
+  RoutingStrategy,
+  ChannelConfigMatrix,
+  RoutingRuleSpec,
+} from '../types/domain';
+import {
+  stubHealthChecks,
+  stubProviders,
+  stubRoutingStrategies,
+  stubChannelConfigMatrices,
+  stubRoutingRuleSpecs,
+} from '../data/stub';
+import { getChannel, listChannels } from './channelsApi';
 
 export async function getProviders(): Promise<Provider[]> {
   return stubProviders;
 }
 
 export async function getChannels(): Promise<Channel[]> {
-  return stubChannels;
+  return listChannels();
 }
 
 export async function getChannelsByProvider(providerId: string): Promise<Channel[]> {
-  return stubChannels.filter((item) => item.provider_id === providerId);
+  return listChannels({ providerId });
 }
 
 export async function getChannelDetail(channelId: string): Promise<Channel | undefined> {
-  return stubChannels.find((item) => item.id === channelId);
+  return getChannel(channelId);
 }
 
 export async function getRoutingStrategies(): Promise<RoutingStrategy[]> {
@@ -27,4 +41,12 @@ export async function getRoutingStrategies(): Promise<RoutingStrategy[]> {
 export async function getHealthChecks(channelId?: string): Promise<HealthCheck[]> {
   if (!channelId) return stubHealthChecks;
   return stubHealthChecks.filter((item) => item.channel_id === channelId);
+}
+
+export async function getChannelConfigMatrices(): Promise<ChannelConfigMatrix[]> {
+  return stubChannelConfigMatrices;
+}
+
+export async function getRoutingRuleSpecs(): Promise<RoutingRuleSpec[]> {
+  return stubRoutingRuleSpecs;
 }

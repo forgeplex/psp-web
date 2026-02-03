@@ -1,19 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { ChannelsPage } from '../../features/channels/pages/ChannelsPage';
-import type { Channel } from '../../features/channels/types/domain';
-import { getChannels } from '../../features/channels/api/adapter';
+import React, { useMemo } from 'react';
+import { createFileRoute, Outlet, useNavigate, useRouterState } from '@tanstack/react-router';
+import { Tabs } from 'antd';
 
 export const Route = createFileRoute('/_authenticated/channels')({
-  component: ChannelsRoute,
+  component: ChannelsLayout,
 });
 
-function ChannelsRoute() {
-  const [data, setData] = useState<Channel[]>([]);
+function ChannelsLayout() {
+  const navigate = useNavigate();
+  const routerState = useRouterState();
+  const currentPath = routerState.location.pathname;
 
-  useEffect(() => {
-    void getChannels().then(setData);
-  }, []);
+  const tabItems = useMemo(
+    () => [
+      { key: '/channels', label: '通道列表' },
+      { key: '/channels/channel-configs', label: 'Channel Configs' },
+      { key: '/channels/routing-rules', label: 'Routing Rules JSON' },
+      { key: '/channels/strategy', label: 'Routing Strategies' },
+      { key: '/channels/health', label: 'Health Checks' },
+    ],
+    [],
+  );
 
-  return <ChannelsPage data={data} />;
+  const activeKey =
+    tabItems
+      .filter((item) => currentPath === item.key || currentPath.startsWith(`${item.key}/`))
+      .sort((a, b) => b.key.length - a.key.length)[0]?.key ??
+    '/channels';
+
+  return (
+    <div>
+      <Tabs
+        activeKey={activeKey}
+        items={tabItems}
+        onChange={(key) => navigate({ to: key })}
+      />
+      <Outlet />
+    </div>
+  );
 }
