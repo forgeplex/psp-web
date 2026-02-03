@@ -98,7 +98,7 @@ export interface TimelineNode {
   operator?: string;        // 操作人
 }
 
-export interface TransactionTimeline {
+export interface TransactionTimelineData {
   currentStatus: TransactionStatus;
   nodes: TimelineNode[];
 }

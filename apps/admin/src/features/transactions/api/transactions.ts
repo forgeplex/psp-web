@@ -1,7 +1,7 @@
 import { apiClient } from '@psp/api';
 import type {
   Transaction,
-  TransactionTimeline,
+  TransactionTimelineData,
   TransactionHistoryItem,
   ListTransactionsParams,
   ListTransactionsResponse,
@@ -64,13 +64,13 @@ export async function getTransactionHistory(
  * 
  * Note: 此端点 BE 14:00 前完成，目前先用 mock 数据开发 UI
  */
-export async function getTransactionTimeline(id: string): Promise<TransactionTimeline> {
+export async function getTransactionTimeline(id: string): Promise<TransactionTimelineData> {
   const response = await apiClient.get(`/api/v1/transactions/${id}/timeline`);
   return response.data;
 }
 
 // Mock timeline for development (14:00 前使用)
-export function getMockTransactionTimeline(): TransactionTimeline {
+export function getMockTransactionTimeline(): TransactionTimelineData {
   return {
     currentStatus: 'COMPLETED',
     nodes: [
