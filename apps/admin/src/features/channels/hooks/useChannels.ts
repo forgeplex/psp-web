@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Channel, ChannelStatus } from '../types/domain';
-import * as channelsApi from '../api/channelsApi';
+import { channelsApi } from '../api/realApi';
 
 const CHANNELS_QUERY_KEY = 'channels';
 
@@ -24,15 +24,15 @@ interface ChannelListResponse {
 export function useChannels(params: ChannelListParams = {}) {
   return useQuery<ChannelListResponse>({
     queryKey: [CHANNELS_QUERY_KEY, params],
-    queryFn: () => channelsApi.listChannels(params),
+    queryFn: () => channelsApi.list(params),
   });
 }
 
 // Get single channel detail
 export function useChannel(channelId: string | undefined) {
-  return useQuery<Channel | undefined>({
+  return useQuery<Channel>({
     queryKey: [CHANNELS_QUERY_KEY, 'detail', channelId],
-    queryFn: () => channelsApi.getChannel(channelId!),
+    queryFn: () => channelsApi.get(channelId!),
     enabled: !!channelId,
   });
 }
@@ -42,7 +42,7 @@ export function useCreateChannel() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (payload: Partial<Channel>) => channelsApi.createChannel(payload),
+    mutationFn: (payload: Partial<Channel>) => channelsApi.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY] });
     },
@@ -55,7 +55,7 @@ export function useUpdateChannel() {
   
   return useMutation({
     mutationFn: ({ channelId, payload }: { channelId: string; payload: Partial<Channel> }) =>
-      channelsApi.updateChannel(channelId, payload),
+      channelsApi.update(channelId, payload),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY, 'detail', variables.channelId] });
@@ -69,7 +69,7 @@ export function useToggleChannel() {
   
   return useMutation({
     mutationFn: ({ channelId, status }: { channelId: string; status: ChannelStatus }) =>
-      channelsApi.setChannelStatus(channelId, status),
+      channelsApi.setStatus(channelId, status),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY, 'detail', variables.channelId] });
@@ -82,7 +82,7 @@ export function useDeleteChannel() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (channelId: string) => channelsApi.deleteChannel(channelId),
+    mutationFn: (channelId: string) => channelsApi.delete(channelId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [CHANNELS_QUERY_KEY] });
     },
