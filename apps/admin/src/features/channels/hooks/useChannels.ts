@@ -1,7 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
-import type { ListChannelsParams } from '../types/stub/channels';
-import * as api from '../api/channelsApi';
+import type { ListChannelsParams, CreateChannelRequest, UpdateChannelRequest, ToggleChannelRequest } from '@psp/shared';
+import {
+  getChannels,
+  getChannelDetail,
+  createChannel,
+  updateChannel,
+  toggleChannel,
+} from '../api/adapter';
 
 // Query keys
 export const channelKeys = {
@@ -20,7 +26,7 @@ export const channelKeys = {
 export function useChannels(params: ListChannelsParams = {}) {
   return useQuery({
     queryKey: channelKeys.list(params),
-    queryFn: () => api.listChannels(params),
+    queryFn: () => getChannels(params),
   });
 }
 
@@ -30,7 +36,7 @@ export function useChannels(params: ListChannelsParams = {}) {
 export function useChannel(id: string) {
   return useQuery({
     queryKey: channelKeys.detail(id),
-    queryFn: () => api.getChannel(id),
+    queryFn: () => getChannelDetail(id),
     enabled: !!id,
   });
 }
@@ -44,7 +50,7 @@ export function useCreateChannel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.createChannel,
+    mutationFn: (data: CreateChannelRequest) => createChannel(data),
     onSuccess: () => {
       message.success('渠道创建成功');
       queryClient.invalidateQueries({ queryKey: channelKeys.lists() });
@@ -62,8 +68,8 @@ export function useUpdateChannel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: Parameters<typeof api.updateChannel>[1] }) =>
-      api.updateChannel(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: UpdateChannelRequest }) =>
+      updateChannel(id, payload),
     onSuccess: (_, { id }) => {
       message.success('渠道更新成功');
       queryClient.invalidateQueries({ queryKey: channelKeys.detail(id) });
@@ -82,8 +88,8 @@ export function useSetChannelStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: Parameters<typeof api.setChannelStatus>[1] }) =>
-      api.setChannelStatus(id, status),
+    mutationFn: ({ id, status }: { id: string; status: ToggleChannelRequest['status'] }) =>
+      toggleChannel(id, { status }),
     onSuccess: (_, { id }) => {
       message.success('状态更新成功');
       queryClient.invalidateQueries({ queryKey: channelKeys.detail(id) });

@@ -8,7 +8,8 @@ function getBaseURL(): string {
       return win.__PSP_API_BASE_URL__;
     }
   }
-  return '';
+  const envBase = import.meta.env?.VITE_API_BASE_URL;
+  return envBase ?? '';
 }
 
 export const apiClient = axios.create({
