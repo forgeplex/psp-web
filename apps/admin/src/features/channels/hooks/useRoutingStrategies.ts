@@ -12,7 +12,6 @@ import type {
   ListRoutingStrategiesParams,
   CreateRoutingStrategyRequest,
   UpdateRoutingStrategyRequest,
-  MoveRoutingStrategyRequest,
 } from '@psp/shared';
 
 const ROUTING_KEY = 'routing-strategies';
@@ -63,11 +62,20 @@ export function useDeleteRoutingStrategy() {
   });
 }
 
-// API Spec v1.0: POST /:id/move - 交换优先级
+// QA 验收: reorder API 未实现，使用带 priority 的 fallback
+// TODO: 等待 BE 实现后移除 fallback
+interface MoveStrategyData {
+  targetId: string;
+  priority: number;  // 新增：用于 fallback 更新
+}
+
 export function useMoveRoutingStrategy(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: MoveRoutingStrategyRequest) => moveRoutingStrategy(id, data),
+    mutationFn: (data: MoveStrategyData) => moveRoutingStrategy(id, {
+      targetId: data.targetId,
+      priority: data.priority
+    } as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
     },
