@@ -33,16 +33,13 @@ import { Route as AuthenticatedProvidersIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedChannelsIndexRouteImport } from './routes/_authenticated/channels/index'
 import { Route as AuthenticatedTransactionsIdRouteImport } from './routes/_authenticated/transactions/$id'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
-import { Route as AuthenticatedProvidersProviderIdChannelsRouteImport } from './routes/_authenticated/providers/channels'
+import { Route as AuthenticatedProvidersChannelsRouteImport } from './routes/_authenticated/providers/channels'
 import { Route as AuthenticatedMerchantsDashboardRouteImport } from './routes/_authenticated/merchants/dashboard'
 import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
-<<<<<<< HEAD
 import { Route as AuthenticatedChannelsStrategyRouteImport } from './routes/_authenticated/channels/strategy'
 import { Route as AuthenticatedChannelsRoutingRulesRouteImport } from './routes/_authenticated/channels/routing-rules'
 import { Route as AuthenticatedChannelsHealthRouteImport } from './routes/_authenticated/channels/health'
 import { Route as AuthenticatedChannelsChannelConfigsRouteImport } from './routes/_authenticated/channels/channel-configs'
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 import { Route as AuthenticatedChannelsChannelIdRouteImport } from './routes/_authenticated/channels.$channelId'
 import { Route as AuthenticatedProvidersProviderIdChannelsRouteImport } from './routes/_authenticated/providers.$providerId.channels'
 
@@ -174,8 +171,8 @@ const AuthenticatedSettingsTrustedDevicesRoute =
     path: '/trusted-devices',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
-const AuthenticatedProvidersProviderIdChannelsRoute =
-  AuthenticatedProvidersProviderIdChannelsRouteImport.update({
+const AuthenticatedProvidersChannelsRoute =
+  AuthenticatedProvidersChannelsRouteImport.update({
     id: '/channels',
     path: '/channels',
     getParentRoute: () => AuthenticatedProvidersRoute,
@@ -192,7 +189,6 @@ const AuthenticatedMerchantsMerchantIdRoute =
     path: '/$merchantId',
     getParentRoute: () => AuthenticatedMerchantsRoute,
   } as any)
-<<<<<<< HEAD
 const AuthenticatedChannelsStrategyRoute =
   AuthenticatedChannelsStrategyRouteImport.update({
     id: '/strategy',
@@ -217,8 +213,6 @@ const AuthenticatedChannelsChannelConfigsRoute =
     path: '/channel-configs',
     getParentRoute: () => AuthenticatedChannelsRoute,
   } as any)
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 const AuthenticatedChannelsChannelIdRoute =
   AuthenticatedChannelsChannelIdRouteImport.update({
     id: '/$channelId',
@@ -251,16 +245,13 @@ export interface FileRoutesByFullPath {
   '/mfa/setup': typeof MfaSetupRoute
   '/mfa/verify': typeof MfaVerifyRoute
   '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
-<<<<<<< HEAD
   '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/channels/health': typeof AuthenticatedChannelsHealthRoute
   '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/channels/': typeof AuthenticatedChannelsIndexRoute
@@ -274,14 +265,9 @@ export interface FileRoutesByTo {
   '/version': typeof VersionRoute
   '/agents': typeof AuthenticatedAgentsRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
-<<<<<<< HEAD
-=======
-  '/channels': typeof AuthenticatedChannelsRouteWithChildren
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
   '/merchants': typeof AuthenticatedMerchantsRouteWithChildren
   '/monitoring': typeof AuthenticatedMonitoringRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
-  '/providers': typeof AuthenticatedProvidersRouteWithChildren
   '/rates': typeof AuthenticatedRatesRoute
   '/risk': typeof AuthenticatedRiskRoute
   '/settlements': typeof AuthenticatedSettlementsRoute
@@ -289,16 +275,13 @@ export interface FileRoutesByTo {
   '/mfa/verify': typeof MfaVerifyRoute
   '/': typeof AuthenticatedIndexRoute
   '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
-<<<<<<< HEAD
   '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/channels/health': typeof AuthenticatedChannelsHealthRoute
   '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/channels': typeof AuthenticatedChannelsIndexRoute
@@ -328,16 +311,13 @@ export interface FileRoutesById {
   '/mfa/verify': typeof MfaVerifyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
-<<<<<<< HEAD
   '/_authenticated/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/_authenticated/channels/health': typeof AuthenticatedChannelsHealthRoute
   '/_authenticated/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/_authenticated/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
   '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/_authenticated/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/_authenticated/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/_authenticated/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/_authenticated/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/_authenticated/channels/': typeof AuthenticatedChannelsIndexRoute
@@ -367,13 +347,10 @@ export interface FileRouteTypes {
     | '/mfa/setup'
     | '/mfa/verify'
     | '/channels/$channelId'
-<<<<<<< HEAD
     | '/channels/channel-configs'
     | '/channels/health'
     | '/channels/routing-rules'
     | '/channels/strategy'
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
     | '/providers/channels'
@@ -393,7 +370,6 @@ export interface FileRouteTypes {
     | '/merchants'
     | '/monitoring'
     | '/notifications'
-    | '/providers'
     | '/rates'
     | '/risk'
     | '/settlements'
@@ -401,13 +377,10 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/'
     | '/channels/$channelId'
-<<<<<<< HEAD
     | '/channels/channel-configs'
     | '/channels/health'
     | '/channels/routing-rules'
     | '/channels/strategy'
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
     | '/merchants/$merchantId'
     | '/merchants/dashboard'
     | '/providers/channels'
@@ -439,13 +412,10 @@ export interface FileRouteTypes {
     | '/mfa/verify'
     | '/_authenticated/'
     | '/_authenticated/channels/$channelId'
-<<<<<<< HEAD
     | '/_authenticated/channels/channel-configs'
     | '/_authenticated/channels/health'
     | '/_authenticated/channels/routing-rules'
     | '/_authenticated/channels/strategy'
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
     | '/_authenticated/merchants/$merchantId'
     | '/_authenticated/merchants/dashboard'
     | '/_authenticated/providers/channels'
@@ -640,7 +610,7 @@ declare module '@tanstack/react-router' {
       id: '/_authenticated/providers/channels'
       path: '/channels'
       fullPath: '/providers/channels'
-      preLoaderRoute: typeof AuthenticatedProvidersProviderIdChannelsRouteImport
+      preLoaderRoute: typeof AuthenticatedProvidersChannelsRouteImport
       parentRoute: typeof AuthenticatedProvidersRoute
     }
     '/_authenticated/merchants/dashboard': {
@@ -657,7 +627,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMerchantsMerchantIdRouteImport
       parentRoute: typeof AuthenticatedMerchantsRoute
     }
-<<<<<<< HEAD
     '/_authenticated/channels/strategy': {
       id: '/_authenticated/channels/strategy'
       path: '/strategy'
@@ -686,8 +655,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChannelsChannelConfigsRouteImport
       parentRoute: typeof AuthenticatedChannelsRoute
     }
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
     '/_authenticated/channels/$channelId': {
       id: '/_authenticated/channels/$channelId'
       path: '/$channelId'
@@ -707,19 +674,15 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedChannelsRouteChildren {
   AuthenticatedChannelsChannelIdRoute: typeof AuthenticatedChannelsChannelIdRoute
-<<<<<<< HEAD
   AuthenticatedChannelsChannelConfigsRoute: typeof AuthenticatedChannelsChannelConfigsRoute
   AuthenticatedChannelsHealthRoute: typeof AuthenticatedChannelsHealthRoute
   AuthenticatedChannelsRoutingRulesRoute: typeof AuthenticatedChannelsRoutingRulesRoute
   AuthenticatedChannelsStrategyRoute: typeof AuthenticatedChannelsStrategyRoute
   AuthenticatedChannelsIndexRoute: typeof AuthenticatedChannelsIndexRoute
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 }
 
 const AuthenticatedChannelsRouteChildren: AuthenticatedChannelsRouteChildren = {
   AuthenticatedChannelsChannelIdRoute: AuthenticatedChannelsChannelIdRoute,
-<<<<<<< HEAD
   AuthenticatedChannelsChannelConfigsRoute:
     AuthenticatedChannelsChannelConfigsRoute,
   AuthenticatedChannelsHealthRoute: AuthenticatedChannelsHealthRoute,
@@ -727,8 +690,6 @@ const AuthenticatedChannelsRouteChildren: AuthenticatedChannelsRouteChildren = {
     AuthenticatedChannelsRoutingRulesRoute,
   AuthenticatedChannelsStrategyRoute: AuthenticatedChannelsStrategyRoute,
   AuthenticatedChannelsIndexRoute: AuthenticatedChannelsIndexRoute,
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 }
 
 const AuthenticatedChannelsRouteWithChildren =
@@ -754,21 +715,15 @@ const AuthenticatedMerchantsRouteWithChildren =
   )
 
 interface AuthenticatedProvidersRouteChildren {
-  AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
-<<<<<<< HEAD
+  AuthenticatedProvidersChannelsRoute: typeof AuthenticatedProvidersChannelsRoute
   AuthenticatedProvidersIndexRoute: typeof AuthenticatedProvidersIndexRoute
   AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 }
 
 const AuthenticatedProvidersRouteChildren: AuthenticatedProvidersRouteChildren =
   {
-<<<<<<< HEAD
-    AuthenticatedProvidersProviderIdChannelsRoute: AuthenticatedProvidersProviderIdChannelsRoute,
+    AuthenticatedProvidersChannelsRoute: AuthenticatedProvidersChannelsRoute,
     AuthenticatedProvidersIndexRoute: AuthenticatedProvidersIndexRoute,
-=======
->>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
     AuthenticatedProvidersProviderIdChannelsRoute:
       AuthenticatedProvidersProviderIdChannelsRoute,
   }
