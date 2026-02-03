@@ -3,7 +3,6 @@ export { TransactionListPage } from './pages/TransactionListPage';
 export { TransactionDetailPage } from './pages/TransactionDetailPage';
 
 // Components
-export { TransactionStatusBadge } from './components/TransactionStatusBadge';
 export { TransactionStatusTag } from './components/TransactionStatusTag';
 export { TransactionTimeline } from './components/TransactionTimeline';
 export { TransactionFilters } from './components/TransactionFilters';

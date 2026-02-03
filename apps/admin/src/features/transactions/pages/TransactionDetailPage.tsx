@@ -4,7 +4,7 @@ import { Card, Tabs, Button, Space, Tag, Descriptions, Spin } from 'antd';
 import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
 import { TransactionTimeline } from '../components/TransactionTimeline';
-import { useTransactionTimeline } from '../hooks/useTimeline';
+import { useTransactionTimeline } from '../hooks/useTransactions';
 
 export const TransactionDetailPage: React.FC = () => {
   const { transactionId } = useParams({ from: '/transactions/$transactionId' });
