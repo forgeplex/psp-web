@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useMemo } from 'react';
 import { createFileRoute, Outlet, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Tabs } from 'antd';
@@ -38,4 +39,24 @@ function ChannelsLayout() {
       <Outlet />
     </div>
   );
+=======
+import React, { useEffect, useState } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
+import { ChannelsPage } from '../../features/channels/pages/ChannelsPage';
+import type { Channel } from '../../features/channels/types/domain';
+import { getChannels } from '../../features/channels/api/adapter';
+
+export const Route = createFileRoute('/_authenticated/channels')({
+  component: ChannelsRoute,
+});
+
+function ChannelsRoute() {
+  const [data, setData] = useState<Channel[]>([]);
+
+  useEffect(() => {
+    void getChannels().then(setData);
+  }, []);
+
+  return <ChannelsPage data={data} />;
+>>>>>>> d8fb1e2 (feat(channels): pre-execute 骨架、types/stub、adapter、路由就位)
 }
