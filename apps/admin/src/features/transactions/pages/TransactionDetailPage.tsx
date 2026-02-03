@@ -34,8 +34,9 @@ export const TransactionDetailPage: React.FC = () => {
     }
     return (
       <TransactionTimeline
-        transactionId={transactionId}
+        
         nodes={timeline?.nodes || []}
+        loading={isLoading}
       />
     );
   };
