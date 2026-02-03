@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Tabs, Button, Space, Tag, Descriptions, Timeline } from 'antd';
-import { Link } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
+import { Card, Tabs, Button, Space, Tag, Descriptions, Spin } from 'antd';
 import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons';
-import type { TransactionDetailTab } from '../types';
+import { Link } from '@tanstack/react-router';
+import { TransactionTimeline } from '../components/TransactionTimeline';
+import { useTransactionTimeline } from '../hooks/useTimeline';
 
-interface TransactionDetailPageProps {
-  transactionId: string;
-}
-
-export const TransactionDetailPage: React.FC<TransactionDetailPageProps> = ({
-  transactionId,
-}) => {
-  const [activeTab, setActiveTab] = useState<TransactionDetailTab>('overview');
+export const TransactionDetailPage: React.FC = () => {
+  const { transactionId } = useParams({ from: '/transactions/$transactionId' });
+  const [activeTab, setActiveTab] = useState('overview');
+  const { data: timeline, isLoading } = useTransactionTimeline(transactionId);
 
   // 概览 Tab
   const OverviewTab = () => (
@@ -30,16 +28,17 @@ export const TransactionDetailPage: React.FC<TransactionDetailPageProps> = ({
   );
 
   // 时间线 Tab
-  const TimelineTab = () => (
-    <Timeline
-      items={[
-        { children: '交易创建 - 2025-02-03 08:00:00', color: 'green' },
-        { children: '风控检查通过 - 2025-02-03 08:01:00', color: 'green' },
-        { children: '支付处理中 - 2025-02-03 08:02:00', color: 'blue' },
-        { children: '支付成功 - 2025-02-03 08:05:00', color: 'green' },
-      ]}
-    />
-  );
+  const TimelineTab = () => {
+    if (isLoading) {
+      return <Spin tip="加载中..." />;
+    }
+    return (
+      <TransactionTimeline
+        transactionId={transactionId}
+        nodes={timeline?.nodes || []}
+      />
+    );
+  };
 
   // 操作记录 Tab
   const OperationsTab = () => (
@@ -61,7 +60,7 @@ export const TransactionDetailPage: React.FC<TransactionDetailPageProps> = ({
     </Descriptions>
   );
 
-  const tabItems = [
+  const items = [
     { key: 'overview', label: '概览', children: <OverviewTab /> },
     { key: 'timeline', label: '时间线', children: <TimelineTab /> },
     { key: 'operations', label: '操作记录', children: <OperationsTab /> },
@@ -69,25 +68,22 @@ export const TransactionDetailPage: React.FC<TransactionDetailPageProps> = ({
   ];
 
   return (
-    <>
-      {/* 顶部操作栏 */}
-      <Card style={{ marginBottom: 16 }}>
+    <Card
+      title={
         <Space>
           <Link to="/transactions">
-            <Button icon={<ArrowLeftOutlined />}>返回列表</Button>
+            <Button icon={<ArrowLeftOutlined />}>返回</Button>
           </Link>
-          <Button icon={<ReloadOutlined />}>刷新</Button>
+          <span>交易详情</span>
         </Space>
-      </Card>
-
-      {/* 详情 Tabs */}
-      <Card>
-        <Tabs
-          activeKey={activeTab}
-          onChange={(key) => setActiveTab(key as TransactionDetailTab)}
-          items={tabItems}
-        />
-      </Card>
-    </>
+      }
+      extra={
+        <Button icon={<ReloadOutlined />} onClick={() => window.location.reload()}>
+          刷新
+        </Button>
+      }
+    >
+      <Tabs activeKey={activeTab} onChange={setActiveTab} items={items} />
+    </Card>
   );
 };
