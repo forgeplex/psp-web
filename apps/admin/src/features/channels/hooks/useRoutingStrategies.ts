@@ -1,44 +1,75 @@
-import { useQuery } from '@tanstack/react-query';
-import { stubRoutingStrategies } from '../data/stub';
-import type { RoutingStrategy } from '../types/domain';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  getRoutingStrategies,
+  getRoutingStrategyDetail,
+  createRoutingStrategy,
+  updateRoutingStrategy,
+  deleteRoutingStrategy,
+  moveRoutingStrategy,
+} from '../api/adapter';
+import type {
+  RoutingStrategy,
+  ListRoutingStrategiesParams,
+  CreateRoutingStrategyRequest,
+  UpdateRoutingStrategyRequest,
+  MoveRoutingStrategyRequest,
+} from '@psp/shared';
 
-// Query keys
-export const routingKeys = {
-  all: ['routing-strategies'] as const,
-  lists: () => [...routingKeys.all, 'list'] as const,
-  detail: (id: string) => [...routingKeys.all, 'detail', id] as const,
-};
+const ROUTING_KEY = 'routing-strategies';
 
-// Stub API - 等待真实 API
-async function fetchRoutingStrategies(): Promise<RoutingStrategy[]> {
-  // TODO: Replace with real API call
-  return Promise.resolve(stubRoutingStrategies);
-}
-
-async function fetchRoutingStrategy(id: string): Promise<RoutingStrategy | undefined> {
-  // TODO: Replace with real API call
-  return Promise.resolve(stubRoutingStrategies.find(r => r.id === id));
-}
-
-// ==================== Queries ====================
-
-/**
- * 获取路由策略列表
- */
-export function useRoutingStrategies() {
+export function useRoutingStrategies(params?: ListRoutingStrategiesParams) {
   return useQuery({
-    queryKey: routingKeys.lists(),
-    queryFn: fetchRoutingStrategies,
+    queryKey: [ROUTING_KEY, params],
+    queryFn: () => getRoutingStrategies(params),
   });
 }
 
-/**
- * 获取路由策略详情
- */
-export function useRoutingStrategy(id: string) {
+export function useRoutingStrategyDetail(id: string) {
   return useQuery({
-    queryKey: routingKeys.detail(id),
-    queryFn: () => fetchRoutingStrategy(id),
+    queryKey: [ROUTING_KEY, id],
+    queryFn: () => getRoutingStrategyDetail(id),
     enabled: !!id,
+  });
+}
+
+export function useCreateRoutingStrategy() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createRoutingStrategy,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
+    },
+  });
+}
+
+export function useUpdateRoutingStrategy(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: UpdateRoutingStrategyRequest) => updateRoutingStrategy(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY, id] });
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
+    },
+  });
+}
+
+export function useDeleteRoutingStrategy() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteRoutingStrategy,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
+    },
+  });
+}
+
+// API Spec v1.0: POST /:id/move - 交换优先级
+export function useMoveRoutingStrategy(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: MoveRoutingStrategyRequest) => moveRoutingStrategy(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
+    },
   });
 }

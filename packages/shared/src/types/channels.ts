@@ -1,10 +1,14 @@
 // Channels module shared types
-// Based on DBA Schema + Arch API Spec v0.9
+// Based on DBA Schema + Arch API Spec v1.0 (FINAL)
 // NON-FROZEN: will be replaced by openapi-typescript codegen
 
-export type ChannelType = 'payment' | 'payout' | 'combined';
+// API v1.0: inactive/active/maintenance
 export type ChannelStatus = 'inactive' | 'active' | 'maintenance';
+
+// API v1.0: unknown/healthy/degraded/failed
 export type HealthStatus = 'unknown' | 'healthy' | 'degraded' | 'failed';
+
+export type ChannelType = 'payment' | 'payout' | 'combined';
 export type RoutingStrategyStatus = 'active' | 'inactive';
 export type RuleLogic = 'AND' | 'OR';
 export type Operator = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'between';
@@ -12,7 +16,7 @@ export type ProviderStatus = 'active' | 'inactive';
 export type HealthCheckType = 'scheduled' | 'manual' | 'auto_failover';
 export type HealthCheckStatus = 'healthy' | 'degraded' | 'failed';
 
-// Config field types per API Spec v0.9
+// Config field types per API Spec v1.0
 export type ConfigFieldType = 'string' | 'number' | 'enum' | 'boolean' | 'secret';
 
 // Channel types
@@ -44,14 +48,14 @@ export interface Channel {
   updated_at: string;
 }
 
-// Routing Strategy types - API Spec v0.9
+// Routing Strategy types - API Spec v1.0
 export interface RuleCondition {
   field: string;
   operator: Operator;
   value: any;
 }
 
-// API Spec v0.9: 单层 AND 条件
+// API Spec v1.0: 单层 AND 条件
 export interface RoutingRule {
   conditions: RuleCondition[];
   logic: 'AND'; // Sprint 2: 仅支持单层 AND
@@ -120,7 +124,7 @@ export interface ChannelHealthStatus {
   avg_response_ms: number;
 }
 
-// Provider types - API Spec v0.9: ConfigFieldType 5 种类型
+// Provider types
 export interface ProviderConfigField {
   name: string;
   type: ConfigFieldType;
@@ -232,12 +236,9 @@ export interface UpdateRoutingStrategyRequest {
   }>;
 }
 
-// API Spec v0.9: POST /routing-strategies/reorder - 批量排序
-export interface ReorderRoutingStrategiesRequest {
-  items: Array<{
-    id: string;
-    priority: number;
-  }>;
+// API Spec v1.0: POST /:id/move - 交换优先级（避免唯一约束冲突）
+export interface MoveRoutingStrategyRequest {
+  target_priority: number;
 }
 
 export interface ListHealthChecksParams {

@@ -1,6 +1,6 @@
 // Adapter layer for Channels API
 // Isolates API shape from domain models
-// Based on Arch API Spec v0.9
+// Based on Arch API Spec v1.0 (FINAL)
 
 import { apiClient } from '@psp/api';
 import type {
@@ -15,7 +15,7 @@ import type {
   ListRoutingStrategiesParams,
   ListRoutingStrategiesResponse,
   UpdateRoutingStrategyRequest,
-  ReorderRoutingStrategiesRequest,
+  MoveRoutingStrategyRequest,
   HealthCheck,
   ListHealthChecksParams,
   ListHealthChecksResponse,
@@ -43,7 +43,7 @@ export async function createChannel(data: CreateChannelRequest): Promise<Channel
   return response.data.data;
 }
 
-// API Spec v0.9: PATCH /channels/:id
+// API Spec v1.0: PATCH /channels/:id
 export async function updateChannel(id: string, data: UpdateChannelRequest): Promise<Channel> {
   const response = await apiClient.patch(`/channels/${id}`, data);
   return response.data.data;
@@ -53,7 +53,7 @@ export async function deleteChannel(id: string): Promise<void> {
   await apiClient.delete(`/channels/${id}`);
 }
 
-// API Spec v0.9: POST /channels/:id/toggle
+// API Spec v1.0: POST /channels/:id/toggle
 export async function toggleChannel(id: string, data: ToggleChannelRequest): Promise<Channel> {
   const response = await apiClient.post(`/channels/${id}/toggle`, data);
   return response.data.data;
@@ -76,7 +76,7 @@ export async function createRoutingStrategy(data: CreateRoutingStrategyRequest):
   return response.data.data;
 }
 
-// API Spec v0.9: PATCH /routing-strategies/:id
+// API Spec v1.0: PATCH /routing-strategies/:id
 export async function updateRoutingStrategy(id: string, data: UpdateRoutingStrategyRequest): Promise<RoutingStrategy> {
   const response = await apiClient.patch(`/routing-strategies/${id}`, data);
   return response.data.data;
@@ -86,9 +86,9 @@ export async function deleteRoutingStrategy(id: string): Promise<void> {
   await apiClient.delete(`/routing-strategies/${id}`);
 }
 
-// API Spec v0.9: POST /routing-strategies/reorder - 批量排序
-export async function reorderRoutingStrategies(data: ReorderRoutingStrategiesRequest): Promise<void> {
-  await apiClient.post('/routing-strategies/reorder', data);
+// API Spec v1.0: POST /routing-strategies/:id/move - 交换优先级（避免唯一约束冲突）
+export async function moveRoutingStrategy(id: string, data: MoveRoutingStrategyRequest): Promise<void> {
+  await apiClient.post(`/routing-strategies/${id}/move`, data);
 }
 
 // ========== Health Checks API (3 endpoints) ==========
@@ -108,7 +108,7 @@ export async function triggerHealthCheck(data: TriggerHealthCheckRequest): Promi
   return response.data.data;
 }
 
-// API Spec v0.9: GET /channels/:id/health - 轮询健康状态
+// API Spec v1.0: GET /channels/:id/health - 列表缓存 + 详情实时
 export async function getChannelHealthStatus(channelId: string): Promise<ChannelHealthStatus> {
   const response = await apiClient.get(`/channels/${channelId}/health`);
   return response.data.data;
