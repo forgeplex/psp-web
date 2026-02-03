@@ -6,6 +6,9 @@ import {
   updateRoutingStrategy,
   deleteRoutingStrategy,
   moveRoutingStrategy,
+  reorderRoutingStrategies,
+  type MoveRoutingStrategyRequest,
+  type ReorderRoutingStrategyRequest,
 } from '../api/adapter';
 import type {
   RoutingStrategy,
@@ -62,20 +65,22 @@ export function useDeleteRoutingStrategy() {
   });
 }
 
-// QA 验收: reorder API 未实现，使用带 priority 的 fallback
-// TODO: 等待 BE 实现后移除 fallback
-interface MoveStrategyData {
-  targetId: string;
-  priority: number;  // 新增：用于 fallback 更新
-}
-
+// Spec v1.0: POST /:id/move - 交换两个策略优先级
 export function useMoveRoutingStrategy(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: MoveStrategyData) => moveRoutingStrategy(id, {
-      targetId: data.targetId,
-      priority: data.priority
-    } as any),
+    mutationFn: (data: MoveRoutingStrategyRequest) => moveRoutingStrategy(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
+    },
+  });
+}
+
+// 备用：批量 reorder（如果 move 未部署）
+export function useReorderRoutingStrategies() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ReorderRoutingStrategyRequest) => reorderRoutingStrategies(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [ROUTING_KEY] });
     },

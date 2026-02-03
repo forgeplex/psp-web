@@ -15,20 +15,15 @@ import type {
   ListRoutingStrategiesParams,
   ListRoutingStrategiesResponse,
   UpdateRoutingStrategyRequest,
-  MoveRoutingStrategyRequest,
-  HealthCheck,
-  ListHealthChecksParams,
-  ListHealthChecksResponse,
-  TriggerHealthCheckRequest,
-  ChannelHealthStatus,
   Provider,
   ListProvidersParams,
   ListProvidersResponse,
+  ChannelHealthStatus,
 } from '@psp/shared';
 
 const API_PREFIX = '/api/v1';
 
-// ========== Channels API (6 endpoints) ==========
+// ========== Channels API ==========
 
 export async function getChannels(params?: ListChannelsParams): Promise<ListChannelsResponse['data']> {
   const response = await apiClient.get(`${API_PREFIX}/channels`, { params });
@@ -45,7 +40,7 @@ export async function createChannel(data: CreateChannelRequest): Promise<Channel
   return response.data.data;
 }
 
-// QA 验收: PUT /channels/:id (实际使用 PUT 而非 PATCH)
+// QA 验收: PUT /channels/:id
 export async function updateChannel(id: string, data: UpdateChannelRequest): Promise<Channel> {
   const response = await apiClient.put(`${API_PREFIX}/channels/${id}`, data);
   return response.data.data;
@@ -55,14 +50,14 @@ export async function deleteChannel(id: string): Promise<void> {
   await apiClient.delete(`${API_PREFIX}/channels/${id}`);
 }
 
-// QA 验收: PUT /channels/:id/enable 和 PUT /channels/:id/disable (而非 POST toggle)
+// QA 验收: PUT /channels/:id/enable 和 PUT /channels/:id/disable
 export async function toggleChannel(id: string, data: ToggleChannelRequest): Promise<Channel> {
   const action = data.enabled ? 'enable' : 'disable';
   const response = await apiClient.put(`${API_PREFIX}/channels/${id}/${action}`, {});
   return response.data.data;
 }
 
-// ========== Routing Strategies API (5 endpoints) ==========
+// ========== Routing Strategies API ==========
 
 export async function getRoutingStrategies(params?: ListRoutingStrategiesParams): Promise<ListRoutingStrategiesResponse['data']> {
   const response = await apiClient.get(`${API_PREFIX}/routing-strategies`, { params });
@@ -79,7 +74,7 @@ export async function createRoutingStrategy(data: CreateRoutingStrategyRequest):
   return response.data.data;
 }
 
-// QA 验收: PUT /routing-strategies/:id (实际使用 PUT 而非 PATCH)
+// QA 验收: PUT /routing-strategies/:id
 export async function updateRoutingStrategy(id: string, data: UpdateRoutingStrategyRequest): Promise<RoutingStrategy> {
   const response = await apiClient.put(`${API_PREFIX}/routing-strategies/${id}`, data);
   return response.data.data;
@@ -89,48 +84,33 @@ export async function deleteRoutingStrategy(id: string): Promise<void> {
   await apiClient.delete(`${API_PREFIX}/routing-strategies/${id}`);
 }
 
-// QA 验收: reorder API 未实现，临时用 PUT update 模拟
-// TODO: 等待 BE 实现 POST /routing-strategies/reorder
+// Spec v1.0: POST /routing-strategies/:id/move
+// Body: { "targetId": "uuid-string" }
+export interface MoveRoutingStrategyRequest {
+  targetId: string;
+}
+
 export async function moveRoutingStrategy(id: string, data: MoveRoutingStrategyRequest): Promise<void> {
-  // 临时方案：先获取目标策略，交换 priority，再更新
-  // 实际应调用：POST /routing-strategies/reorder
-  try {
-    await apiClient.post(`${API_PREFIX}/routing-strategies/reorder`, {
-      orders: [{ id, targetId: data.targetId }]
-    });
-  } catch (error) {
-    console.warn('reorder API not available, using fallback:', error);
-    // Fallback: 直接更新 priority
-    await apiClient.put(`${API_PREFIX}/routing-strategies/${id}`, {
-      priority: data.priority
-    });
-  }
+  await apiClient.post(`${API_PREFIX}/routing-strategies/${id}/move`, data);
 }
 
-// ========== Health Checks API (3 endpoints) ==========
-
-export async function getHealthChecks(params?: ListHealthChecksParams): Promise<ListHealthChecksResponse['data']> {
-  const response = await apiClient.get(`${API_PREFIX}/health-checks`, { params });
-  return response.data.data;
+// 备用：reorder API（如果 move 未部署时使用）
+export interface ReorderRoutingStrategyRequest {
+  orderedIds: string[];
 }
 
-export async function getHealthCheckDetail(id: string): Promise<HealthCheck> {
-  const response = await apiClient.get(`${API_PREFIX}/health-checks/${id}`);
-  return response.data.data;
+export async function reorderRoutingStrategies(data: ReorderRoutingStrategyRequest): Promise<void> {
+  await apiClient.post(`${API_PREFIX}/routing-strategies/reorder`, data);
 }
 
-export async function triggerHealthCheck(data: TriggerHealthCheckRequest): Promise<HealthCheck> {
-  const response = await apiClient.post(`${API_PREFIX}/health-checks`, data);
-  return response.data.data;
-}
+// ========== Health Checks API ==========
 
-// QA 验收: GET /channels/:id/health
 export async function getChannelHealthStatus(channelId: string): Promise<ChannelHealthStatus> {
   const response = await apiClient.get(`${API_PREFIX}/channels/${channelId}/health`);
   return response.data.data;
 }
 
-// ========== Providers API (1 endpoint) ==========
+// ========== Providers API ==========
 
 export async function getProviders(params?: ListProvidersParams): Promise<ListProvidersResponse['data']> {
   const response = await apiClient.get(`${API_PREFIX}/providers`, { params });
