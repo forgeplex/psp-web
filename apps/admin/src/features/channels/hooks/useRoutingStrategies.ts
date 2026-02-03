@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { RoutingStrategy, MoveStrategyRequest } from '../types/domain';
+import type { RoutingStrategy, ReorderStrategiesRequest, MoveStrategyRequest } from '../types/domain';
 
 const ROUTING_STRATEGIES_QUERY_KEY = 'routingStrategies';
 
@@ -88,7 +88,21 @@ async function deleteStrategy(id: string): Promise<void> {
     .map((s, idx) => ({ ...s, priority: idx + 1 }));
 }
 
-// v1.0 Move API - swap priority with target
+// v1.0 Reorder API - batch update priorities
+// POST /routing-strategies/reorder
+async function reorderStrategies(request: ReorderStrategiesRequest): Promise<void> {
+  // Update each strategy's priority based on the request
+  strategies = strategies.map(s => {
+    const order = request.orders.find(o => o.id === s.id);
+    if (order) {
+      return { ...s, priority: order.priority, updated_at: new Date().toISOString() };
+    }
+    return s;
+  });
+}
+
+// Deprecated: Move API - swap priority with target
+// Use reorderStrategies instead (POST /routing-strategies/reorder)
 async function moveStrategy(id: string, request: MoveStrategyRequest): Promise<void> {
   const sourceIdx = strategies.findIndex(s => s.id === id);
   const targetIdx = strategies.findIndex(s => s.id === request.targetId);
@@ -158,7 +172,21 @@ export function useDeleteRoutingStrategy() {
   });
 }
 
-// v1.0 Move API hook - replaces reorder
+// v1.0 Reorder API hook - batch update priorities
+// POST /routing-strategies/reorder with { orders: [{ id, priority }] }
+export function useReorderRoutingStrategies() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (request: ReorderStrategiesRequest) => reorderStrategies(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ROUTING_STRATEGIES_QUERY_KEY] });
+    },
+  });
+}
+
+// Deprecated: use useReorderRoutingStrategies instead
+// Move API (POST /:id/move) is being replaced by Reorder API (POST /reorder)
 export function useMoveRoutingStrategy() {
   const queryClient = useQueryClient();
   
@@ -169,9 +197,4 @@ export function useMoveRoutingStrategy() {
       queryClient.invalidateQueries({ queryKey: [ROUTING_STRATEGIES_QUERY_KEY] });
     },
   });
-}
-
-// Deprecated: use useMoveRoutingStrategy instead
-export function useReorderRoutingStrategies() {
-  return useMoveRoutingStrategy();
 }

@@ -29,12 +29,12 @@ import {
   SaveOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from '@tanstack/react-router';
-import type { RoutingStrategy } from '../types/domain';
+import type { RoutingStrategy, ReorderStrategiesRequest } from '../types/domain';
 import {
   useRoutingStrategies,
   useUpdateRoutingStrategy,
   useDeleteRoutingStrategy,
-  useMoveRoutingStrategy,
+  useReorderRoutingStrategies,
 } from '../hooks';
 
 const { Title, Text } = Typography;
@@ -66,11 +66,13 @@ export function RoutingStrategiesPage() {
   const { data: strategies, isLoading, refetch } = useRoutingStrategies();
   const updateStrategy = useUpdateRoutingStrategy();
   const deleteStrategy = useDeleteRoutingStrategy();
-  const moveStrategy = useMoveRoutingStrategy();
+  const reorderStrategies = useReorderRoutingStrategies();
 
   const sortedStrategies = [...(strategies || [])].sort((a, b) => a.priority - b.priority);
 
-  // 移动策略（交换优先级）- v1.0 Move API
+  // 移动策略（使用 reorder API 批量更新优先级）- v1.0 Reorder API
+  // POST /routing-strategies/reorder
+  // Body: { orders: [{ id, priority }, ...] }
   const handleMove = async (sourceId: string, direction: 'up' | 'down') => {
     const idx = sortedStrategies.findIndex(s => s.id === sourceId);
     if (idx === -1) return;
@@ -78,10 +80,22 @@ export function RoutingStrategiesPage() {
     const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
     if (targetIdx < 0 || targetIdx >= sortedStrategies.length) return;
 
-    const targetId = sortedStrategies[targetIdx].id;
+    // Build reorder request: swap priorities between source and target
+    const sourceStrategy = sortedStrategies[idx];
+    const targetStrategy = sortedStrategies[targetIdx];
+    
+    const orders: ReorderStrategiesRequest['orders'] = sortedStrategies.map((s, i) => {
+      if (s.id === sourceId) {
+        return { id: s.id, priority: targetStrategy.priority };
+      }
+      if (s.id === targetStrategy.id) {
+        return { id: s.id, priority: sourceStrategy.priority };
+      }
+      return { id: s.id, priority: s.priority };
+    });
 
     try {
-      await moveStrategy.mutateAsync({ id: sourceId, request: { targetId } });
+      await reorderStrategies.mutateAsync({ orders });
       message.success('优先级已调整');
     } catch {
       message.error('调整失败');
