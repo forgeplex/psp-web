@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '@psp/ui';
-import { Card, Typography } from 'antd';
+import { ChannelsPage } from '../../features/channels/pages/ChannelsPage';
+import type { Channel } from '../../features/channels/types/domain';
+import { getChannels } from '../../features/channels/api/adapter';
 
 export const Route = createFileRoute('/_authenticated/channels')({
-  component: ChannelsPage,
+  component: ChannelsRoute,
 });
 
-function ChannelsPage() {
-  return (
-    <div>
-      <PageHeader title="通道 & 路由" />
-      <Card style={ { borderRadius: 8 } }>
-        <div style={ { padding: 40, textAlign: 'center' } }>
-          <Typography.Text type="secondary">
-            🚧 通道 & 路由模块开发中...
-          </Typography.Text>
-        </div>
-      </Card>
-    </div>
-  );
+function ChannelsRoute() {
+  const [data, setData] = useState<Channel[]>([]);
+
+  useEffect(() => {
+    void getChannels().then(setData);
+  }, []);
+
+  return <ChannelsPage data={data} />;
 }
