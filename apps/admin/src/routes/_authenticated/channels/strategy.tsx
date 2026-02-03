@@ -1,36 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { Spin, Alert } from 'antd';
 import { RoutingStrategiesPage } from '../../../features/channels/pages/RoutingStrategiesPage';
-import { useRoutingStrategies } from '../../../features/channels/hooks/useRoutingStrategies';
+import type { RoutingStrategy } from '../../../features/channels/types/domain';
+import { getRoutingStrategies } from '../../../features/channels/api/adapter';
 
 export const Route = createFileRoute('/_authenticated/channels/strategy')({
-  component: RoutingStrategiesRoute,
+  component: ChannelsStrategyRoute,
 });
 
-function RoutingStrategiesRoute() {
-  const { data, isLoading, error } = useRoutingStrategies();
+function ChannelsStrategyRoute() {
+  const [data, setData] = useState<RoutingStrategy[]>([]);
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: 24, textAlign: 'center' }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    void getRoutingStrategies().then(setData);
+  }, []);
 
-  if (error) {
-    return (
-      <div style={{ padding: 24 }}>
-        <Alert
-          message="加载失败"
-          description={error.message}
-          type="error"
-          showIcon
-        />
-      </div>
-    );
-  }
-
-  return <RoutingStrategiesPage data={data ?? []} />;
+  return <RoutingStrategiesPage data={data} />;
 }

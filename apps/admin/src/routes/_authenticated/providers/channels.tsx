@@ -1,36 +1,11 @@
 import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { Spin, Alert } from 'antd';
 import { ChannelsPage } from '../../../features/channels/pages/ChannelsPage';
-import { useChannels } from '../../../features/channels/hooks/useChannels';
 
 export const Route = createFileRoute('/_authenticated/providers/channels')({
   component: ProvidersChannelsRoute,
 });
 
 function ProvidersChannelsRoute() {
-  const { data, isLoading, error } = useChannels();
-
-  if (isLoading) {
-    return (
-      <div style={{ padding: 24, textAlign: 'center' }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ padding: 24 }}>
-        <Alert
-          message="加载失败"
-          description={error.message}
-          type="error"
-          showIcon
-        />
-      </div>
-    );
-  }
-
-  return <ChannelsPage title="Provider Channels" data={data?.items ?? []} />;
+  return <ChannelsPage title="Provider Channels" />;
 }

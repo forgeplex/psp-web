@@ -1,120 +1,30 @@
-// Adapter layer for Channels API
-// Isolates API shape from domain models
-// Based on Arch API Spec v0.9
+// Adapter layer to isolate API shape from domain models
+// TODO(openapi): replace stub data sources with real API calls
 
-import { apiClient } from '@psp/api';
-import type {
-  Channel,
-  ChannelFormData,
-  CreateChannelRequest,
-  ListChannelsParams,
-  ListChannelsResponse,
-  UpdateChannelRequest,
-  ToggleChannelRequest,
-  RoutingStrategy,
-  RoutingStrategyFormData,
-  CreateRoutingStrategyRequest,
-  ListRoutingStrategiesParams,
-  ListRoutingStrategiesResponse,
-  UpdateRoutingStrategyRequest,
-  ReorderRoutingStrategiesRequest,
-  HealthCheck,
-  ListHealthChecksParams,
-  ListHealthChecksResponse,
-  TriggerHealthCheckRequest,
-  ChannelHealthStatus,
-  Provider,
-  ListProvidersParams,
-  ListProvidersResponse,
-} from '../types/domain';
+import type { Channel, HealthCheck, Provider, RoutingStrategy } from '../types/domain';
+import { stubChannels, stubHealthChecks, stubProviders, stubRoutingStrategies } from '../data/stub';
 
-// Channels API
-export async function getChannels(params?: ListChannelsParams): Promise<ListChannelsResponse['data']> {
-  const response = await apiClient.get('/channels', { params });
-  return response.data.data;
+export async function getProviders(): Promise<Provider[]> {
+  return stubProviders;
 }
 
-export async function getChannelDetail(id: string): Promise<Channel> {
-  const response = await apiClient.get(`/channels/${id}`);
-  return response.data.data;
+export async function getChannels(): Promise<Channel[]> {
+  return stubChannels;
 }
 
-export async function createChannel(data: CreateChannelRequest): Promise<Channel> {
-  const response = await apiClient.post('/channels', data);
-  return response.data.data;
+export async function getChannelsByProvider(providerId: string): Promise<Channel[]> {
+  return stubChannels.filter((item) => item.provider_id === providerId);
 }
 
-export async function updateChannel(id: string, data: UpdateChannelRequest): Promise<Channel> {
-  const response = await apiClient.patch(`/channels/${id}`, data);
-  return response.data.data;
+export async function getChannelDetail(channelId: string): Promise<Channel | undefined> {
+  return stubChannels.find((item) => item.id === channelId);
 }
 
-export async function deleteChannel(id: string): Promise<void> {
-  await apiClient.delete(`/channels/${id}`);
+export async function getRoutingStrategies(): Promise<RoutingStrategy[]> {
+  return stubRoutingStrategies;
 }
 
-export async function toggleChannel(id: string, data: ToggleChannelRequest): Promise<Channel> {
-  const response = await apiClient.post(`/channels/${id}/toggle`, data);
-  return response.data.data;
-}
-
-// Routing Strategies API
-export async function getRoutingStrategies(params?: ListRoutingStrategiesParams): Promise<ListRoutingStrategiesResponse['data']> {
-  const response = await apiClient.get('/routing-strategies', { params });
-  return response.data.data;
-}
-
-export async function getRoutingStrategyDetail(id: string): Promise<RoutingStrategy> {
-  const response = await apiClient.get(`/routing-strategies/${id}`);
-  return response.data.data;
-}
-
-export async function createRoutingStrategy(data: CreateRoutingStrategyRequest): Promise<RoutingStrategy> {
-  const response = await apiClient.post('/routing-strategies', data);
-  return response.data.data;
-}
-
-export async function updateRoutingStrategy(id: string, data: UpdateRoutingStrategyRequest): Promise<RoutingStrategy> {
-  const response = await apiClient.patch(`/routing-strategies/${id}`, data);
-  return response.data.data;
-}
-
-export async function deleteRoutingStrategy(id: string): Promise<void> {
-  await apiClient.delete(`/routing-strategies/${id}`);
-}
-
-export async function reorderRoutingStrategies(data: ReorderRoutingStrategiesRequest): Promise<void> {
-  await apiClient.post('/routing-strategies/reorder', data);
-}
-
-// Health Checks API
-export async function getHealthChecks(params?: ListHealthChecksParams): Promise<ListHealthChecksResponse['data']> {
-  const response = await apiClient.get('/health-checks', { params });
-  return response.data.data;
-}
-
-export async function getHealthCheckDetail(id: string): Promise<HealthCheck> {
-  const response = await apiClient.get(`/health-checks/${id}`);
-  return response.data.data;
-}
-
-export async function triggerHealthCheck(data: TriggerHealthCheckRequest): Promise<HealthCheck> {
-  const response = await apiClient.post('/health-checks', data);
-  return response.data.data;
-}
-
-export async function getChannelHealthStatus(channelId: string): Promise<ChannelHealthStatus> {
-  const response = await apiClient.get(`/channels/${channelId}/health-status`);
-  return response.data.data;
-}
-
-// Providers API
-export async function getProviders(params?: ListProvidersParams): Promise<ListProvidersResponse['data']> {
-  const response = await apiClient.get('/providers', { params });
-  return response.data.data;
-}
-
-export async function getProviderDetail(id: string): Promise<Provider> {
-  const response = await apiClient.get(`/providers/${id}`);
-  return response.data.data;
+export async function getHealthChecks(channelId?: string): Promise<HealthCheck[]> {
+  if (!channelId) return stubHealthChecks;
+  return stubHealthChecks.filter((item) => item.channel_id === channelId);
 }
