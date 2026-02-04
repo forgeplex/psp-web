@@ -1,7 +1,7 @@
 /**
  * Channels API Module
  * Real API implementation using generated types from OpenAPI
- * ADR-0001: 列表响应统一 { data: { items: [...], total } }
+ * API Spec v1.1: 列表响应统一 { items: [...], total, limit, offset } (扁平结构)
  */
 import { apiClient } from './client';
 /**

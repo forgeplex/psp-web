@@ -1,7 +1,7 @@
 /**
  * Channels API Module
  * Real API implementation using generated types from OpenAPI
- * ADR-0001: 列表响应统一 { data: { items: [...], total } }
+ * API Spec v1.1: 列表响应统一 { items: [...], total, limit, offset } (扁平结构)
  */
 import { apiClient } from './client';
 import type { components } from './generated/admin';
@@ -12,14 +12,12 @@ export type ChannelVerifyRequest = components['schemas']['psp_com_internal_chann
 export type ChannelVerifyResponse = components['schemas']['psp_com_internal_channel_app.ChannelVerifyResponse'];
 export type HealthCheckResultDTO = components['schemas']['psp_com_internal_channel_app.HealthCheckResultDTO'];
 
-// ADR-0001: unified list response { data: { items, total, limit, offset } }
+// API Spec v1.1: unified list response { items, total, limit, offset } (flat structure)
 export interface ChannelListResponse {
-  data: {
-    items: ChannelResponse[];
-    total: number;
-    limit: number;
-    offset: number;
-  };
+  items: ChannelResponse[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 // Query params for list
