@@ -54,8 +54,8 @@ export function useDeleteRoutingStrategy() {
   });
 }
 
-// v1.0 Reorder API hook - batch update priorities
-// POST /routing-strategies/reorder with { orders: [{ id, priority }] }
+// v1.0 Batch Reorder API hook - batch update priorities
+// POST /routing-strategies/batch-reorder with { orders: [{ id, priority }] }
 export function useReorderRoutingStrategies() {
   const queryClient = useQueryClient();
   

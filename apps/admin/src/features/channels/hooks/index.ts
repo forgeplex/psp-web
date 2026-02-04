@@ -4,7 +4,7 @@ export {
   useCreateRoutingStrategy,
   useUpdateRoutingStrategy,
   useDeleteRoutingStrategy,
-  useReorderRoutingStrategies,  // v1.0 Reorder API (POST /reorder)
+  useReorderRoutingStrategies,  // v1.0 Batch Reorder API (POST /batch-reorder)
   useMoveRoutingStrategy,        // Deprecated: use useReorderRoutingStrategies
 } from './useRoutingStrategies';
 

@@ -59,7 +59,7 @@ export const channelsApi = {
     }),
 };
 
-// Routing Strategies API (v1.0 with reorder)
+// Routing Strategies API (v1.0 with batch-reorder)
 export const strategiesApi = {
   list: () => apiCall<RoutingStrategy[]>('/routing-strategies'),
   
@@ -82,16 +82,16 @@ export const strategiesApi = {
       method: 'DELETE',
     }),
   
-  // v1.0 Reorder API - batch update priorities
-  // POST /routing-strategies/reorder
+  // v1.0 Batch Reorder API - batch update priorities
+  // POST /routing-strategies/batch-reorder
   // Body: { orders: [{ id, priority }] }
   reorder: (request: ReorderStrategiesRequest) =>
-    apiCall<void>('/routing-strategies/reorder', {
+    apiCall<void>('/routing-strategies/batch-reorder', {
       method: 'POST',
       body: JSON.stringify(request),
     }),
   
-  // Deprecated: move API replaced by reorder
+  // Deprecated: move API replaced by batch-reorder
   // Kept for backward compatibility during migration
   move: (id: string, request: MoveStrategyRequest) =>
     apiCall<void>(`/routing-strategies/${id}/move`, {
