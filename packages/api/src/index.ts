@@ -25,3 +25,6 @@ export * from './export';
 
 // MFA API
 export * from './mfa';
+
+// Channels API
+export * from './channels';

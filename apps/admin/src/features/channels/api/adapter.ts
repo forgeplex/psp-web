@@ -28,3 +28,12 @@ export async function getHealthChecks(channelId?: string): Promise<HealthCheck[]
   if (!channelId) return stubHealthChecks;
   return stubHealthChecks.filter((item) => item.channel_id === channelId);
 }
+
+// Stub exports for pages under development
+export async function getRoutingRuleSpecs(): Promise<unknown[]> {
+  return [];
+}
+
+export async function getChannelConfigMatrices(): Promise<unknown[]> {
+  return [];
+}
