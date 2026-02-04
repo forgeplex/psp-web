@@ -33,11 +33,12 @@ import { Route as AuthenticatedProvidersIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedChannelsIndexRouteImport } from './routes/_authenticated/channels/index'
 import { Route as AuthenticatedTransactionsIdRouteImport } from './routes/_authenticated/transactions/$id'
 import { Route as AuthenticatedSettingsTrustedDevicesRouteImport } from './routes/_authenticated/settings/trusted-devices'
-import { Route as AuthenticatedProvidersProviderIdChannelsRouteImport } from './routes/_authenticated/providers/channels'
+import { Route as AuthenticatedProvidersChannelsRouteImport } from './routes/_authenticated/providers/channels'
 import { Route as AuthenticatedMerchantsDashboardRouteImport } from './routes/_authenticated/merchants/dashboard'
 import { Route as AuthenticatedMerchantsMerchantIdRouteImport } from './routes/_authenticated/merchants/$merchantId'
 import { Route as AuthenticatedChannelsStrategyRouteImport } from './routes/_authenticated/channels/strategy'
 import { Route as AuthenticatedChannelsRoutingRulesRouteImport } from './routes/_authenticated/channels/routing-rules'
+import { Route as AuthenticatedChannelsProvidersRouteImport } from './routes/_authenticated/channels/providers'
 import { Route as AuthenticatedChannelsHealthRouteImport } from './routes/_authenticated/channels/health'
 import { Route as AuthenticatedChannelsChannelConfigsRouteImport } from './routes/_authenticated/channels/channel-configs'
 import { Route as AuthenticatedChannelsChannelIdRouteImport } from './routes/_authenticated/channels.$channelId'
@@ -171,8 +172,8 @@ const AuthenticatedSettingsTrustedDevicesRoute =
     path: '/trusted-devices',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
-const AuthenticatedProvidersProviderIdChannelsRoute =
-  AuthenticatedProvidersProviderIdChannelsRouteImport.update({
+const AuthenticatedProvidersChannelsRoute =
+  AuthenticatedProvidersChannelsRouteImport.update({
     id: '/channels',
     path: '/channels',
     getParentRoute: () => AuthenticatedProvidersRoute,
@@ -199,6 +200,12 @@ const AuthenticatedChannelsRoutingRulesRoute =
   AuthenticatedChannelsRoutingRulesRouteImport.update({
     id: '/routing-rules',
     path: '/routing-rules',
+    getParentRoute: () => AuthenticatedChannelsRoute,
+  } as any)
+const AuthenticatedChannelsProvidersRoute =
+  AuthenticatedChannelsProvidersRouteImport.update({
+    id: '/providers',
+    path: '/providers',
     getParentRoute: () => AuthenticatedChannelsRoute,
   } as any)
 const AuthenticatedChannelsHealthRoute =
@@ -247,11 +254,12 @@ export interface FileRoutesByFullPath {
   '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
   '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/channels/providers': typeof AuthenticatedChannelsProvidersRoute
   '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/channels/': typeof AuthenticatedChannelsIndexRoute
@@ -277,11 +285,12 @@ export interface FileRoutesByTo {
   '/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
   '/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/channels/providers': typeof AuthenticatedChannelsProvidersRoute
   '/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/channels': typeof AuthenticatedChannelsIndexRoute
@@ -313,11 +322,12 @@ export interface FileRoutesById {
   '/_authenticated/channels/$channelId': typeof AuthenticatedChannelsChannelIdRoute
   '/_authenticated/channels/channel-configs': typeof AuthenticatedChannelsChannelConfigsRoute
   '/_authenticated/channels/health': typeof AuthenticatedChannelsHealthRoute
+  '/_authenticated/channels/providers': typeof AuthenticatedChannelsProvidersRoute
   '/_authenticated/channels/routing-rules': typeof AuthenticatedChannelsRoutingRulesRoute
   '/_authenticated/channels/strategy': typeof AuthenticatedChannelsStrategyRoute
   '/_authenticated/merchants/$merchantId': typeof AuthenticatedMerchantsMerchantIdRoute
   '/_authenticated/merchants/dashboard': typeof AuthenticatedMerchantsDashboardRoute
-  '/_authenticated/providers/channels': typeof AuthenticatedProvidersProviderIdChannelsRoute
+  '/_authenticated/providers/channels': typeof AuthenticatedProvidersChannelsRoute
   '/_authenticated/settings/trusted-devices': typeof AuthenticatedSettingsTrustedDevicesRoute
   '/_authenticated/transactions/$id': typeof AuthenticatedTransactionsIdRoute
   '/_authenticated/channels/': typeof AuthenticatedChannelsIndexRoute
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/channels/$channelId'
     | '/channels/channel-configs'
     | '/channels/health'
+    | '/channels/providers'
     | '/channels/routing-rules'
     | '/channels/strategy'
     | '/merchants/$merchantId'
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/channels/$channelId'
     | '/channels/channel-configs'
     | '/channels/health'
+    | '/channels/providers'
     | '/channels/routing-rules'
     | '/channels/strategy'
     | '/merchants/$merchantId'
@@ -414,6 +426,7 @@ export interface FileRouteTypes {
     | '/_authenticated/channels/$channelId'
     | '/_authenticated/channels/channel-configs'
     | '/_authenticated/channels/health'
+    | '/_authenticated/channels/providers'
     | '/_authenticated/channels/routing-rules'
     | '/_authenticated/channels/strategy'
     | '/_authenticated/merchants/$merchantId'
@@ -610,7 +623,7 @@ declare module '@tanstack/react-router' {
       id: '/_authenticated/providers/channels'
       path: '/channels'
       fullPath: '/providers/channels'
-      preLoaderRoute: typeof AuthenticatedProvidersProviderIdChannelsRouteImport
+      preLoaderRoute: typeof AuthenticatedProvidersChannelsRouteImport
       parentRoute: typeof AuthenticatedProvidersRoute
     }
     '/_authenticated/merchants/dashboard': {
@@ -639,6 +652,13 @@ declare module '@tanstack/react-router' {
       path: '/routing-rules'
       fullPath: '/channels/routing-rules'
       preLoaderRoute: typeof AuthenticatedChannelsRoutingRulesRouteImport
+      parentRoute: typeof AuthenticatedChannelsRoute
+    }
+    '/_authenticated/channels/providers': {
+      id: '/_authenticated/channels/providers'
+      path: '/providers'
+      fullPath: '/channels/providers'
+      preLoaderRoute: typeof AuthenticatedChannelsProvidersRouteImport
       parentRoute: typeof AuthenticatedChannelsRoute
     }
     '/_authenticated/channels/health': {
@@ -676,6 +696,7 @@ interface AuthenticatedChannelsRouteChildren {
   AuthenticatedChannelsChannelIdRoute: typeof AuthenticatedChannelsChannelIdRoute
   AuthenticatedChannelsChannelConfigsRoute: typeof AuthenticatedChannelsChannelConfigsRoute
   AuthenticatedChannelsHealthRoute: typeof AuthenticatedChannelsHealthRoute
+  AuthenticatedChannelsProvidersRoute: typeof AuthenticatedChannelsProvidersRoute
   AuthenticatedChannelsRoutingRulesRoute: typeof AuthenticatedChannelsRoutingRulesRoute
   AuthenticatedChannelsStrategyRoute: typeof AuthenticatedChannelsStrategyRoute
   AuthenticatedChannelsIndexRoute: typeof AuthenticatedChannelsIndexRoute
@@ -686,6 +707,7 @@ const AuthenticatedChannelsRouteChildren: AuthenticatedChannelsRouteChildren = {
   AuthenticatedChannelsChannelConfigsRoute:
     AuthenticatedChannelsChannelConfigsRoute,
   AuthenticatedChannelsHealthRoute: AuthenticatedChannelsHealthRoute,
+  AuthenticatedChannelsProvidersRoute: AuthenticatedChannelsProvidersRoute,
   AuthenticatedChannelsRoutingRulesRoute:
     AuthenticatedChannelsRoutingRulesRoute,
   AuthenticatedChannelsStrategyRoute: AuthenticatedChannelsStrategyRoute,
@@ -715,14 +737,14 @@ const AuthenticatedMerchantsRouteWithChildren =
   )
 
 interface AuthenticatedProvidersRouteChildren {
-  AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
+  AuthenticatedProvidersChannelsRoute: typeof AuthenticatedProvidersChannelsRoute
   AuthenticatedProvidersIndexRoute: typeof AuthenticatedProvidersIndexRoute
   AuthenticatedProvidersProviderIdChannelsRoute: typeof AuthenticatedProvidersProviderIdChannelsRoute
 }
 
 const AuthenticatedProvidersRouteChildren: AuthenticatedProvidersRouteChildren =
   {
-    AuthenticatedProvidersProviderIdChannelsRoute: AuthenticatedProvidersProviderIdChannelsRoute,
+    AuthenticatedProvidersChannelsRoute: AuthenticatedProvidersChannelsRoute,
     AuthenticatedProvidersIndexRoute: AuthenticatedProvidersIndexRoute,
     AuthenticatedProvidersProviderIdChannelsRoute:
       AuthenticatedProvidersProviderIdChannelsRoute,

@@ -1,18 +1,63 @@
-// Domain models for Channels module
-// NON-FROZEN: stub types only, to be replaced by OpenAPI v0.9 codegen
-// TODO(openapi): reconcile with generated types once v0.9 spec is available
+// Domain types for Channels module - aligned with API Spec v1.0
+// ChannelStatus: inactive/active/maintenance
+// HealthStatus: unknown/healthy/degraded/failed
 
-import type { ProviderStub } from './stub/providers';
-import type { ChannelStub, ChannelConfigStub } from './stub/channels';
-import type { RoutingStrategyStub, RoutingStrategyTargetStub } from './stub/routing';
-import type { HealthCheckStub } from './stub/health';
-import type { ChannelConfigMatrixStub, RoutingRuleSpecStub } from './stub';
+export type ChannelType = 'payment' | 'payout' | 'combined';
+export type ChannelStatus = 'inactive' | 'active' | 'maintenance';
+export type HealthStatus = 'unknown' | 'healthy' | 'degraded' | 'failed';
 
-export interface Provider extends ProviderStub {}
-export interface Channel extends ChannelStub {}
-export interface ChannelConfig extends ChannelConfigStub {}
-export interface RoutingStrategy extends RoutingStrategyStub {}
-export interface RoutingStrategyTarget extends RoutingStrategyTargetStub {}
-export interface HealthCheck extends HealthCheckStub {}
-export interface ChannelConfigMatrix extends ChannelConfigMatrixStub {}
-export interface RoutingRuleSpec extends RoutingRuleSpecStub {}
+export interface Channel {
+  id: string;
+  tenant_id: string;
+  provider_id: string;
+  code: string;
+  name: string;
+  description?: string | null;
+  type: ChannelType;
+  status: ChannelStatus;
+  priority: number;
+  health_status: HealthStatus;
+  limits?: {
+    min_amount?: number;
+    max_amount?: number;
+    daily_amount?: number;
+  };
+  success_rate?: number;
+  avg_response_ms?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ChannelConfig {
+  channel_id: string;
+  config?: Record<string, unknown>;
+  encrypted_config?: Record<string, unknown>;
+  masked_fields?: string[];
+  writable_fields?: string[];
+}
+
+export interface RoutingStrategy {
+  id: string;
+  name: string;
+  description?: string;
+  priority: number;
+  enabled: boolean;
+  conditions?: Record<string, unknown>;
+  target_channels?: string[];
+  channel_weights?: Record<string, number>;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Reorder API request type - batch update priorities
+export interface ReorderStrategiesRequest {
+  orders: Array<{
+    id: string;
+    priority: number;
+  }>;
+}
+
+// Deprecated: MoveStrategyRequest removed, use ReorderStrategiesRequest
+export interface MoveStrategyRequest {
+  targetId: string;
+}

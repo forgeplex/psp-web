@@ -13,9 +13,9 @@ function ChannelsLayout() {
 
   const tabItems = useMemo(
     () => [
-      { key: '/channels', label: '通道列表' },
+      { key: '/channels', label: 'Channels' },
       { key: '/channels/channel-configs', label: 'Channel Configs' },
-      { key: '/channels/routing-rules', label: 'Routing Rules JSON' },
+      { key: '/channels/routing-rules', label: 'Routing Rules' },
       { key: '/channels/strategy', label: 'Routing Strategies' },
       { key: '/channels/health', label: 'Health Checks' },
     ],

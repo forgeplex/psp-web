@@ -1,10 +1,8 @@
 // NON-FROZEN: stub types derived from DBA schema (channels-schema.md)
 // TODO(openapi): replace with codegen once v0.9 spec is published
 
-/** NON-FROZEN */
 export type RoutingStrategyStatus = 'active' | 'inactive';
 
-/** NON-FROZEN */
 export interface RoutingStrategyStub {
   id: string;
   tenant_id: string;
@@ -16,7 +14,6 @@ export interface RoutingStrategyStub {
   updated_at?: string;
 }
 
-/** NON-FROZEN */
 export interface RoutingStrategyTargetStub {
   id: string;
   routing_strategy_id: string;
