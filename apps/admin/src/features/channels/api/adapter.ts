@@ -41,9 +41,9 @@ export async function getChannelConfigMatrices(): Promise<unknown[]> {
 /**
  * Move a routing strategy — swap priority with target strategy
  * POST /api/v1/routing-strategies/:id/move
- * Body: { targetId: string }
+ * Body: { TargetID: string } (BE PascalCase)
  */
 export async function moveStrategy(strategyId: string, targetId: string): Promise<void> {
   const { apiClient } = await import('@psp/api');
-  await apiClient.post(`/api/v1/routing-strategies/${strategyId}/move`, { targetId });
+  await apiClient.post(`/api/v1/routing-strategies/${strategyId}/move`, { TargetID: targetId });
 }
