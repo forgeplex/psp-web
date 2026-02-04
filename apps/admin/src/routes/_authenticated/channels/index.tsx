@@ -209,7 +209,7 @@ function ChannelsIndexRoute() {
   ];
 
   // Calculate stats from data
-  const channels = data?.data || [];
+  const channels = data?.data?.items || [];
   const activeCount = channels.filter((c) => c.status === 'active').length;
   const healthyCount = channels.filter((c) => c.health_status === 'healthy').length;
   const abnormalCount = channels.filter((c) => c.health_status === 'degraded' || c.health_status === 'failed').length;
@@ -257,7 +257,7 @@ function ChannelsIndexRoute() {
       <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>
-            <Statistic title="总渠道数" value={data?.total || 0} suffix="个" valueStyle={{ color: '#1677ff' }} />
+            <Statistic title="总渠道数" value={data?.data?.total || 0} suffix="个" valueStyle={{ color: '#1677ff' }} />
           </Card>
         </Col>
         <Col span={6}>
@@ -299,7 +299,7 @@ function ChannelsIndexRoute() {
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
-            total: data?.total || 0,
+            total: data?.data?.total || 0,
             showSizeChanger: true,
             showTotal: (total) => `共 ${total} 条`,
             onChange: (page, pageSize) => setPagination({ current: page, pageSize }),

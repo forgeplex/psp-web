@@ -13,4 +13,5 @@ export * from './types';
 export * from './merchants';
 export * from './export';
 export * from './mfa';
+export * from './channels';
 //# sourceMappingURL=index.d.ts.map

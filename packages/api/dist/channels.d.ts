@@ -4,10 +4,12 @@ export type ChannelVerifyRequest = components['schemas']['psp_com_internal_chann
 export type ChannelVerifyResponse = components['schemas']['psp_com_internal_channel_app.ChannelVerifyResponse'];
 export type HealthCheckResultDTO = components['schemas']['psp_com_internal_channel_app.HealthCheckResultDTO'];
 export interface ChannelListResponse {
-    data: ChannelResponse[];
-    total: number;
-    limit: number;
-    offset: number;
+    data: {
+        items: ChannelResponse[];
+        total: number;
+        limit: number;
+        offset: number;
+    };
 }
 export interface ListChannelsParams {
     limit?: number;
