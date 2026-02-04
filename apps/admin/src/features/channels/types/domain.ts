@@ -49,6 +49,14 @@ export interface RoutingStrategy {
   updated_at?: string;
 }
 
+// API Response types - aligned with ADR-024
+export interface ChannelListResponse {
+  items: Channel[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 // Reorder API request type - batch update priorities
 export interface ReorderStrategiesRequest {
   orders: Array<{
@@ -59,5 +67,5 @@ export interface ReorderStrategiesRequest {
 
 // Deprecated: MoveStrategyRequest removed, use ReorderStrategiesRequest
 export interface MoveStrategyRequest {
-  targetId: string;
+  target_id: string;
 }

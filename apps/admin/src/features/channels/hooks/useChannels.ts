@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Channel, ChannelStatus } from '../types/domain';
+import type { Channel, ChannelStatus, ChannelListResponse } from '../types/domain';
 import { channelsApi } from '../api/realApi';
 
 const CHANNELS_QUERY_KEY = 'channels';
@@ -9,16 +9,11 @@ interface ChannelListParams {
   providerId?: string;
   status?: ChannelStatus;
   keyword?: string;
-  page?: number;
-  pageSize?: number;
+  limit?: number;
+  offset?: number;
 }
 
-interface ChannelListResponse {
-  items: Channel[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+// ChannelListResponse imported from domain.ts
 
 // List channels with filters
 export function useChannels(params: ChannelListParams = {}) {

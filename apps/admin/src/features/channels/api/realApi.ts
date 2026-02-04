@@ -23,12 +23,12 @@ async function apiCall<T>(path: string, options?: RequestInit): Promise<T> {
 
 // Channels API
 export const channelsApi = {
-  list: (params?: { keyword?: string; status?: string; page?: number; pageSize?: number }) => {
+  list: (params?: { keyword?: string; status?: string; limit?: number; offset?: number }) => {
     const query = new URLSearchParams();
     if (params?.keyword) query.set('keyword', params.keyword);
     if (params?.status) query.set('status', params.status);
-    if (params?.page) query.set('page', String(params.page));
-    if (params?.pageSize) query.set('pageSize', String(params.pageSize));
+    if (params?.limit) query.set('limit', String(params.limit));
+    if (params?.offset) query.set('offset', String(params.offset));
     
     return apiCall<ChannelListResponse>(`/channels?${query.toString()}`);
   },
