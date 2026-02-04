@@ -1,5 +1,6 @@
 'use client';
 
+import { moveStrategy } from "../../../features/channels/api/adapter";
 import React, { useState } from 'react';
 import {
   Table,
@@ -117,7 +118,7 @@ const channelNames: Record<string, string> = {
 
 export default function RoutingStrategiesPage() {
   const [strategies, setStrategies] = useState(mockStrategies);
-  const [hasChanges, setHasChanges] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStrategy, setEditingStrategy] = useState<any>(null);
   const [form] = Form.useForm();
@@ -136,33 +137,43 @@ export default function RoutingStrategiesPage() {
     message.success('策略已删除');
   };
 
-  // 上移
-  const handleMoveUp = (index: number) => {
+  // 上移 — 调用 move API，交换与上方策略的优先级
+  const handleMoveUp = async (index: number) => {
     if (index === 0) return;
-    const newList = [...strategies];
-    [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
-    // 重新计算优先级
-    newList.forEach((s, i) => (s.priority = i + 1));
-    setStrategies(newList);
-    setHasChanges(true);
+    const source = strategies[index];
+    const target = strategies[index - 1];
+    try {
+      await moveStrategy(source.id, target.id);
+      // 本地乐观更新
+      const newList = [...strategies];
+      [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
+      newList.forEach((s, i) => (s.priority = i + 1));
+      setStrategies(newList);
+      message.success('优先级已调整');
+    } catch (e) {
+      message.error('移动失败，请重试');
+    }
   };
 
-  // 下移
-  const handleMoveDown = (index: number) => {
+  // 下移 — 调用 move API，交换与下方策略的优先级
+  const handleMoveDown = async (index: number) => {
     if (index === strategies.length - 1) return;
-    const newList = [...strategies];
-    [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
-    newList.forEach((s, i) => (s.priority = i + 1));
-    setStrategies(newList);
-    setHasChanges(true);
+    const source = strategies[index];
+    const target = strategies[index + 1];
+    try {
+      await moveStrategy(source.id, target.id);
+      // 本地乐观更新
+      const newList = [...strategies];
+      [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
+      newList.forEach((s, i) => (s.priority = i + 1));
+      setStrategies(newList);
+      message.success('优先级已调整');
+    } catch (e) {
+      message.error('移动失败，请重试');
+    }
   };
 
-  // 保存排序
-  const handleSaveOrder = () => {
-    console.log('Save order:', strategies.map((s) => ({ id: s.id, priority: s.priority })));
-    setHasChanges(false);
-    message.success('排序已保存');
-  };
+
 
   // 打开编辑/创建
   const handleOpenModal = (strategy?: any) => {
@@ -320,15 +331,7 @@ export default function RoutingStrategiesPage() {
         </Col>
         <Col>
           <Space>
-            {hasChanges && (
-              <Button
-                type="primary"
-                icon={<SaveOutlined />}
-                onClick={handleSaveOrder}
-              >
-                保存排序
-              </Button>
-            )}
+
             <Button type="primary" icon={<PlusOutlined />} onClick={() => handleOpenModal()}>
               新建策略
             </Button>
