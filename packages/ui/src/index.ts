@@ -9,3 +9,6 @@ export * from './form';
 
 // Components
 export * from './components';
+
+// VeloPays Mercury-style components
+export * from './velopays';
