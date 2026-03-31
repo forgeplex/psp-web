@@ -1,11 +1,20 @@
-// VeloPays UI Components - Mercury Dashboard Style
-// Built on top of shadcn/ui primitives
-// Brand color: #6366f1 (indigo-500)
+// VeloPays UI Components - shadcn/ui + Tailwind CSS style
+// Based on Mercury Dashboard design system
 
-export { AppShell, type AppShellProps, type NavItem } from './AppShell';
-export { KpiCard, type KpiCardProps } from './KpiCard';
-export { DataTable, type DataTableProps, type Column } from './DataTable';
-export { StatusBadge, type StatusBadgeProps } from './StatusBadge';
-export { SearchInput, type SearchInputProps } from './SearchInput';
-export { FilterBar, type FilterBarProps, type FilterOption } from './FilterBar';
-export { PageHeader, type PageHeaderProps, type BreadcrumbItem } from './PageHeader';
+export { AppShell } from './app-shell';
+export type { AppShellProps } from './app-shell';
+
+export { KpiCard } from './kpi-card';
+export type { KpiCardProps } from './kpi-card';
+
+export { StatusBadge } from './status-badge';
+export type { StatusBadgeProps, StatusType } from './status-badge';
+
+export { PageHeader } from './page-header';
+export type { PageHeaderProps, Breadcrumb } from './page-header';
+
+export { FilterBar } from './filter-bar';
+export type { FilterBarProps, FilterOption } from './filter-bar';
+
+export { DataTable } from './data-table';
+export type { DataTableProps, Column } from './data-table';
